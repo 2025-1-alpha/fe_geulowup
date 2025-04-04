@@ -1,15 +1,45 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --font-family-sans: Pretendard, sans-serif;
+
+  --color-primary-navy1: #e8f3ff;
+  --color-primary-navy2: #bbd8ff;
+  --color-primary-navy3: #4287d6;
+  --color-primary-navy4: #004798;
+  --color-primary-navy5: #01326b;
+  --color-primary-navy6: #002652;
+  --color-primary-navy7: #00152e;
+
+  --color-secondary-purple1: #f0effa;
+  --color-secondary-purple2: #e2e0fb;
+  --color-secondary-purple3: #b3b0f9;
+  --color-secondary-purple4: #7d76fa;
+  --color-secondary-purple5: #403ac0;
+  --color-secondary-purple6: #161184;
+  --color-secondary-purple7: #16135b;
+
+  --color-layout-white: #f9f9f9;
+  --color-layout-grey1: #f2f2f2;
+  --color-layout-grey2: #e6e6e6;
+  --color-layout-grey3: #c1c1c1;
+  --color-layout-grey4: #a2a2a2;
+  --color-layout-grey5: #747474;
+  --color-layout-grey6: #454545;
+  --color-layout-grey7: #171717;
+
+  --color-point-pink1: #ffd6d9;
+  --color-point-pink2: #fda8a1;
+  --color-point-pink3: #ff6771;
+
+  --color-correction-green1: #afe7c9;
+  --color-correction-green2: #3bc87d;
+  --color-correction-green3: #28b856;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,7 +50,8 @@
 }
 
 body {
+  font-family: Pretendard, sans-serif;
+  @apply antialiased;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

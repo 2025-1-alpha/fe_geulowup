@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-family-sans: Pretendard, ui-sans-serif, system-ui, sans-serif;
+  --font-family-sans: Pretendard, sans-serif;
 
   --color-primary-navy1: #e8f3ff;
   --color-primary-navy2: #bbd8ff;

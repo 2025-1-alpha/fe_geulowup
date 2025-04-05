@@ -37,6 +37,104 @@
   --color-correction-green3: #28b856;
 }
 
+@layer utilities {
+  /* 제목 스타일 */
+  .title-lg {
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 43px;
+    letter-spacing: 0.01em; /* 1% */
+  }
+
+  .title-md {
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 30px;
+    letter-spacing: 0.01em; /* 1% */
+  }
+
+  .title-sm {
+    font-size: 23px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: 0; /* 0% */
+  }
+
+  /* 본문 스타일 - 레귤러 */
+  .body-lg {
+    font-size: 19px;
+    font-weight: normal;
+    line-height: 26px;
+    letter-spacing: -0.01em; /* -1% */
+  }
+
+  .body-md {
+    font-size: 17px;
+    font-weight: normal;
+    line-height: 24px;
+    letter-spacing: -0.01em; /* -1% */
+  }
+
+  .body-sm {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 22px;
+    letter-spacing: -0.01em; /* -1% */
+  }
+
+  /* 본문 스타일 - 세미볼드 */
+  .body-lgst {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 26px;
+    letter-spacing: -0.01em; /* -1% */
+  }
+
+  .body-mst {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.01em; /* -1% */
+  }
+
+  .body-sst {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: -0.01em; /* -1% */
+  }
+
+  /* 디테일 스타일 */
+  .detail {
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 22px;
+    letter-spacing: 0; /* 0% */
+  }
+
+  /* 버튼 스타일 */
+  .button-lg {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.01em; /* 1% */
+  }
+
+  .button-md {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0.01em; /* 1% */
+  }
+
+  .button-sm {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.01em; /* 1% */
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

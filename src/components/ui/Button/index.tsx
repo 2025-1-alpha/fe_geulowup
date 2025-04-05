@@ -1,4 +1,6 @@
 import { clsx } from 'clsx';
+import IconArrowDown from '@/assets/icons/icon-arrow-down.svg';
+import IconAdd from '@/assets/icons/icon-plus.svg';
 
 type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'grey' | 'disabled';
@@ -60,9 +62,12 @@ export const Button = ({
 
   return (
     <button className={clsx(baseStyle, selectedVariant, sizeStyle[size], className)} {...props}>
-      {icon && icon === 'add' && <span className="mr-0.5">{icon}</span>}
+      {icon && icon === 'add' && <IconAdd className="mr-0.5" />}
       {children}
-      {icon && icon === 'dropdown' && <span className="ml-1">{icon}</span>}
+      {icon && icon === 'dropdown' && <IconArrowDown className="ml-1" />}
     </button>
   );
 };
+
+// TODO : 생각해보니까 icon 형식이 다 들어가는 게 아니긴 한데... 확장성을 위해서 그냥 냅둘지 or medium 사이즈에만 가능하게 할지 결정하기!
+// TODO : medium만 할 거면 medium 검사하기 or variant에 아이콘들을 추가하기

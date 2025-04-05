@@ -1,3 +1,11 @@
+import Header from '@/components/ui/Header';
+
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <Header />
+      {children}
+      <footer></footer>
+    </>
+  );
 }

@@ -14,7 +14,7 @@ export default function TestPage() {
         variant="grey"
         state="hover"
         size="medium"
-        icon="add"
+        icon="dropdown"
         onClick={() => alert('버튼 테스트')}
       >
         버튼 테스트

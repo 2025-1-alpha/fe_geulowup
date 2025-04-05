@@ -47,11 +47,15 @@ export const Button = ({
   };
 
   const sizeStyle = {
-    large: 'h-[54px] w-[764px] button-lg rounded-[6px]',
-    medium: 'h-[52px] w-[217px] button-md rounded-[6px]',
-    small: 'h-11 w-[129px] button-md rounded-[6px]',
-    xsmall: 'h-[34px] w-[87px] button-sm rounded-[5px]',
+    large: 'h-14 w-[764px] button-lg rounded-[6px]',
+    medium:
+      icon === 'add'
+        ? 'h-14 w-[210px] button-md rounded-[6px]'
+        : 'h-[52px] w-[210px] button-md rounded-[6px]',
+    small: 'h-11 w-32 button-md rounded-[6px]',
+    xsmall: 'h-8 w-[88px] button-sm rounded-[5px]',
   };
+
   const variantObj = variantStyle[variant];
 
   const selectedVariant =
@@ -62,12 +66,9 @@ export const Button = ({
 
   return (
     <button className={clsx(baseStyle, selectedVariant, sizeStyle[size], className)} {...props}>
-      {icon && icon === 'add' && <IconAdd className="mr-0.5" />}
+      {size === 'medium' && icon === 'add' && <IconAdd className="mr-0.5" />}
       {children}
-      {icon && icon === 'dropdown' && <IconArrowDown className="ml-1" />}
+      {size === 'medium' && icon === 'dropdown' && <IconArrowDown className="ml-1" />}
     </button>
   );
 };
-
-// TODO : 생각해보니까 icon 형식이 다 들어가는 게 아니긴 한데... 확장성을 위해서 그냥 냅둘지 or medium 사이즈에만 가능하게 할지 결정하기!
-// TODO : medium만 할 거면 medium 검사하기 or variant에 아이콘들을 추가하기

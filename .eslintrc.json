@@ -1,4 +1,67 @@
 {
-  "extends": ["next", "next/core-web-vitals", "plugin:prettier/recommended"],
-  "rules": {}
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "next",
+    "next/core-web-vitals"
+  ],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-console": "warn",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off",
+    "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "sort-imports": [
+      "warn",
+      {
+        "ignoreCase": true,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSortOrder": ["none", "all", "multiple", "single"]
+      }
+    ],
+    "prefer-const": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["src/app/**/*.tsx", "src/app/**/*.ts"],
+      "rules": {
+        "no-console": "warn",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-uses-react": "off",
+        "react/jsx-props-no-spreading": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "import/order": [
+          "warn",
+          {
+            "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+            "newlines-between": "always"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "warn",
+        "sort-imports": [
+          "warn",
+          {
+            "ignoreCase": true,
+            "ignoreDeclarationSort": true,
+            "ignoreMemberSortOrder": ["none", "all", "multiple", "single"]
+          }
+        ],
+        "prefer-const": "warn"
+      }
+    }
+  ]
 }

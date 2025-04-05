@@ -1,15 +1,17 @@
 {
+  "root": true,
   "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "jsx-a11y", "react", "react-hooks", "@next/next"],
   "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
     "next",
-    "next/core-web-vitals"
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint"],
   "rules": {
     "no-console": "warn",
-    "no-unused-vars": "off",
+    "no-unused-vars": "off", 
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
@@ -28,40 +30,9 @@
       {
         "ignoreCase": true,
         "ignoreDeclarationSort": true,
-        "ignoreMemberSortOrder": ["none", "all", "multiple", "single"]
+        "ignoreMemberSortOrder": true
       }
     ],
     "prefer-const": "warn"
-  },
-  "overrides": [
-    {
-      "files": ["src/app/**/*.tsx", "src/app/**/*.ts"],
-      "rules": {
-        "no-console": "warn",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-        "react/react-in-jsx-scope": "off",
-        "react/jsx-uses-react": "off",
-        "react/jsx-props-no-spreading": "off",
-        "jsx-a11y/anchor-is-valid": "off",
-        "import/order": [
-          "warn",
-          {
-            "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-            "newlines-between": "always"
-          }
-        ],
-        "@typescript-eslint/no-explicit-any": "warn",
-        "sort-imports": [
-          "warn",
-          {
-            "ignoreCase": true,
-            "ignoreDeclarationSort": true,
-            "ignoreMemberSortOrder": ["none", "all", "multiple", "single"]
-          }
-        ],
-        "prefer-const": "warn"
-      }
-    }
-  ]
+  }
 }

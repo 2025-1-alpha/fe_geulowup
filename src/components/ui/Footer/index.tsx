@@ -2,7 +2,7 @@ import Logo from '@/assets/logo.svg';
 
 export default function Footer() {
   return (
-    <footer className="bg-layout-grey1 mx-auto flex min-w-screen items-center justify-between px-[105px] pt-6 pb-[42px]">
+    <footer className="bg-layout-grey1 mx-auto flex min-w-screen items-center justify-between px-24 pt-6 pb-[42px]">
       <div className="flex flex-col">
         <Logo />
         <p className="detail text-layout-grey6">Copyright(c)2025</p>

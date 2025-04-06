@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Logo from '@/assets/logo.svg';
 
 export default function Header() {
   const pathname = usePathname();
@@ -15,10 +16,9 @@ export default function Header() {
 
   return (
     <header className="bg-layout-grey1 mx-auto flex min-w-screen items-center justify-between px-24 py-3">
-      {/* TODO : svg 다운로드해서 로고로 변경하기 */}
       <section className="flex h-11 items-center gap-[110px]">
-        <Link href="/" className="text-2xl font-bold">
-          Geulow Up
+        <Link href="/">
+          <Logo />
         </Link>
         <nav className="flex gap-20">
           {menus.map((menu) => {

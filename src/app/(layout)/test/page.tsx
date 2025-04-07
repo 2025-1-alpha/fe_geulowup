@@ -24,7 +24,6 @@ export default function TestPage() {
       <div className="mt-10">
         <InputTag
           initialValue=""
-          placeholder="#태그"
           tagErrCheck={(v) => ['bad', '이상한말', '에러'].includes(v)}
           onConfirm={(v) => console.log('태그 확정:', v)}
           onRemove={() => console.log('태그 삭제')}

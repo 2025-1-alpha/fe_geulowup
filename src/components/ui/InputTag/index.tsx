@@ -37,9 +37,12 @@ export const InputTag = ({
   useEffect(() => {
     if (spanRef.current) {
       const width = spanRef.current.offsetWidth;
-      setInputWidth(Math.min(width + 16, 200));
+
+      const basePadding = !value ? 10 : 16;
+
+      setInputWidth(Math.min(width + basePadding, 200));
     }
-  }, [value, placeholder]);
+  }, [value, placeholder, isConfirmed]);
 
   const confirmInput = () => {
     const trimmed = value.trim();
@@ -69,22 +72,19 @@ export const InputTag = ({
   };
 
   const baseStyle =
-    'group flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-[4px] border transition-colors w-fit text-[color:var(--color-layout-grey6)]';
+    'group flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-[4px] border transition-colors w-fit text-layout-grey6';
 
   const statusStyle = clsx({
-    'bg-[color:var(--color-primary-navy1)] border-[color:var(--color-primary-navy3)]':
+    'bg-primary-navy1 border-primary-navy3':
       !isConfirmed || (isConfirmed && (isHovered || isFocused) && !isError),
-    'bg-[color:var(--color-primary-navy2)] border-[color:var(--color-primary-navy3)]':
-      isConfirmed && !isError && !isHovered && !isFocused,
-    'bg-[color:var(--color-point-pink1)] border-[color:var(--color-point-pink3)]':
-      isConfirmed && isError && !isHovered && !isFocused,
-    'bg-[color:var(--color-point-pink2)] border-[color:var(--color-point-pink3)]':
-      isConfirmed && isError && (isHovered || isFocused),
+    'bg-primary-navy2 border-primary-navy3': isConfirmed && !isError && !isHovered && !isFocused,
+    'bg-point-pink1 border-point-pink3': isConfirmed && isError && !isHovered && !isFocused,
+    'bg-point-pink2 border-point-pink3': isConfirmed && isError && (isHovered || isFocused),
   });
 
   return (
     <div
-      className={clsx(baseStyle, statusStyle)}
+      className={clsx(baseStyle, statusStyle, 'group')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onFocus={() => setIsFocused(true)}
@@ -119,7 +119,6 @@ export const InputTag = ({
       {isConfirmed && (
         <>
           {isError ? (
-            // 에러 상태일 때: hover/focus면 제거 아이콘, 아니면 alert 아이콘
             isHovered || isFocused ? (
               <button
                 onClick={() => onRemove?.(value)}
@@ -133,11 +132,10 @@ export const InputTag = ({
               </span>
             )
           ) : (
-            // 정상 상태면 그냥 remove 아이콘
             onRemove && (
               <button
                 onClick={() => onRemove(value)}
-                className="ml-1 flex h-[17px] w-[17px] items-center justify-center"
+                className="ml-1 flex w-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-200 group-hover:w-[17px] group-hover:opacity-100"
               >
                 <InputTagRemove className="h-[17px] w-[17px]" />
               </button>

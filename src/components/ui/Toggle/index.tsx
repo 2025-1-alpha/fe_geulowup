@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-type ToggleButtonProps = {
+type ToggleProps = {
   defaultState?: 'on' | 'off';
 };
 
-export default function ToggleButton({ defaultState = 'off' }: ToggleButtonProps) {
+export default function Toggle({ defaultState = 'off' }: ToggleProps) {
   const [isOn, setIsOn] = useState(defaultState === 'on');
 
   return (

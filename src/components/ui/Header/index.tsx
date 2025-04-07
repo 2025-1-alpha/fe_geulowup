@@ -21,7 +21,7 @@ export default function Header() {
   const isLogin = true;
 
   return (
-    <header className="bg-layout-grey1 mx-auto flex min-w-screen items-center justify-between px-24 py-3">
+    <header className="bg-layout-grey1 mx-auto mb-[100px] flex min-w-screen items-center justify-between px-24 py-3">
       <section className="flex h-11 items-center gap-[110px]">
         <Link href="/">
           <Logo />

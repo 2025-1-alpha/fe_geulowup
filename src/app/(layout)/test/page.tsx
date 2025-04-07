@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
+import ToggleButton from '@/components/ui/Toggle';
 
 export default function TestPage() {
   return (
@@ -19,6 +20,7 @@ export default function TestPage() {
       >
         버튼 테스트
       </Button>
+      <ToggleButton />
     </div>
   );
 }

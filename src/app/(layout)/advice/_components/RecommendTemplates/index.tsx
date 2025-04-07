@@ -11,6 +11,11 @@ export default function RecommendTemplates() {
 
   const [asideState, setAsideState] = useState('recommend');
 
+  const handleAside = (label: string) => {
+    setAsideState(label);
+    // 선택에 맞춰서 카드 리스트 api 연결
+  };
+
   return (
     <section className="flex">
       <aside className="bg-layout-grey2 border-layout-grey3 flex h-[156px] w-[132px] flex-col justify-between rounded-[5px] border p-3">
@@ -18,7 +23,7 @@ export default function RecommendTemplates() {
           {asideList.map((item) => (
             <button
               key={item.label}
-              onClick={() => setAsideState(item.label)}
+              onClick={() => handleAside(item.label)}
               className={`body-sst text-left ${asideState === item.label ? 'text-layout-grey7' : 'text-layout-grey5'}`}
             >
               {item.text}

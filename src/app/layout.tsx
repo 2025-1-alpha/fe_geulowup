@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
         />
       </head>
-      <body className="mx-auto max-w-[1512px] font-sans antialiased">{children}</body>
+      <body className="mx-auto font-sans antialiased">{children}</body>
     </html>
   );
 }

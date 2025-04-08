@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({ variant, title, description, tags, likes })
     },
     small: {
       default: 'bg-layout-grey1 border border-layout-grey3',
-      hover: 'bg-layout-grey2',
+      hover: 'bg-layout-grey2 ',
       click: 'bg-layout-grey2 border border-primary-navy4',
     },
     promote: {
@@ -74,7 +74,7 @@ const Card: React.FC<CardProps> = ({ variant, title, description, tags, likes })
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => setIsClicked(true)}
       className={clsx(
-        'flex flex-col justify-between rounded-[8px] p-[16px] transition-all',
+        'z-10 flex flex-col justify-between rounded-[8px] p-[16px] transition-all',
         sizeStyle[variant],
         backgroundStyle[variant][state],
       )}

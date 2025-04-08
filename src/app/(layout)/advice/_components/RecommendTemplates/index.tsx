@@ -2,6 +2,34 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Card from '@/components/ui/Card';
+
+const templates = [
+  {
+    templateId: 1,
+    title: '글로우업을 소개하기',
+    content:
+      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
+    likeCount: 100,
+    tagText: ['태그 텍스트', '테스트'],
+  },
+  {
+    templateId: 2,
+    title: '글로우업을 소개하기',
+    content:
+      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
+    likeCount: 50,
+    tagText: ['태그 텍스트', '테스트'],
+  },
+  {
+    templateId: 3,
+    title: '글로우업을 소개하기',
+    content:
+      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
+    likeCount: 50,
+    tagText: ['태그 텍스트', '테스트'],
+  },
+];
 
 export default function RecommendTemplates() {
   const asideList = [
@@ -38,8 +66,21 @@ export default function RecommendTemplates() {
           더 찾아보기
         </Link>
       </aside>
-      {/* 아래 섹션은 카드 리스트들 삽입 */}
-      <section></section>
+      <section className="ml-4 flex w-[648px] flex-1 overflow-x-auto">
+        <section className="relative flex h-[156px] gap-2">
+          {templates.map((template) => (
+            <Card
+              key={template.templateId}
+              variant="small"
+              state="default"
+              title={template.title}
+              description={template.content}
+              tags={template.tagText}
+              likes={template.likeCount}
+            />
+          ))}
+        </section>
+      </section>
     </section>
   );
 }

@@ -29,6 +29,14 @@ const templates = [
     likeCount: 50,
     tagText: ['태그 텍스트', '테스트'],
   },
+  {
+    templateId: 4,
+    title: '글로우업을 소개하기',
+    content:
+      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
+    likeCount: 50,
+    tagText: ['태그 텍스트', '테스트'],
+  },
 ];
 
 export default function RecommendTemplates() {
@@ -45,7 +53,7 @@ export default function RecommendTemplates() {
   };
 
   return (
-    <section className="flex">
+    <section className="relative z-10 flex">
       <aside className="bg-layout-grey2 border-layout-grey3 flex h-[156px] w-[132px] flex-col justify-between rounded-[5px] border p-3">
         <div className="flex flex-col gap-1">
           {asideList.map((item) => (
@@ -66,13 +74,12 @@ export default function RecommendTemplates() {
           더 찾아보기
         </Link>
       </aside>
-      <section className="ml-4 flex w-[648px] flex-1 overflow-x-auto">
-        <section className="relative flex h-[156px] gap-2">
+      <section className="z-20 ml-4 flex h-[156px] w-[648px] flex-1 overflow-x-scroll overflow-y-visible">
+        <section className="relative flex max-h-full gap-2">
           {templates.map((template) => (
             <Card
               key={template.templateId}
               variant="small"
-              state="default"
               title={template.title}
               description={template.content}
               tags={template.tagText}

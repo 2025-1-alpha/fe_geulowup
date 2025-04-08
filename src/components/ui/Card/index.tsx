@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import CardTag from './CardTag';
-import CardLike from './CardLike';
+import CardTag from '@/components/ui/CardTag';
+import CardLike from '@/components/ui/CardLike';
 
 type Variant = 'large' | 'medium' | 'small' | 'promote';
 
@@ -63,9 +63,9 @@ const Card: React.FC<CardProps> = ({ variant, title, description, tags, likes })
 
   const descriptionStyle = clsx(
     'body-sm text-layout-grey6 mb-[16px]',
-    variant === 'small' &&
-      state !== 'hover' &&
-      'w-[168px] h-[44px] overflow-hidden text-ellipsis line-clamp-2',
+    variant === 'small' && state !== 'hover'
+      ? 'w-[168px] h-[44px] overflow-hidden text-ellipsis line-clamp-2'
+      : 'overflow-hidden text-ellipsis line-clamp-4',
   );
 
   return (

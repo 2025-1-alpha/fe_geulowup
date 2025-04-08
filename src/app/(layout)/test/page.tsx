@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/Button';
 import ToggleButton from '@/components/ui/Toggle';
+import { InputTagAdd } from '@/components/ui/InputTagAdd';
 
 export default function TestPage() {
   return (
@@ -21,6 +22,7 @@ export default function TestPage() {
         버튼 테스트
       </Button>
       <ToggleButton />
+      <InputTagAdd onClick={() => console.log('추가 버튼 클릭됨')} />
     </div>
   );
 }

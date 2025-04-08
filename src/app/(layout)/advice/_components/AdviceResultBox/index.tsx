@@ -1,4 +1,7 @@
 import { Spacing } from '@/components/ui/Spacing';
+import IconShare from '@/assets/icons/icon-share.svg';
+import IconSave from '@/assets/icons/icon-save.svg';
+import IconCopy from '@/assets/icons/icon-copy.svg';
 
 interface AdviceResultProps {
   content: string;
@@ -18,7 +21,12 @@ export default function AdviceResult({ content }: AdviceResultProps) {
           </p>
         )}
       </div>
-      <div className="flex w-full items-end justify-end">{/* TODO : 아이콘 추가하기 */}</div>
+      <Spacing size={12} />
+      <div className="flex w-full items-end justify-end gap-6">
+        <IconShare />
+        <IconSave />
+        <IconCopy />
+      </div>
     </section>
   );
 }

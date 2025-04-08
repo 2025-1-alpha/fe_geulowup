@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import { InputTag } from '@/components/ui/InputTag';
+import ToggleButton from '@/components/ui/Toggle';
 
 export default function TestPage() {
   return (
@@ -20,16 +20,7 @@ export default function TestPage() {
       >
         버튼 테스트
       </Button>
-      {/* InputTag 테스트 */}
-      <div className="mt-10">
-        <InputTag
-          initialValue=""
-          tagErrCheck={(v) => ['bad', '이상한말', '에러'].includes(v)}
-          onConfirm={(v) => console.log('태그 확정:', v)}
-          onRemove={() => console.log('태그 삭제')}
-          maxLength={20}
-        />
-      </div>
+      <ToggleButton />
     </div>
   );
 }

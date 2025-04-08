@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { Spacing } from '@/components/ui/Spacing';
+import Toggle from '@/components/ui/Toggle';
 import AdviceInputArea from '../AdviceInputArea';
 import AdviceResult from '../AdviceResultBox';
 import RecommendTemplates from '../RecommendTemplates';
+import IconHelp from '@/assets/icons/icon-help.svg';
 
 export default function AdviceEditor() {
   const [draftContent, setDraftContent] = useState('');
@@ -25,6 +27,12 @@ export default function AdviceEditor() {
     <section className="flex">
       <section className="flex">
         <section className="flex flex-col">
+          <section className="button-md text-layout-grey7 flex items-center justify-end gap-2">
+            <IconHelp />
+            AI 첨삭 모드
+            <Toggle defaultState="on" />
+          </section>
+          <Spacing size={16} />
           <RecommendTemplates />
           <Spacing size={8} />
           <AdviceInputArea

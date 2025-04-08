@@ -22,6 +22,7 @@ export default function AdviceResult({ content }: AdviceResultProps) {
         )}
       </div>
       <Spacing size={12} />
+      {/* TODO : 디자인 맟줘서 수정 필요 */}
       <div className="flex w-full items-end justify-end gap-6">
         <IconShare />
         <IconSave />

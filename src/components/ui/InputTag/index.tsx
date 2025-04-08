@@ -97,7 +97,6 @@ export const InputTag = ({
       {!isConfirmed ? (
         <input
           value={value}
-          autoFocus
           placeholder={placeholder}
           onChange={(e) => {
             const newValue = e.target.value;

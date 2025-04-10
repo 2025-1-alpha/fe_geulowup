@@ -53,7 +53,7 @@ export default function RecommendTemplates() {
   };
 
   return (
-    <section className="relative z-10 flex">
+    <section className="z-10 flex">
       <aside className="bg-layout-grey2 border-layout-grey3 flex h-[156px] w-[132px] flex-col justify-between rounded-[5px] border p-3">
         <div className="flex flex-col gap-1">
           {asideList.map((item) => (
@@ -74,8 +74,9 @@ export default function RecommendTemplates() {
           더 찾아보기
         </Link>
       </aside>
-      <section className="z-20 ml-4 flex h-[156px] w-[648px] flex-1 overflow-x-scroll overflow-y-visible">
-        <section className="relative flex max-h-full gap-2">
+      {/* 스크롤바 커스텀 하기 */}
+      <section className="z-20 ml-4 flex w-[648px] flex-1 overflow-x-scroll scroll-smooth pb-10">
+        <section className="flex max-h-full gap-2">
           {templates.map((template) => (
             <Card
               key={template.templateId}

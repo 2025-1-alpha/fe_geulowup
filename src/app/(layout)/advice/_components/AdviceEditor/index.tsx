@@ -27,7 +27,7 @@ export default function AdviceEditor() {
     <section className="flex">
       <section className="flex">
         <section className="flex flex-col">
-          <section className="button-md text-layout-grey7 flex items-center justify-end gap-2">
+          <section className="button-md text-layout-grey7 relative flex items-center justify-end gap-2">
             <IconHelp />
             AI 첨삭 모드
             <Toggle defaultState="on" />

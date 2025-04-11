@@ -64,7 +64,7 @@ export default function AdviceInputArea({
   return (
     <form
       onSubmit={handleSubmit}
-      className="border-layout-grey3 absolute top-[440px] h-[520px] w-[788px] flex-col rounded-[7px] border p-3"
+      className="border-layout-grey3 absolute top-[436px] h-[520px] w-[788px] flex-col rounded-[7px] border p-3"
     >
       <div className="relative h-[336px] w-[760px]">
         <textarea

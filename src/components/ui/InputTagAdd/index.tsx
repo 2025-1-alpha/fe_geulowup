@@ -1,6 +1,3 @@
-'use client';
-
-import { clsx } from 'clsx';
 import IconAdd from '@/assets/icons/icon-add.svg';
 
 type InputTagAddProps = {
@@ -8,20 +5,13 @@ type InputTagAddProps = {
   className?: string;
 };
 
-export const InputTagAdd = ({ onClick, className }: InputTagAddProps) => {
+export const InputTagAdd = ({ onClick, className = '' }: InputTagAddProps) => {
   return (
     <button
       onClick={onClick}
-      className={clsx(
-        'h-[40px] w-[40px]',
-        'flex items-center justify-center',
-        'border-layout-grey6 rounded-[6px] border',
-        'hover:bg-layout-grey1 bg-white',
-        'transition-colors duration-150',
-        className,
-      )}
+      className={`border-layout-grey6 hover:bg-layout-grey1 flex h-[40px] w-[40px] items-center justify-center rounded-[6px] border bg-white transition-colors duration-150 ${className}`}
     >
-      <IconAdd className="h-[14px] w-[14px] overflow-visible" />
+      <IconAdd />
     </button>
   );
 };

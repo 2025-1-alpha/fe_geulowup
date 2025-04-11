@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/Button';
 import ToggleButton from '@/components/ui/Toggle';
+import { InputTagAdd } from '@/components/ui/InputTagAdd';
 import Card from '@/components/ui/Card';
 
 export default function TestPage() {
@@ -24,6 +25,7 @@ export default function TestPage() {
       </Button>
 
       <ToggleButton />
+      <InputTagAdd onClick={() => console.log('추가 버튼 클릭됨')} />
 
       <div className="mt-10 space-y-10">
         <div>

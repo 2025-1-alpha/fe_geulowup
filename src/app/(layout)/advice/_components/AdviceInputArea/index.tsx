@@ -79,9 +79,8 @@ export default function AdviceInputArea({
       <p className="button-md">키워드 입력</p>
       <Spacing size={8} />
 
-      {/* TODO : 스크롤바 커스텀 하기 */}
-      <div className="max-w-[760px] overflow-x-auto scroll-smooth">
-        <div className="flex w-max flex-nowrap gap-2">
+      <div className="custom-scrollbar max-w-[760px] rotate-x-180 scroll-smooth">
+        <div className="mb-3 flex w-max rotate-x-180 flex-nowrap gap-2">
           {tags.map((tag) => (
             <InputTag
               key={tag.id}

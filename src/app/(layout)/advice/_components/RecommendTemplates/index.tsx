@@ -74,9 +74,8 @@ export default function RecommendTemplates() {
           더 찾아보기
         </Link>
       </aside>
-      {/* 스크롤바 커스텀 하기 */}
-      <section className="custom-scrollbar-button z-20 ml-4 flex w-[648px] flex-1 rotate-x-180 overflow-x-scroll scroll-smooth">
-        <section className="flex max-h-full rotate-x-180 gap-2">
+      <section className="custom-scrollbar z-20 ml-4 flex w-[648px] flex-1 rotate-x-180 overflow-x-scroll scroll-smooth">
+        <section className="mb-2 flex max-h-full rotate-x-180 gap-2">
           {templates.map((template) => (
             <Card
               key={template.templateId}

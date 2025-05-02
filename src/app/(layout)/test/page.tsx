@@ -14,13 +14,7 @@ export default function TestPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-10 text-black">
-      <Button
-        variant="primary"
-        state=""
-        size="medium"
-        icon="dropdown"
-        onClick={() => alert('버튼 테스트')}
-      >
+      <Button variant="primary" size="medium" icon="dropdown" onClick={() => alert('버튼 테스트')}>
         버튼 테스트
       </Button>
 
@@ -33,7 +27,6 @@ export default function TestPage() {
           <div className="flex flex-wrap gap-4">
             <Card
               variant="large"
-              state="default"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -41,7 +34,6 @@ export default function TestPage() {
             />
             <Card
               variant="large"
-              state="hover"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -49,7 +41,6 @@ export default function TestPage() {
             />
             <Card
               variant="large"
-              state="click"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -63,7 +54,6 @@ export default function TestPage() {
           <div className="flex flex-wrap gap-4">
             <Card
               variant="medium"
-              state="default"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -71,7 +61,6 @@ export default function TestPage() {
             />
             <Card
               variant="medium"
-              state="hover"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -79,7 +68,6 @@ export default function TestPage() {
             />
             <Card
               variant="medium"
-              state="click"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -93,7 +81,6 @@ export default function TestPage() {
           <div className="flex flex-wrap gap-4">
             <Card
               variant="small"
-              state="default"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -101,7 +88,6 @@ export default function TestPage() {
             />
             <Card
               variant="small"
-              state="hover"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -109,7 +95,6 @@ export default function TestPage() {
             />
             <Card
               variant="small"
-              state="click"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -123,7 +108,6 @@ export default function TestPage() {
           <div className="flex flex-wrap gap-4">
             <Card
               variant="promote"
-              state="default"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -131,7 +115,6 @@ export default function TestPage() {
             />
             <Card
               variant="promote"
-              state="hover"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}
@@ -139,7 +122,6 @@ export default function TestPage() {
             />
             <Card
               variant="promote"
-              state="click"
               title={dummyTitle}
               description={dummyDescription}
               tags={dummyTags}

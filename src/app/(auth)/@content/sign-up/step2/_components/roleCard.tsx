@@ -17,7 +17,7 @@ export function RoleCard({
   label: string;
 }) {
   return (
-    // onClick이랑 클릭 상태 변화 주기
+    // TODO : onClick이랑 클릭 상태 변화 주기
     <button
       className={clsx(
         'flex h-[140px] w-[252px] items-center justify-center rounded-xl border p-6',

@@ -31,10 +31,12 @@
   --color-point-pink1: #ffd6d9;
   --color-point-pink2: #fda8a1;
   --color-point-pink3: #ff6771;
+  --color-point-pink4: #e5515b;
 
   --color-correction-green1: #afe7c9;
   --color-correction-green2: #3bc87d;
   --color-correction-green3: #28b856;
+  --color-correction-green4: #176039;
 }
 
 @layer utilities {

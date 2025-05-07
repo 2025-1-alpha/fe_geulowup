@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useSignupStore } from '@/stores/signUpStore';
 import { Spacing } from '@/components/ui/Spacing';
 import { Button } from '@/components/ui/Button';
+import { StepBar } from '@/components/ui/StepBar';
 import { RoleCard } from './_components/roleCard';
 
 const roleList = [
@@ -56,7 +57,8 @@ export default function Step2() {
         </Button>
       </div>
       <Spacing size={180} />
-      {/* TODO : step bar 생성하기 */}
+
+      <StepBar currentStep={2} maxStep={4} />
     </section>
   );
 }

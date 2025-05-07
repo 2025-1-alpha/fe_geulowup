@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSignupStore } from '@/stores/signUpStore';
-import { useState } from 'react';
 import { Spacing } from '@/components/ui/Spacing';
 import { Button } from '@/components/ui/Button';
+import { StepBar } from '@/components/ui/StepBar';
 
 export default function Step1() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function Step1() {
         </Button>
       </div>
       <Spacing size={260} />
-      {/* TODO : step bar 생성하기 */}
+      <StepBar maxStep={4} currentStep={1} />
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Spacing } from '@/components/ui/Spacing';
 import { Button } from '@/components/ui/Button';
+import { StepBar } from '@/components/ui/StepBar';
 import { useSignupStore } from '@/stores/signUpStore';
 import IconArrowDown from '@/assets/icons/icon-arrow-down.svg';
 import IconArrowBack from '@/assets/icons/icon-arrow-back.svg';
@@ -118,7 +119,7 @@ export default function Step1() {
         </Button>
       </div>
       <Spacing size={120} />
-      {/* TODO : step bar 생성하기 */}
+      <StepBar currentStep={3} maxStep={4} />
     </section>
   );
 }

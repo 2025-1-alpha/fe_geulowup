@@ -12,7 +12,7 @@ export default function Step1() {
   const { setUsername } = useSignupStore();
   const [input, setInput] = useState('');
 
-  const handleNext = () => {
+  const handleNextBtn = () => {
     setUsername(input);
     router.push('/sign-up/step2');
   };
@@ -33,9 +33,15 @@ export default function Step1() {
       />
       <Spacing size={80} />
       <div className="flex w-full justify-end">
-        <Button size="small" onClick={handleNext}>
-          다음으로
-        </Button>
+        {input ? (
+          <Button size="small" onClick={handleNextBtn}>
+            다음으로
+          </Button>
+        ) : (
+          <Button size="small" variant="disabled">
+            다음으로
+          </Button>
+        )}
       </div>
       <Spacing size={260} />
       <StepBar maxStep={4} currentStep={1} />

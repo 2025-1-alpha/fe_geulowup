@@ -135,6 +135,16 @@
     line-height: 18px;
     letter-spacing: 0.01em; /* 1% */
   }
+
+  /* 스크롤바 숨김 유틸리티 클래스 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 .rotate-x-180 {
@@ -158,4 +168,14 @@ body {
   @apply antialiased;
   background: var(--background);
   color: var(--foreground);
+}
+
+/* 스크롤바 숨기기 스타일 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Spacing } from '@/components/ui/Spacing';
 import { Button } from '@/components/ui/Button';
+import { useSignupStore } from '@/stores/signUpStore';
 import IconArrowDown from '@/assets/icons/icon-arrow-down.svg';
 import IconArrowBack from '@/assets/icons/icon-arrow-back.svg';
 
@@ -31,11 +33,23 @@ const categoryPages = [
 ];
 
 export default function Step1() {
+  const router = useRouter();
+  const { preferences, setPreferences, clearPreferences } = useSignupStore();
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => setCurrentIndex((prev) => Math.max(prev - 1, 0));
   const handleNext = () => setCurrentIndex((prev) => Math.min(prev + 1, categoryPages.length - 1));
   const handleIndicatorClick = (index: number) => setCurrentIndex(index);
+
+  const handleSkipBtn = () => {
+    clearPreferences();
+    router.push('/sign-up-complete');
+  };
+
+  const handleNextBtn = () => {
+    router.push('/sign-up-complete');
+  };
 
   return (
     <section>
@@ -51,16 +65,23 @@ export default function Step1() {
         >
           {categoryPages.map((categories, index) => (
             <div key={index} className="grid w-full shrink-0 grid-cols-2 gap-2 px-2">
-              {categories.map(({ label, icon: Icon }) => (
-                // onCilck 상태 추가하기
-                <button
-                  key={label}
-                  className="title-sm border-primary-navy4 text-primary-navy4 bg-primary-navy1 flex h-[68px] items-center justify-center rounded-md border py-3 font-medium"
-                >
-                  <Icon className="mr-2 h-5 w-5" />
-                  {label}
-                </button>
-              ))}
+              {categories.map(({ label, icon: Icon }) => {
+                const isActive = preferences.includes(label);
+                return (
+                  <button
+                    key={label}
+                    onClick={() => setPreferences(label)}
+                    className={`title-sm border-primary-navy4 flex h-[68px] items-center justify-center rounded-md border py-3 font-medium transition-colors ${
+                      isActive
+                        ? 'bg-primary-navy4 text-layout-grey1'
+                        : 'bg-primary-navy1 text-primary-navy4 hover:bg-primary-navy2'
+                    } `}
+                  >
+                    <Icon className="mr-2 h-5 w-5" />
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -69,7 +90,7 @@ export default function Step1() {
       {/* 인디케이터 */}
       <div className="mt-1 flex items-center justify-between">
         <button onClick={() => handlePrev()}>
-          <IconArrowBack className="scale-75" />
+          <IconArrowBack className="ml-1 scale-75" />
         </button>
         <div className="flex items-center justify-center space-x-2">
           {categoryPages.map((_, index) => (
@@ -84,15 +105,17 @@ export default function Step1() {
         </div>
 
         <button onClick={() => handleNext()}>
-          <IconArrowBack className="scale-75 rotate-180" />
+          <IconArrowBack className="mr-1 scale-75 rotate-180" />
         </button>
       </div>
       <Spacing size={40} />
       <div className="flex w-full justify-between">
-        <Button size="small" state="line">
+        <Button size="small" state="line" onClick={handleSkipBtn}>
           건너뛰기
         </Button>
-        <Button size="small">다음으로</Button>
+        <Button size="small" onClick={handleNextBtn}>
+          다음으로
+        </Button>
       </div>
       <Spacing size={120} />
       {/* TODO : step bar 생성하기 */}

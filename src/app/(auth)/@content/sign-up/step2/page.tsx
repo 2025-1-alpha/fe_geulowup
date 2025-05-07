@@ -1,12 +1,17 @@
+'use client';
+
+import { useSignupStore } from '@/stores/signUpStore';
 import { Spacing } from '@/components/ui/Spacing';
 import { Button } from '@/components/ui/Button';
 import { RoleCard } from './_components/roleCard';
 
 export default function Step2() {
+  const { username } = useSignupStore();
+
   return (
     <section>
       <div className="title-lg flex whitespace-pre-line">
-        {`님, 반갑습니다!
+        {`${username}님, 반갑습니다!
 어떤 일을 하고 계신가요?`}
       </div>
       <Spacing size={64} />
@@ -24,7 +29,7 @@ export default function Step2() {
         </Button>
         <Button size="small">다음으로</Button>
       </div>
-      <Spacing size={260} />
+      <Spacing size={180} />
       {/* TODO : step bar 생성하기 */}
     </section>
   );

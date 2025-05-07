@@ -13,7 +13,7 @@ export default function Step1() {
 
   const handleNext = () => {
     setUsername(input);
-    router.push('/signup/step2');
+    router.push('/sign-up/step2');
   };
 
   return (
@@ -24,10 +24,10 @@ export default function Step1() {
 입력해 주세요.`}
       </div>
       <Spacing size={148} />
-      {/* TODO : input 디자인 수정하기 */}
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        className="border-layout-grey5 body-lg w-100 rounded-md border px-3 py-2"
         placeholder="이름을 입력하세요"
       />
       <Spacing size={80} />

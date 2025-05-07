@@ -8,7 +8,7 @@ import { useSignupStore } from '@/stores/signUpStore';
 import IconArrowDown from '@/assets/icons/icon-arrow-down.svg';
 import IconArrowBack from '@/assets/icons/icon-arrow-back.svg';
 
-const categoryPages = [
+const category = [
   [
     // TODO : svg로 아이콘 받으면 다시 넣기
     { label: '인사말', icon: IconArrowDown },
@@ -22,7 +22,7 @@ const categoryPages = [
   ],
   [
     { label: '후기작성', icon: IconArrowDown },
-    { label: '자기소개', icon: IconArrowDown },
+    { label: '소셜글', icon: IconArrowDown },
     { label: '고객상담', icon: IconArrowDown },
     { label: '교수문의', icon: IconArrowDown },
     { label: '조별활동', icon: IconArrowDown },
@@ -39,7 +39,7 @@ export default function Step1() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => setCurrentIndex((prev) => Math.max(prev - 1, 0));
-  const handleNext = () => setCurrentIndex((prev) => Math.min(prev + 1, categoryPages.length - 1));
+  const handleNext = () => setCurrentIndex((prev) => Math.min(prev + 1, category.length - 1));
   const handleIndicatorClick = (index: number) => setCurrentIndex(index);
 
   const handleSkipBtn = () => {
@@ -63,7 +63,7 @@ export default function Step1() {
           className="flex transition-transform duration-300"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {categoryPages.map((categories, index) => (
+          {category.map((categories, index) => (
             <div key={index} className="grid w-full shrink-0 grid-cols-2 gap-2 px-2">
               {categories.map(({ label, icon: Icon }) => {
                 const isActive = preferences.includes(label);
@@ -93,7 +93,7 @@ export default function Step1() {
           <IconArrowBack className="ml-1 scale-75" />
         </button>
         <div className="flex items-center justify-center space-x-2">
-          {categoryPages.map((_, index) => (
+          {category.map((_, index) => (
             <button
               key={index}
               onClick={() => handleIndicatorClick(index)}

@@ -9,6 +9,7 @@ export default function LoginPage() {
       <div className="body-lg flex">글로우업 회원이 되어 더 많은 기능을 누려보세요!</div>
       <Spacing size={120} />
       <section className="flex flex-col gap-3">
+        {/* TODO : 로그인 버튼 디자인 수정하기 */}
         <button className="h-[45px] w-[300px]">카카오</button>
         <button className="h-[45px] w-[300px]">구글</button>
       </section>

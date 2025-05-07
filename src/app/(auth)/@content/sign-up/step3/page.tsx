@@ -65,7 +65,7 @@ export default function Step1() {
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {category.map((categories, index) => (
-            <div key={index} className="grid w-full shrink-0 grid-cols-2 gap-2 px-2">
+            <div key={index} className="grid w-full shrink-0 grid-cols-2 gap-x-2 gap-y-3">
               {categories.map(({ label, icon: Icon }) => {
                 const isActive = preferences.includes(label);
                 return (
@@ -114,9 +114,15 @@ export default function Step1() {
         <Button size="small" state="line" onClick={handleSkipBtn}>
           건너뛰기
         </Button>
-        <Button size="small" onClick={handleNextBtn}>
-          다음으로
-        </Button>
+        {preferences.length >= 3 ? (
+          <Button size="small" onClick={handleNextBtn}>
+            다음으로
+          </Button>
+        ) : (
+          <Button size="small" variant="disabled">
+            다음으로
+          </Button>
+        )}
       </div>
       <Spacing size={120} />
       <StepBar currentStep={3} maxStep={4} />

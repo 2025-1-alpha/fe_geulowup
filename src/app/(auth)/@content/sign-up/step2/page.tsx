@@ -52,9 +52,15 @@ export default function Step2() {
         <Button size="small" state="line" onClick={handleSkipBtn}>
           건너뛰기
         </Button>
-        <Button size="small" onClick={handleNextBtn}>
-          다음으로
-        </Button>
+        {role ? (
+          <Button size="small" onClick={handleNextBtn}>
+            다음으로
+          </Button>
+        ) : (
+          <Button size="small" variant="disabled">
+            다음으로
+          </Button>
+        )}
       </div>
       <Spacing size={180} />
 

@@ -1,5 +1,9 @@
 import { Spacing } from '@/components/ui/Spacing';
 import Logo from '@/assets/logo.svg';
+import IconKaKao from '@/assets/icons/icon-kakao.svg';
+import KakaoText from '@/assets/icons/kakao-text.svg';
+import IconGoogle from '@/assets/icons/icon-google.svg';
+import GoogleText from '@/assets/icons/google-text.svg';
 
 export default function LoginPage() {
   return (
@@ -9,9 +13,15 @@ export default function LoginPage() {
       <div className="body-lg flex">글로우업 회원이 되어 더 많은 기능을 누려보세요!</div>
       <Spacing size={120} />
       <section className="flex flex-col gap-3">
-        {/* TODO : 로그인 버튼 디자인 수정하기 */}
-        <button className="h-[45px] w-[300px]">카카오</button>
-        <button className="h-[45px] w-[300px]">구글</button>
+        {/* TODO : api 연결할 때 onClick 연결 필요 */}
+        <button className="flex h-[45px] w-[300px] items-center justify-center rounded-md bg-[#fee500] p-[14px]">
+          <IconKaKao />
+          <KakaoText />
+        </button>
+        <button className="border-layout-grey4 flex h-[45px] w-[300px] items-center justify-center rounded-md border p-[14px]">
+          <IconGoogle />
+          <GoogleText />
+        </button>
       </section>
     </div>
   );

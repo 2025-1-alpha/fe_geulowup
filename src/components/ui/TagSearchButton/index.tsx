@@ -59,6 +59,15 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
   const iconCode = tagIconMap[tag];
   const iconSrc = `/assets/icons/${iconCode}_${selected ? 'clicked' : 'default'}.png`;
 
+  console.log('TagSearchButton 렌더링:', tag, '선택됨:', selected, '아이콘 경로:', iconSrc);
+
+  const handleClick = () => {
+    console.log('TagSearchButton 클릭:', tag, '현재 선택 상태:', selected);
+    if (onClick) {
+      onClick();
+    }
+  };
+
   const getBackgroundClass = () => {
     if (selected) return 'bg-primary-navy4 border-primary-navy4 text-white';
     if (isHovered) return 'bg-layout-grey2';
@@ -68,7 +77,7 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={clsx(

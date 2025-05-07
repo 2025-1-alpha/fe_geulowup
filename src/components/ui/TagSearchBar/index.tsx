@@ -5,7 +5,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import Arrow from '@/components/ui/Arrow';
 import TagSearchButton from '@/components/ui/TagSearchButton';
 import SearchIcon from '@/assets/icons/icon-tag-searchbar-popup.svg';
-import Spacing from '@/components/ui/Spacing';
 
 type TagType =
   | '인사말'
@@ -97,6 +96,14 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
 
   const sizeClass = size === 'big' ? 'w-[1320px]' : 'w-[984px]';
 
+  // 태그 선택 핸들러
+  const handleTagClick = (tag: TagType) => {
+    console.log('TagSearchBar - 태그 클릭:', tag, '현재 선택된 태그:', selectedTag);
+    if (onTagSelect) {
+      onTagSelect(tag);
+    }
+  };
+
   return (
     <div
       className={clsx(
@@ -106,7 +113,7 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
         className,
       )}
     >
-      <div className="ml-[22px] flex items-center">
+      <div className="ml-[22px] flex flex-shrink-0 items-center">
         <Arrow
           direction="left"
           colorType="navy"
@@ -115,24 +122,24 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
         />
       </div>
 
-      <Spacing size={4} />
-
-      <div
-        ref={containerRef}
-        onScroll={handleScrollUpdate}
-        className="scrollbar-hide flex flex-1 gap-[4px] overflow-x-auto px-4 py-1"
-      >
-        {tags.map((tag) => (
-          <TagSearchButton
-            key={tag}
-            tag={tag}
-            selected={tag === selectedTag}
-            onClick={() => onTagSelect?.(tag)}
-          />
-        ))}
+      <div className="ml-1 flex-grow overflow-hidden">
+        <div
+          ref={containerRef}
+          onScroll={handleScrollUpdate}
+          className="scrollbar-hide flex w-full gap-[4px] overflow-x-auto px-4 py-1"
+        >
+          {tags.map((tag) => (
+            <TagSearchButton
+              key={tag}
+              tag={tag}
+              selected={tag === selectedTag}
+              onClick={() => handleTagClick(tag)}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="ml-auto flex items-center">
+      <div className="ml-auto flex flex-shrink-0 items-center">
         <Arrow
           direction="right"
           colorType="navy"
@@ -140,17 +147,17 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
           onClick={() => handleScroll('right')}
         />
 
-        <Spacing size={12} />
-
-        <button
-          type="button"
-          onClick={onSearchClick}
-          className="bg-primary-navy4 flex h-[44px] w-[44px] items-center justify-center rounded-tr-md rounded-br-md"
-        >
-          <div className="p-2">
-            <SearchIcon />
-          </div>
-        </button>
+        <div className="ml-3">
+          <button
+            type="button"
+            onClick={onSearchClick}
+            className="bg-primary-navy4 flex h-[44px] w-[44px] items-center justify-center rounded-tr-md rounded-br-md"
+          >
+            <div className="p-2">
+              <SearchIcon />
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

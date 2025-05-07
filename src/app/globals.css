@@ -160,6 +160,10 @@
   }
 }
 
+.rotate-x-180 {
+  transform: rotateX(180deg);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

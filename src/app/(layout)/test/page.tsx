@@ -55,7 +55,9 @@ export default function TestPage() {
   ];
 
   const handleTagSelect = (tag: TagType) => {
+    console.log('TestPage - 태그 선택:', tag, '이전 선택된 태그:', selectedTag);
     setSelectedTag(tag === selectedTag ? undefined : tag);
+    console.log('TestPage - 태그 선택 후:', tag === selectedTag ? undefined : tag);
   };
 
   const handleSearchClick = () => {

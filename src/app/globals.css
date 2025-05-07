@@ -29,12 +29,27 @@
   --color-layout-grey7: #171717;
 
   --color-point-pink1: #ffd6d9;
-  --color-point-pink2: #fda8a1;
-  --color-point-pink3: #ff6771;
+  --color-point-pink2: #ffa3a9;
+  --color-point-pink3: #ff727b;
+  --color-point-mint1: #cef9e6;
+  --color-point-mint2: #a9f5da;
+  --color-point-mint3: #62edd1;
+  --color-point-yellow1: #fff1bc;
+  --color-point-yellow2: #ffde6a;
+  --color-point-yellow3: #ffcb17;
+  --color-point-blue1: #bedbff;
+  --color-point-blue2: #7fb7ff;
+  --color-point-blue3: #418dfe;
 
   --color-correction-green1: #afe7c9;
-  --color-correction-green2: #3bc87d;
-  --color-correction-green3: #28b856;
+  --color-correction-green2: #67d89e;
+  --color-correction-green3: #27c168;
+  --color-correction-orange1: #ffdec9;
+  --color-correction-orange2: #ffbe92;
+  --color-correction-orange3: #ff9c5b;
+  --color-correction-purple1: #d7cefd;
+  --color-correction-purple2: #9889f9;
+  --color-correction-purple3: #6451f0;
 }
 
 @layer utilities {
@@ -133,6 +148,16 @@
     line-height: 18px;
     letter-spacing: 0.01em; /* 1% */
   }
+
+  /* 스크롤바 숨김 유틸리티 클래스 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 :root {
@@ -152,4 +177,14 @@ body {
   @apply antialiased;
   background: var(--background);
   color: var(--foreground);
+}
+
+/* 스크롤바 숨기기 스타일 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

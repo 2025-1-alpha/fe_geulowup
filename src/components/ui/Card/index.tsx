@@ -13,9 +13,19 @@ interface CardProps {
   description: string;
   tags: string[];
   likes: number;
+  onClick?: () => void;
+  className?: string;
 }
 
-const Card: React.FC<CardProps> = ({ variant, title, description, tags, likes }) => {
+const Card: React.FC<CardProps> = ({
+  variant,
+  title,
+  description,
+  tags,
+  likes,
+  onClick,
+  className,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -68,16 +78,24 @@ const Card: React.FC<CardProps> = ({ variant, title, description, tags, likes })
       : 'overflow-hidden text-ellipsis line-clamp-4',
   );
 
+  const handleClick = () => {
+    setIsClicked(true);
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => setIsClicked(true)}
+      onClick={handleClick}
       className={clsx(
         'z-10 flex flex-col justify-between rounded-[8px] p-[16px] transition-all',
         sizeStyle[variant],
         backgroundStyle[variant][state],
         variant === 'small' && state === 'hover' ? 'z-30' : 'z-10',
+        className,
       )}
     >
       <div className="flex h-full flex-col justify-between">

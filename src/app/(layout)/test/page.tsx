@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/Button';
 import ToggleButton from '@/components/ui/Toggle';
 import { InputTagAdd } from '@/components/ui/InputTagAdd';
 import Card from '@/components/ui/Card';
+import { useTemplateDetail } from '@/hooks/template';
+import { useEffect } from 'react';
 
 export default function TestPage() {
   const dummyTags = ['태그텍스트', '태그텍스트'];
@@ -11,6 +13,11 @@ export default function TestPage() {
   const dummyDescription =
     '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.';
   const dummyLikes = 100;
+  const { data } = useTemplateDetail(1001);
+
+  useEffect(() => {
+    console.log(data);
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-10 text-black">
@@ -20,7 +27,6 @@ export default function TestPage() {
 
       <ToggleButton />
       <InputTagAdd onClick={() => console.log('추가 버튼 클릭됨')} />
-
       <div className="mt-10 space-y-10">
         <div>
           <h2 className="mb-2 text-lg font-bold text-white">Variant: large</h2>

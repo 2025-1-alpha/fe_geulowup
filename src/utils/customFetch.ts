@@ -1,5 +1,3 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 interface CustomFetchOptions extends RequestInit {
   skipAuth?: boolean;
 }
@@ -8,9 +6,18 @@ export const customFetch = async <T>(
   endpoint: string,
   options: CustomFetchOptions = {},
 ): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
+  const isAbsolute = /^https?:\/\//.test(endpoint);
+  const url = isAbsolute ? endpoint : `/api${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+
   const headers = new Headers(options.headers || {});
   headers.set('Content-Type', 'application/json');
+
+  if (typeof window !== 'undefined' && !options.skipAuth) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+  }
 
   const res = await fetch(url, {
     ...options,

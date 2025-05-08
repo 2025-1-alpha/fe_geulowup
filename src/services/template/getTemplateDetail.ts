@@ -17,8 +17,7 @@ export interface TemplateDetail {
 }
 
 export const getTemplateDetail = async (templateId: number) => {
-  const query = new URLSearchParams({ templateId: String(templateId) }).toString();
-  return customFetch<TemplateDetail>(`/templates/detail?${query}`, {
-    skipAuth: true,
+  return customFetch<TemplateDetail>(`/templates/${templateId}`, {
+    // skipAuth: true,
   });
 };

@@ -128,6 +128,24 @@ const Card: React.FC<CardProps> = ({
     }
   }, [title, variant]);
 
+  // 모달 닫힘 이벤트 감지
+  useEffect(() => {
+    // 모달 닫힘 이벤트 리스너 설정
+    const handleModalClose = () => {
+      const cardId = `${title}-${variant}`;
+      localStorage.removeItem(`card-clicked-${cardId}`);
+      setIsClicked(false);
+    };
+
+    // 사용자 정의 이벤트 생성 및 구독
+    window.addEventListener('modal-closed', handleModalClose);
+
+    // cleanup
+    return () => {
+      window.removeEventListener('modal-closed', handleModalClose);
+    };
+  }, [title, variant]);
+
   const handleClick = () => {
     if (!isClicked) {
       setIsClicked(true);

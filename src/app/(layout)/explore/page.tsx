@@ -464,6 +464,8 @@ export default function ExplorePage() {
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setSelectedTemplate(null);
+    // 모달 닫힘 이벤트 발생 - 모든 카드의 클릭 상태 초기화
+    window.dispatchEvent(new Event('modal-closed'));
   };
 
   // 화면에 표시할 추천 템플릿 (3개씩)

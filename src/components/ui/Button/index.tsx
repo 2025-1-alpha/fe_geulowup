@@ -25,24 +25,25 @@ export const Button = ({
   const variantStyle = {
     primary: {
       default: 'bg-primary-navy4 text-layout-white',
-      hover: 'bg-primary-navy5 text-layout-white',
+      hover: 'hover:bg-primary-navy5 hover:text-layout-white',
       line: 'border border-primary-navy4 text-primary-navy4 bg-layout-white',
-      line_hover: 'border border-primary-navy4 text-primary-navy4 bg-layout-grey1',
+      line_hover: 'hover:bg-layout-grey1 hover:border-primary-navy4 hover:text-primary-navy4',
     },
     secondary: {
       default: 'bg-secondary-purple5 text-layout-white',
-      hover: 'bg-secondary-purple6 text-layout-white',
+      hover: 'hover:bg-secondary-purple6 hover:text-layout-white',
       line: 'border border-secondary-purple6 text-secondary-purple6 bg-layout-white',
-      line_hover: 'border border-secondary-purple6 text-secondary-purple6 bg-layout-grey1',
+      line_hover:
+        'hover:bg-layout-grey1 hover:border-secondary-purple6 hover:text-secondary-purple6',
     },
     grey: {
       default: 'bg-layout-grey4 text-layout-white',
-      hover: 'bg-layout-grey5 text-layout-white',
+      hover: 'hover:bg-layout-grey5 hover:text-layout-white',
       line: 'border border-layout-grey6 text-layout-grey6 bg-layout-white',
-      line_hover: 'border border-layout-grey6 text-layout-grey6 bg-layout-grey1',
+      line_hover: 'hover:bg-layout-grey1 hover:border-layout-grey6 hover:text-layout-grey6',
     },
     disabled: {
-      default: 'bg-layout-grey3 text-layout-grey2',
+      default: 'bg-layout-grey3 text-layout-grey2 cursor-not-allowed',
     },
   };
 
@@ -56,16 +57,26 @@ export const Button = ({
     xsmall: 'h-8 w-[88px] button-sm rounded-[5px]',
   };
 
-  const variantObj = variantStyle[variant];
-
-  const selectedVariant =
+  const baseStateClass =
     variant === 'disabled'
-      ? variantObj.default
-      : (variantObj as Record<'default' | 'hover' | 'line' | 'line_hover', string>)[state] ||
-        variantObj.default;
+      ? variantStyle.disabled.default
+      : state === 'line'
+        ? variantStyle[variant].line
+        : variantStyle[variant].default;
+
+  const hoverClass =
+    variant === 'disabled'
+      ? ''
+      : state === 'line'
+        ? variantStyle[variant].line_hover
+        : variantStyle[variant].hover;
 
   return (
-    <button className={clsx(baseStyle, selectedVariant, sizeStyle[size], className)} {...props}>
+    <button
+      disabled={variant === 'disabled'}
+      className={clsx(baseStyle, baseStateClass, hoverClass, sizeStyle[size], className)}
+      {...props}
+    >
       {size === 'medium' && icon === 'add' && <IconAdd className="mr-0.5" />}
       {children}
       {size === 'medium' && icon === 'dropdown' && <IconArrowDown className="ml-1" />}

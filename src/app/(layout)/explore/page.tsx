@@ -4,39 +4,12 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { Spacing } from '@/components/ui/Spacing';
 import TagSearchBar from '@/components/ui/TagSearchBar';
 import Card from '@/components/ui/Card';
+import CardTag from '@/components/ui/CardTag';
 import Arrow from '@/components/ui/Arrow';
 import WandIcon from '@/assets/icons/icon-lucide-wand.svg';
 import MagnifyIcon from '@/assets/icons/icon-magnify.svg';
 import ArrowUpDownIcon from '@/assets/icons/icon-arrow-up-down.svg';
-import TempTemplateModal from '@/components/ui/TemplateModal';
-
-// TagSearchBar에서 사용하는 TagType 정의
-type TagType =
-  | '인사말'
-  | '자기소개'
-  | '사과문'
-  | '부탁글'
-  | '감사글'
-  | '제안글'
-  | '공지글'
-  | '소개글'
-  | '후기작성'
-  | '소셜글'
-  | '고객응대'
-  | '교수문의'
-  | '조별활동'
-  | '공모전'
-  | '지원서'
-  | '기타';
-
-// 템플릿 데이터 타입 정의
-type TemplateType = {
-  title: string;
-  description: string;
-  tags: string[];
-  likes: number;
-  content?: string; // 템플릿 내용 (필요시 추가)
-};
+import { TagType, TemplateType } from '@/types';
 
 // 전체 샘플 데이터 64개 생성을 위한 기본 데이터
 const baseSampleData = [
@@ -218,24 +191,13 @@ const generateCardData = (count: number) => {
 const allCardItems = generateCardData(64);
 
 export default function ExplorePage() {
-  // 태그 선택 상태 관리
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
-
-  // 추천 템플릿 상태 관리
   const [currentRecommendIndex, setCurrentRecommendIndex] = useState(0);
-
-  // 현재 로드된 카드 데이터 관리
   const [visibleCardCount, setVisibleCardCount] = useState(16);
   const [isLoading, setIsLoading] = useState(false);
-
-  // 정렬 타입 상태
   const [sortType, setSortType] = useState<'popular' | 'recent'>('popular');
-
-  // 모달 관련 상태 관리
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType | null>(null);
 
-  // 태그 옵션 목록
   const tagOptions: TagType[] = [
     '인사말',
     '자기소개',
@@ -433,24 +395,19 @@ export default function ExplorePage() {
     },
   ];
 
-  // 태그 필터링 로직
+  // 필터링 로직
   const filteredCardItems = useMemo(() => {
     if (!selectedTag) {
-      // 태그가 선택되지 않았으면 모든 아이템 반환
       return allCardItems;
     }
-
-    // 선택된 태그를 포함하는 아이템만 필터링
     return allCardItems.filter((item) => item.tags.includes(selectedTag));
-  }, [allCardItems, selectedTag]);
+  }, [selectedTag]);
 
   // 정렬 로직
   const sortedCardItems = useMemo(() => {
     if (sortType === 'popular') {
-      // 인기순 정렬 (좋아요 내림차순)
       return [...filteredCardItems].sort((a, b) => b.likes - a.likes);
     } else {
-      // 최신순 정렬 (ID 내림차순 - 여기서는 단순히 배열 역순)
       return [...filteredCardItems].reverse();
     }
   }, [filteredCardItems, sortType]);
@@ -462,10 +419,7 @@ export default function ExplorePage() {
   const handleLoadMore = useCallback(() => {
     if (visibleCardCount >= sortedCardItems.length) return;
 
-    // 로딩 상태 표시
     setIsLoading(true);
-
-    // API 호출을 시뮬레이션하기 위한 타임아웃
     setTimeout(() => {
       setVisibleCardCount((prev) => Math.min(prev + 16, sortedCardItems.length));
       setIsLoading(false);
@@ -476,7 +430,6 @@ export default function ExplorePage() {
   const handleTagSelect = (tag: TagType) => {
     console.log('태그 선택:', tag, '이전 선택된 태그:', selectedTag);
     setSelectedTag(tag === selectedTag ? undefined : tag);
-    // 태그가 변경되면 카드 카운트를 초기화
     setVisibleCardCount(16);
   };
 
@@ -505,13 +458,11 @@ export default function ExplorePage() {
   // 모달 열기 핸들러
   const handleOpenModal = (template: TemplateType) => {
     setSelectedTemplate(template);
-    setIsModalOpen(true);
     console.log('모달 열림, 선택된 템플릿:', template.title);
   };
 
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
-    setIsModalOpen(false);
     setSelectedTemplate(null);
   };
 
@@ -524,16 +475,10 @@ export default function ExplorePage() {
   // 템플릿 사용 핸들러
   const handleUseTemplate = () => {
     if (selectedTemplate?.content) {
-      // 클립보드에 템플릿 내용 복사
       navigator.clipboard
         .writeText(selectedTemplate.content)
         .then(() => {
-          // 복사 성공 시 알림
           alert('템플릿 내용이 클립보드에 복사되었습니다.');
-
-          // 편집 페이지로 이동 로직을 여기에 추가할 수 있습니다.
-          // 예시: router.push('/edit?template=' + encodeURIComponent(selectedTemplate.title));
-
           console.log('템플릿 사용하기:', selectedTemplate.title);
           handleCloseModal();
         })
@@ -547,168 +492,206 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="mt-[100px] mb-[140px]">
-      <section className="flex flex-col items-center">
-        <section className="mx-[96px] w-full max-w-[1320px]">
-          {/* 찾아보기 제목 */}
-          <div className="h-[44px] w-[126px]">
-            <p className="title-lg text-layout-grey7">찾아보기</p>
-          </div>
-          <Spacing size={40} />
-
-          {/* 1320*1692 크기의 블록 */}
-          <div className="w-[1320px]">
-            {/* 섹션 1: 추천 템플릿 사용하기 */}
-            <div className="border-secondary-purple2 relative rounded-[7px] border p-6">
-              <div className="flex items-center">
-                {/* 추가된 WandIcon 사용 */}
-                <WandIcon className="mr-2" />
-                <h2 className="text-layout-grey7 title-md">추천 템플릿 사용하기</h2>
-              </div>
-              <Spacing size={8} />
-              <p className="body-md text-layout-grey7">
-                AI가 [username]님을 위해 추천한 맞춤형 템플릿을 사용해 보세요!
-              </p>
-              <Spacing size={40} />
-
-              {/* 추천 템플릿 카드 슬라이더 - 화살표 위치 균형 조정 */}
-              <div className="flex w-full items-center justify-center px-8">
-                {/* 왼쪽 화살표 */}
-                <div className="mr-4 flex h-6 w-6 items-center justify-center">
-                  <Arrow
-                    direction="left"
-                    colorType="navy"
-                    onClick={handlePrevRecommend}
-                    disabled={currentRecommendIndex === 0}
-                    className="h-6 w-6"
-                  />
-                </div>
-
-                {/* 카드 컨테이너 - 동일한 너비 확보 */}
-                <div className="flex flex-1 justify-center gap-[12px]">
-                  {visibleRecommendTemplates.map((template, index) => (
-                    <Card
-                      key={index}
-                      variant="promote"
-                      title={template.title}
-                      description={template.description}
-                      tags={template.tags}
-                      likes={template.likes}
-                      onClick={() => handleOpenModal(template)}
-                      className="cursor-pointer transition-shadow hover:shadow-md"
-                    />
-                  ))}
-                </div>
-
-                {/* 오른쪽 화살표 */}
-                <div className="ml-4 flex h-6 w-6 items-center justify-center">
-                  <Arrow
-                    direction="right"
-                    colorType="navy"
-                    onClick={handleNextRecommend}
-                    disabled={currentRecommendIndex >= recommendTemplates.length - 3}
-                    className="h-6 w-6"
-                  />
-                </div>
-              </div>
-              <Spacing size={20} />
+    <>
+      <div className="mt-[100px] mb-[140px]">
+        <section className="flex flex-col items-center">
+          <section className="mx-[96px] w-full max-w-[1320px]">
+            <div className="h-[44px] w-[126px]">
+              <p className="title-lg text-layout-grey7">찾아보기</p>
             </div>
+            <Spacing size={40} />
 
-            <Spacing size={80} />
-
-            {/* 섹션 2: 템플릿 찾아보기 (태그 검색) */}
-            <div>
-              <div className="flex items-center">
-                <MagnifyIcon className="mr-2 h-[27px] w-[27px]" />
-                <h2 className="text-layout-grey7 title-md h-[30px] w-[159px]">템플릿 찾아보기</h2>
-              </div>
-              <Spacing size={8} />
-              <p className="body-md text-layout-grey7 h-[25px] w-[850px]">
-                키워드 태그를 통해 다양한 상황에 맞는 템플릿을 찾아 보세요!
-              </p>
-              <Spacing size={40} />
-              <TagSearchBar
-                size="big"
-                tags={tagOptions}
-                selectedTag={selectedTag}
-                onTagSelect={handleTagSelect}
-                onSearchClick={handleSearchClick}
-              />
-            </div>
-
-            <Spacing size={80} />
-
-            {/* 섹션 3: 템플릿 카드 나열 */}
-            <div>
-              <div className="flex items-center justify-between">
-                <h2 className="text-layout-grey7 title-md">템플릿 목록</h2>
-
-                {/* 인기순 정렬 버튼 */}
-                <button
-                  onClick={handleSortChange}
-                  className="bg-layout-grey1 text-layout-grey6 flex h-[36px] w-[87px] items-center justify-center gap-1 rounded"
-                >
-                  <ArrowUpDownIcon className="h-4 w-4" />
-                  <span>{sortType === 'popular' ? '인기순' : '최신순'}</span>
-                </button>
-              </div>
-              <Spacing size={40} />
-
-              {/* 필터링 결과가 없을 때 표시할 메시지 */}
-              {visibleCardItems.length === 0 ? (
-                <div className="text-layout-grey6 py-10 text-center">
-                  <p>선택한 태그에 맞는 템플릿이 없습니다.</p>
+            <div className="w-[1320px]">
+              <div className="border-secondary-purple2 relative rounded-[7px] border p-6">
+                <div className="flex items-center">
+                  <WandIcon className="mr-2" />
+                  <h2 className="text-layout-grey7 title-md">추천 템플릿 사용하기</h2>
                 </div>
-              ) : (
-                <div className="grid grid-cols-4 gap-x-[13.33px] gap-y-[12px]">
-                  {visibleCardItems.map((item, index) => (
-                    <Card
-                      key={index}
-                      variant="large"
-                      title={item.title}
-                      description={item.description}
-                      tags={item.tags}
-                      likes={item.likes}
-                      onClick={() => handleOpenModal(item)}
-                      className="cursor-pointer transition-shadow hover:shadow-md"
+                <Spacing size={8} />
+                <p className="body-md text-layout-grey7">
+                  AI가 [username]님을 위해 추천한 맞춤형 템플릿을 사용해 보세요!
+                </p>
+                <Spacing size={40} />
+
+                <div className="flex w-full items-center justify-center px-8">
+                  <div className="mr-4 flex h-6 w-6 items-center justify-center">
+                    <Arrow
+                      direction="left"
+                      colorType="navy"
+                      onClick={handlePrevRecommend}
+                      disabled={currentRecommendIndex === 0}
+                      className="h-6 w-6"
                     />
-                  ))}
-                </div>
-              )}
+                  </div>
 
-              {/* 더 불러오기 버튼 (필터링된 결과가 있고, 더 불러올 항목이 있을 때만 표시) */}
-              {visibleCardItems.length > 0 && visibleCardCount < sortedCardItems.length && (
-                <div className="mt-[80px] flex justify-center">
+                  <div className="flex flex-1 justify-center gap-[12px]">
+                    {visibleRecommendTemplates.map((template, index) => (
+                      <Card
+                        key={index}
+                        variant="promote"
+                        title={template.title}
+                        description={template.description}
+                        tags={template.tags}
+                        likes={template.likes}
+                        onClick={() => handleOpenModal(template)}
+                        className="cursor-pointer transition-shadow hover:shadow-md"
+                      />
+                    ))}
+                  </div>
+
+                  <div className="ml-4 flex h-6 w-6 items-center justify-center">
+                    <Arrow
+                      direction="right"
+                      colorType="navy"
+                      onClick={handleNextRecommend}
+                      disabled={currentRecommendIndex >= recommendTemplates.length - 3}
+                      className="h-6 w-6"
+                    />
+                  </div>
+                </div>
+                <Spacing size={20} />
+              </div>
+
+              <Spacing size={80} />
+
+              <div>
+                <div className="flex items-center">
+                  <MagnifyIcon className="mr-2 h-[27px] w-[27px]" />
+                  <h2 className="text-layout-grey7 title-md h-[30px] w-[159px]">템플릿 찾아보기</h2>
+                </div>
+                <Spacing size={8} />
+                <p className="body-md text-layout-grey7 h-[25px] w-[850px]">
+                  키워드 태그를 통해 다양한 상황에 맞는 템플릿을 찾아 보세요!
+                </p>
+                <Spacing size={40} />
+                <TagSearchBar
+                  size="big"
+                  tags={tagOptions}
+                  selectedTag={selectedTag}
+                  onTagSelect={handleTagSelect}
+                  onSearchClick={handleSearchClick}
+                />
+              </div>
+
+              <Spacing size={80} />
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-layout-grey7 title-md">템플릿 목록</h2>
+
                   <button
-                    onClick={handleLoadMore}
-                    disabled={isLoading}
-                    className={`border-primary-navy4 text-primary-navy4 hover:bg-primary-navy1 rounded-[6px] border px-6 py-2 transition-colors ${isLoading ? 'cursor-not-allowed opacity-70' : ''}`}
+                    onClick={handleSortChange}
+                    className="bg-layout-grey1 text-layout-grey6 flex h-[36px] w-[87px] items-center justify-center gap-1 rounded"
                   >
-                    {isLoading ? '로딩 중...' : '더 불러오기'}
+                    <ArrowUpDownIcon className="h-4 w-4" />
+                    <span>{sortType === 'popular' ? '인기순' : '최신순'}</span>
                   </button>
                 </div>
+                <Spacing size={40} />
+
+                {visibleCardItems.length === 0 ? (
+                  <div className="text-layout-grey6 py-10 text-center">
+                    <p>선택한 태그에 맞는 템플릿이 없습니다.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-4 gap-x-[13.33px] gap-y-[12px]">
+                    {visibleCardItems.map((item, index) => (
+                      <Card
+                        key={index}
+                        variant="large"
+                        title={item.title}
+                        description={item.description}
+                        tags={item.tags}
+                        likes={item.likes}
+                        onClick={() => handleOpenModal(item)}
+                        className="cursor-pointer transition-shadow hover:shadow-md"
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {visibleCardItems.length > 0 && visibleCardCount < sortedCardItems.length && (
+                  <div className="mt-[80px] flex justify-center">
+                    <button
+                      onClick={handleLoadMore}
+                      disabled={isLoading}
+                      className={`border-primary-navy4 text-primary-navy4 hover:bg-primary-navy1 rounded-[6px] border px-6 py-2 transition-colors ${isLoading ? 'cursor-not-allowed opacity-70' : ''}`}
+                    >
+                      {isLoading ? '로딩 중...' : '더 불러오기'}
+                    </button>
+                  </div>
+                )}
+
+                <div className="text-layout-grey5 mt-4 text-xs">
+                  {selectedTag
+                    ? `선택된 태그: ${selectedTag} | 결과: ${sortedCardItems.length}개`
+                    : '모든 템플릿 표시 중'}
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+
+      {selectedTemplate && (
+        <div
+          className="fixed inset-0 z-50"
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.05)',
+            backdropFilter: 'blur(3px)',
+          }}
+          onClick={handleCloseModal}
+        >
+          <div className="flex h-full w-full items-center justify-center p-4">
+            <div
+              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="title-md text-layout-grey7">{selectedTemplate.title}</h3>
+                <button
+                  onClick={handleCloseModal}
+                  className="text-layout-grey6 hover:text-layout-grey7"
+                >
+                  닫기
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="body-md text-layout-grey7 mb-4">{selectedTemplate.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedTemplate.tags.map((tag, idx) => (
+                    <CardTag key={idx} text={tag} />
+                  ))}
+                </div>
+              </div>
+
+              {selectedTemplate.content && (
+                <div className="bg-layout-grey1 mt-4 mb-6 rounded-md p-4">
+                  <p className="text-layout-grey7 text-sm whitespace-pre-line">
+                    {selectedTemplate.content}
+                  </p>
+                </div>
               )}
 
-              {/* 선택된 태그 정보 표시 (디버깅용, 필요시 제거) */}
-              <div className="text-layout-grey5 mt-4 text-xs">
-                {selectedTag
-                  ? `선택된 태그: ${selectedTag} | 결과: ${sortedCardItems.length}개`
-                  : '모든 템플릿 표시 중'}
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  className="border-layout-grey3 hover:bg-layout-grey1 rounded-md border px-4 py-2 transition-colors"
+                  onClick={handleCloseModal}
+                >
+                  취소
+                </button>
+                <button
+                  className="bg-primary-navy4 hover:bg-primary-navy5 rounded-md px-4 py-2 text-white transition-colors"
+                  onClick={handleUseTemplate}
+                >
+                  템플릿 사용하기
+                </button>
               </div>
             </div>
           </div>
-        </section>
-      </section>
-
-      {/* TemplateModal 컴포넌트 사용 */}
-      {selectedTemplate && (
-        <TempTemplateModal
-          isOpen={isModalOpen}
-          template={selectedTemplate}
-          onClose={handleCloseModal}
-          onUse={handleUseTemplate}
-        />
+        </div>
       )}
-    </div>
+    </>
   );
 }

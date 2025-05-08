@@ -2,14 +2,7 @@
 
 import React from 'react';
 import CardTag from '@/components/ui/CardTag';
-
-interface TemplateType {
-  title: string;
-  description: string;
-  tags: string[];
-  likes: number;
-  content?: string;
-}
+import { TemplateType } from '@/types';
 
 interface TempTemplateModalProps {
   isOpen: boolean;
@@ -35,10 +28,10 @@ const TempTemplateModal: React.FC<TempTemplateModalProps> = ({
 
   return (
     <div
-      className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black"
+      className="bg-opacity-20 fixed inset-0 z-50 flex items-center justify-center bg-black"
       onClick={handleBackdropClick}
     >
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="title-md text-layout-grey7">{template.title}</h3>
           <button onClick={onClose} className="text-layout-grey6 hover:text-layout-grey7">

@@ -2,26 +2,9 @@
 
 import { clsx } from 'clsx';
 import React, { useState, useEffect } from 'react';
+import { TagType } from '@/types';
 
-type TagType =
-  | '인사말'
-  | '자기소개'
-  | '사과문'
-  | '부탁글'
-  | '감사글'
-  | '제안글'
-  | '공지글'
-  | '소개글'
-  | '후기작성'
-  | '소셜글'
-  | '고객응대'
-  | '교수문의'
-  | '조별활동'
-  | '공모전'
-  | '지원서'
-  | '기타';
-
-// 태그 아이콘 매핑을 새로운 SVG 파일명 패턴에 맞게 수정
+// 태그 아이콘 매핑
 const tagIconMap: Record<TagType, { id: number; code: string }> = {
   인사말: { id: 1, code: 'gre' },
   자기소개: { id: 2, code: 'sel' },
@@ -59,9 +42,7 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
 
   const { id, code } = tagIconMap[tag];
 
-  // 컴포넌트 마운트 시와 selected 상태 변경 시 아이콘 로드
   useEffect(() => {
-    // 동적으로 SVG 아이콘 불러오기
     const loadIcon = async () => {
       try {
         const iconModule = await import(

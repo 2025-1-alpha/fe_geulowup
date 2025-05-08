@@ -142,17 +142,4 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
   );
 };
 
-// 스크롤바를 숨기기 위한 글로벌 스타일
-// src/app/globals.css에 추가될 내용
-/*
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-*/
-
 export default TagSearchBar;

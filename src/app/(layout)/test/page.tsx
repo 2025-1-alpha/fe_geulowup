@@ -21,7 +21,6 @@ export default function TestPage() {
     mutate({
       title: '정중한 사과문 작성법',
       content: '불편을 드려 죄송합니다. 본문에는 진심 어린 사과의 말을 담습니다...',
-      likeCount: 7,
       tags: ['자기소개'],
       isPrivate: false,
     });

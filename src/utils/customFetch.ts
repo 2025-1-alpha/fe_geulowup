@@ -22,7 +22,7 @@ export const customFetch = async <T>(
   const res = await fetch(url, {
     ...options,
     headers,
-    credentials: 'include',
+    credentials: options.skipAuth ? 'omit' : 'include',
   });
 
   if (!res.ok) {

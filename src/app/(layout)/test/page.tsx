@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/Button';
 import ToggleButton from '@/components/ui/Toggle';
 import { InputTagAdd } from '@/components/ui/InputTagAdd';
 import Card from '@/components/ui/Card';
+import TagSearchBar from '@/components/ui/TagSearchBar';
+import { useState } from 'react';
+import { TagType } from '@/types';
 
 export default function TestPage() {
   const dummyTags = ['태그텍스트', '태그텍스트'];
@@ -12,9 +15,45 @@ export default function TestPage() {
     '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.';
   const dummyLikes = 100;
 
+  const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
+  const tagOptions: TagType[] = [
+    '인사말',
+    '자기소개',
+    '사과문',
+    '부탁글',
+    '감사글',
+    '제안글',
+    '공지글',
+    '소개글',
+    '후기작성',
+    '소셜글',
+    '고객응대',
+    '교수문의',
+    '조별활동',
+    '공모전',
+    '지원서',
+    '기타',
+  ];
+
+  const handleTagSelect = (tag: TagType) => {
+    console.log('TestPage - 태그 선택:', tag, '이전 선택된 태그:', selectedTag);
+    setSelectedTag(tag === selectedTag ? undefined : tag);
+    console.log('TestPage - 태그 선택 후:', tag === selectedTag ? undefined : tag);
+  };
+
+  const handleSearchClick = () => {
+    alert(`검색: ${selectedTag || '선택된 태그 없음'}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-10 text-black">
-      <Button variant="primary" size="medium" icon="dropdown" onClick={() => alert('버튼 테스트')}>
+      <Button
+        variant="primary"
+        state="default"
+        size="medium"
+        icon="dropdown"
+        onClick={() => alert('버튼 테스트')}
+      >
         버튼 테스트
       </Button>
 
@@ -24,108 +63,70 @@ export default function TestPage() {
       <div className="mt-10 space-y-10">
         <div>
           <h2 className="mb-2 text-lg font-bold text-white">Variant: large</h2>
-          <div className="flex flex-wrap gap-4">
-            <Card
-              variant="large"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="large"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="large"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-          </div>
+          <Card
+            variant="large"
+            title={dummyTitle}
+            description={dummyDescription}
+            tags={dummyTags}
+            likes={dummyLikes}
+          />
         </div>
 
         <div>
           <h2 className="mb-2 text-lg font-bold text-white">Variant: medium</h2>
-          <div className="flex flex-wrap gap-4">
-            <Card
-              variant="medium"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="medium"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="medium"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-          </div>
+          <Card
+            variant="medium"
+            title={dummyTitle}
+            description={dummyDescription}
+            tags={dummyTags}
+            likes={dummyLikes}
+          />
         </div>
 
         <div>
           <h2 className="mb-2 text-lg font-bold text-white">Variant: small</h2>
-          <div className="flex flex-wrap gap-4">
-            <Card
-              variant="small"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="small"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="small"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
+          <Card
+            variant="small"
+            title={dummyTitle}
+            description={dummyDescription}
+            tags={dummyTags}
+            likes={dummyLikes}
+          />
+        </div>
+
+        <div>
+          <h2 className="mb-2 text-lg font-bold text-white">Variant: promote</h2>
+          <Card
+            variant="promote"
+            title={dummyTitle}
+            description={dummyDescription}
+            tags={dummyTags}
+            likes={dummyLikes}
+          />
+        </div>
+
+        <div>
+          <h2 className="mb-2 text-lg font-bold text-white">태그 검색바 (Big Size)</h2>
+          <div className="rounded-lg bg-white p-4">
+            <TagSearchBar
+              size="big"
+              tags={tagOptions}
+              selectedTag={selectedTag}
+              onTagSelect={handleTagSelect}
+              onSearchClick={handleSearchClick}
             />
           </div>
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-white">Variant: promote</h2>
-          <div className="flex flex-wrap gap-4">
-            <Card
-              variant="promote"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="promote"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
-            />
-            <Card
-              variant="promote"
-              title={dummyTitle}
-              description={dummyDescription}
-              tags={dummyTags}
-              likes={dummyLikes}
+          <h2 className="mb-2 text-lg font-bold text-white">태그 검색바 (Small Size)</h2>
+          <div className="rounded-lg bg-white p-4">
+            <TagSearchBar
+              size="small"
+              tags={tagOptions}
+              selectedTag={selectedTag}
+              onTagSelect={handleTagSelect}
+              onSearchClick={handleSearchClick}
             />
           </div>
         </div>

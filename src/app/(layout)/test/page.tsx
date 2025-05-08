@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import ToggleButton from '@/components/ui/Toggle';
 import { InputTagAdd } from '@/components/ui/InputTagAdd';
+import ViewModal from '@/components/ui/ViewModal';
 import Card from '@/components/ui/Card';
 
 export default function TestPage() {
@@ -17,6 +18,7 @@ export default function TestPage() {
       <Button variant="primary" size="medium" icon="dropdown" onClick={() => alert('버튼 테스트')}>
         버튼 테스트
       </Button>
+      <ViewModal />
 
       <ToggleButton />
       <InputTagAdd onClick={() => console.log('추가 버튼 클릭됨')} />

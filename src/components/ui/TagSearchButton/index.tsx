@@ -1,8 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
 
 type TagType =
   | '인사말'
@@ -22,23 +21,24 @@ type TagType =
   | '지원서'
   | '기타';
 
-const tagIconMap: Record<TagType, string> = {
-  인사말: 'ic_gre_1',
-  자기소개: 'ic_sel_2',
-  사과문: 'ic_sor_3',
-  부탁글: 'ic_fav_4',
-  감사글: 'ic_tha_5',
-  제안글: 'ic_sug_6',
-  공지글: 'ic_ann_7',
-  소개글: 'ic_int_8',
-  후기작성: 'ic_rev_9',
-  소셜글: 'ic_lik_10',
-  고객응대: 'ic_cus_11',
-  교수문의: 'ic_pro_12',
-  조별활동: 'ic_gro_13',
-  공모전: 'ic_com_14',
-  지원서: 'ic_app_15',
-  기타: 'ic_etc_16',
+// 태그 아이콘 매핑을 새로운 SVG 파일명 패턴에 맞게 수정
+const tagIconMap: Record<TagType, { id: number; code: string }> = {
+  인사말: { id: 1, code: 'gre' },
+  자기소개: { id: 2, code: 'sel' },
+  사과문: { id: 3, code: 'sor' },
+  부탁글: { id: 4, code: 'fav' },
+  감사글: { id: 5, code: 'tha' },
+  제안글: { id: 6, code: 'sug' },
+  공지글: { id: 7, code: 'ann' },
+  소개글: { id: 8, code: 'int' },
+  후기작성: { id: 9, code: 'rev' },
+  소셜글: { id: 10, code: 'lik' },
+  고객응대: { id: 11, code: 'cus' },
+  교수문의: { id: 12, code: 'pro' },
+  조별활동: { id: 13, code: 'gro' },
+  공모전: { id: 14, code: 'com' },
+  지원서: { id: 15, code: 'app' },
+  기타: { id: 16, code: 'etc' },
 };
 
 type TagSearchButtonProps = {
@@ -55,11 +55,29 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
   className,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [Icon, setIcon] = useState<React.ComponentType<React.SVGProps<SVGSVGElement>> | null>(null);
 
-  const iconCode = tagIconMap[tag];
-  const iconSrc = `/assets/icons/${iconCode}_${selected ? 'clicked' : 'default'}.png`;
+  const { id, code } = tagIconMap[tag];
 
-  console.log('TagSearchButton 렌더링:', tag, '선택됨:', selected, '아이콘 경로:', iconSrc);
+  // 컴포넌트 마운트 시와 selected 상태 변경 시 아이콘 로드
+  useEffect(() => {
+    // 동적으로 SVG 아이콘 불러오기
+    const loadIcon = async () => {
+      try {
+        const iconModule = await import(
+          `@/assets/icons/icon-ic-${id}-${code}-${selected ? 'clicked' : 'default'}.svg`
+        );
+        setIcon(() => iconModule.default);
+      } catch (error) {
+        console.error('아이콘 로딩 에러:', error);
+        setIcon(null);
+      }
+    };
+
+    loadIcon();
+  }, [id, code, selected]);
+
+  console.log('TagSearchButton 렌더링:', tag, '선택됨:', selected);
 
   const handleClick = () => {
     console.log('TagSearchButton 클릭:', tag, '현재 선택 상태:', selected);
@@ -89,14 +107,9 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
       )}
     >
       <div className="flex items-center gap-2">
-        <Image
-          src={iconSrc}
-          alt={`${tag} 아이콘`}
-          width={24}
-          height={24}
-          className="h-6 w-6 flex-shrink-0"
-          unoptimized
-        />
+        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
+          {Icon && <Icon />}
+        </div>
         <span
           className={clsx(
             'text-base font-medium whitespace-nowrap',

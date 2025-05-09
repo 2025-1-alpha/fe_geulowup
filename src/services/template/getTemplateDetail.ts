@@ -16,8 +16,7 @@ export interface TemplateDetail {
   isPrivate: boolean;
 }
 
-export const getTemplateDetail = async (templateId: number) => {
-  return customFetch<TemplateDetail>(`/templates/${templateId}`, {
-    // skipAuth: true,
-  });
+export const getTemplateDetail = async (templateId: number): Promise<TemplateDetail | null> => {
+  const data = await customFetch<TemplateDetail>(`/templates/${templateId}`);
+  return data ?? null;
 };

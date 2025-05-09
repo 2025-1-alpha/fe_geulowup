@@ -1,8 +1,7 @@
 import { createTemplate, CreateTemplatePayload } from '@/services/template/postCreateTemplate';
 import { useMutation } from '@tanstack/react-query';
 
-export const useCreateTemplate = () => {
-  return useMutation({
-    mutationFn: (data: CreateTemplatePayload) => createTemplate(data),
+export const useCreateTemplate = () =>
+  useMutation<void, Error, CreateTemplatePayload>({
+    mutationFn: (data) => createTemplate(data),
   });
-};

@@ -50,14 +50,15 @@ export default function ExplorePage() {
     const fetchRecommendTemplates = async () => {
       try {
         const response = await getTemplatesRecommendation();
-        const templates = response.templates.map((template) => ({
-          title: template.title,
-          description: template.content,
-          tags: template.tags,
-          likes: template.likeCount,
-          content: template.content,
-          templateId: template.templateId,
-        }));
+        const templates =
+          response?.templates.map((template) => ({
+            title: template.title,
+            description: template.content,
+            tags: template.tags,
+            likes: template.likeCount,
+            content: template.content,
+            templateId: template.templateId,
+          })) ?? [];
         setRecommendTemplates(templates);
       } catch (error) {
         console.error('추천 템플릿 가져오기 오류:', error);
@@ -80,7 +81,7 @@ export default function ExplorePage() {
           sort: sortOptions,
         });
 
-        const templates = response.templates.map((template) => ({
+        const templates = response?.templates.map((template) => ({
           title: template.title,
           description: template.content,
           tags: template.tags,
@@ -89,8 +90,8 @@ export default function ExplorePage() {
           templateId: template.templateId,
         }));
 
-        setAllTemplates(templates);
-        setTotalPages(response.totalPage);
+        setAllTemplates(templates ?? []);
+        setTotalPages(response?.totalPage ?? 0);
       } catch (error) {
         console.error('템플릿 가져오기 오류:', error);
       } finally {

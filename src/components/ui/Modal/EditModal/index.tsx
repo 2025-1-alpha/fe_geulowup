@@ -5,6 +5,7 @@ import { InputTag } from '../../InputTag';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import IconClose from '@/assets/icons/icon-close.svg';
+import { useCreateTemplate } from '@/hooks/template';
 import { useEffect, useState } from 'react';
 
 interface TagItem {
@@ -21,8 +22,40 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
   const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
   const [content, setContent] = useState('');
   const [inputs, setInputs] = useState<string[]>([]);
+  const [title, setTitle] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const { closeModal } = useModalStore();
+  const { mutate: createTemplate } = useCreateTemplate();
+
+  //   TODO : 현재 생성만 연결되어 있는데, 생성 수정 분기처리 하기
+  //   TODO : 모든 입력 입력되어 있는지 검사하기
+  const handleSaveBtn = () => {
+    const tagValues = tags.map((tag) => tag.value.trim()).filter((val) => val.length > 0);
+
+    if (!title.trim() || !content.trim()) {
+      alert('제목과 내용을 모두 입력해주세요.');
+      return;
+    }
+
+    createTemplate(
+      {
+        title: title.trim(),
+        content: content.trim(),
+        tags: tagValues,
+        isPrivate,
+      },
+      {
+        onSuccess: () => {
+          // TODO : 성공 모달 디자인 받기
+          closeModal();
+        },
+        onError: (error) => {
+          console.error('템플릿 저장 실패:', error);
+        },
+      },
+    );
+  };
 
   function generateId() {
     return Date.now().toString() + Math.random().toString(36).substring(2);
@@ -94,7 +127,12 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
 
       {/* 타이틀 */}
       <Spacing size={12} />
-      <input className="title-lg flex" placeholder="제목을 입력해 주세요." />
+      <input
+        className="title-lg flex"
+        placeholder="제목을 입력해 주세요."
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
       <Spacing size={24} />
       <p className="text-primary-navy4 body-sm whitespace-pre">
         {`*중괄호를 사용해 이름, 날짜 등을 사용자가 채울 수 있는 빈칸을 만들 수 있어요!
@@ -127,7 +165,12 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
       <Spacing size={24} />
       <section className="flex h-[80px] w-full items-end justify-end gap-3">
         <section className="button-sm mb-3 flex items-center gap-2">
-          <input type="checkbox" className="border-primary-navy5 h-4 w-4 rounded-b-xs border" />
+          <input
+            type="checkbox"
+            className="border-primary-navy5 h-4 w-4 rounded-b-xs border"
+            checked={isPrivate}
+            onChange={(e) => setIsPrivate(e.target.checked)}
+          />
           나만 보기
         </section>
         {mode == 'edit' && (
@@ -136,7 +179,13 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
           </Button>
         )}
         <Button>자동 빈칸 만들기</Button>
-        <Button icon="dropdown">저장하기</Button>
+        {/* TODO : 추후 isLoading 달아서 로딩 처리하기  */}
+        {/* <Button icon="dropdown" onClick={handleSaveBtn} disabled={isLoading}>
+          {isLoading ? '저장 중...' : '저장하기'}
+        </Button> */}
+        <Button icon="dropdown" onClick={handleSaveBtn}>
+          저장하기
+        </Button>
       </section>
     </section>
   );

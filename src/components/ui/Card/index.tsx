@@ -174,9 +174,7 @@ const Card: React.FC<CardProps> = ({
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-1 flex-col">
           <div className="mb-[8px] flex flex-wrap gap-1">
-            {tags.map((tag, idx) => (
-              <CardTag key={idx} text={tag} />
-            ))}
+            {tags && tags.map((tag, idx) => <CardTag key={idx} text={tag} />)}
           </div>
           <div className={titleStyle}>{title}</div>
           <div

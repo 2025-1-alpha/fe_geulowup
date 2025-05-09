@@ -125,16 +125,18 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
       )}
 
       <Spacing size={24} />
-      <section className="flex h-[80px] w-full items-end justify-end">
-        <section className="flex gap-3">
-          {mode == 'edit' && (
-            <Button state="line" onClick={handleCancelEditBtn}>
-              수정 취소
-            </Button>
-          )}
-          <Button>자동 빈칸 만들기</Button>
-          <Button icon="dropdown">저장하기</Button>
+      <section className="flex h-[80px] w-full items-end justify-end gap-3">
+        <section className="button-sm mb-3 flex items-center gap-2">
+          <input type="checkbox" className="border-primary-navy5 h-4 w-4 rounded-b-xs border" />
+          나만 보기
         </section>
+        {mode == 'edit' && (
+          <Button state="line" onClick={handleCancelEditBtn}>
+            수정 취소
+          </Button>
+        )}
+        <Button>자동 빈칸 만들기</Button>
+        <Button icon="dropdown">저장하기</Button>
       </section>
     </section>
   );

@@ -2,10 +2,11 @@
 
 import { useModalStore } from '@/stores/useModalStore';
 import ViewModal from './ViewModal';
+import EditModal from './EditModal';
 import { useEffect } from 'react';
 
 export default function ModalContainer() {
-  const { currentModal } = useModalStore();
+  const { currentModal, draftContent } = useModalStore();
 
   useEffect(() => {
     if (currentModal) {
@@ -23,7 +24,11 @@ export default function ModalContainer() {
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center">
-      <div onClick={(e) => e.stopPropagation()}>{currentModal === 'view' && <ViewModal />}</div>
+      <div onClick={(e) => e.stopPropagation()}>
+        {currentModal === 'view' && <ViewModal />}
+        {currentModal === 'create' && <EditModal mode="create" draftContent={draftContent} />}
+        {currentModal === 'edit' && <EditModal mode="edit" />}
+      </div>
     </div>
   );
 }

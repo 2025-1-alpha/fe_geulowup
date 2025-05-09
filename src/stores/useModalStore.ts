@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type ModalType = 'view' | 'edit' | 'using' | 'profile' | null;
+type ModalType = 'view' | 'create' | 'edit' | 'using' | 'profile' | null;
 
 interface ModalState {
   currentModal: ModalType;

@@ -66,7 +66,7 @@ export default function TestPage() {
         variant="primary"
         size="medium"
         icon="dropdown"
-        onClick={() => openModal('view', { templateId: 1001 })}
+        onClick={() => openModal('edit', { templateId: 1001 })}
       >
         버튼 테스트
       </Button>

@@ -12,6 +12,7 @@ import ArrowUpDownIcon from '@/assets/icons/icon-arrow-up-down.svg';
 import { TagType, TemplateType } from '@/types';
 import { getTemplates } from '@/services/template/getTemplates';
 import { getTemplatesRecommendation } from '@/services/template/getTemplatesRecommendation';
+import { useModalStore } from '@/stores/useModalStore';
 
 export default function ExplorePage() {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
@@ -23,6 +24,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const { openModal } = useModalStore();
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -138,19 +140,8 @@ export default function ExplorePage() {
   };
 
   // 모달 열기 핸들러
-  const handleOpenModal = (template: TemplateType) => {
-    // 필수 필드 확인 및 보완
-    const processedTemplate = {
-      ...template,
-      title: template.title || '제목 없음',
-      description: template.description || '설명이 없는 템플릿입니다.',
-      tags: template.tags || [],
-      likes: template.likes || 0,
-      content: template.content || '',
-    };
-
-    setSelectedTemplate(processedTemplate);
-    console.log('모달 열림, 선택된 템플릿:', processedTemplate.title);
+  const handleOpenModal = (templateId: number) => {
+    openModal('view', { templateId });
   };
 
   // 모달 닫기 핸들러
@@ -227,7 +218,7 @@ export default function ExplorePage() {
                         description={template.description}
                         tags={template.tags}
                         likes={template.likes}
-                        onClick={() => handleOpenModal(template)}
+                        onClick={() => handleOpenModal(template.templateId)}
                         className="cursor-pointer transition-shadow hover:shadow-md"
                       />
                     ))}
@@ -297,7 +288,7 @@ export default function ExplorePage() {
                         description={item.description}
                         tags={item.tags}
                         likes={item.likes}
-                        onClick={() => handleOpenModal(item)}
+                        onClick={() => handleOpenModal(item.templateId)}
                         className="cursor-pointer transition-shadow hover:shadow-md"
                       />
                     ))}

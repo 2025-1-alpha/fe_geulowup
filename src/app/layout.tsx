@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import ReactQueryProviders from '@/hooks/useReactQuery';
 import '@/styles/scrollbar.css';
 import './globals.css';
+import ModalContainer from '@/components/ui/Modal/ModalContainer';
 
 export const metadata: Metadata = {
   title: 'GeulouUp',
@@ -19,7 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="mx-auto font-sans antialiased">
-        <ReactQueryProviders>{children}</ReactQueryProviders>
+        <ReactQueryProviders>
+          {children}
+          <ModalContainer />
+        </ReactQueryProviders>
       </body>
     </html>
   );

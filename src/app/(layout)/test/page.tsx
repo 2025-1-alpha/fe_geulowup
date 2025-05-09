@@ -66,7 +66,12 @@ export default function TestPage() {
         variant="primary"
         size="medium"
         icon="dropdown"
-        onClick={() => openModal('edit', { templateId: 1001 })}
+        onClick={() =>
+          openModal('create', {
+            // templateId: 1001,
+            draftContent: '안녕하세요 {이름}님, {날짜}에 뵐 수 있을까요?',
+          })
+        }
       >
         버튼 테스트
       </Button>

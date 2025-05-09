@@ -60,7 +60,7 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
   const tagErrCheck = () => false;
 
   useEffect(() => {
-    if (mode === 'edit' && draftContent) {
+    if (mode === 'create' && draftContent) {
       setContent(draftContent);
     }
   }, [mode, draftContent]);

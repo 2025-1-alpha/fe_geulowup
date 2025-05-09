@@ -7,7 +7,7 @@ export interface CreateTemplatePayload {
   isPrivate: boolean;
 }
 
-export const createTemplate = async (payload: CreateTemplatePayload) => {
+export const createTemplate = async (payload: CreateTemplatePayload): Promise<void> => {
   return customFetch('/templates', {
     method: 'POST',
     body: JSON.stringify(payload),

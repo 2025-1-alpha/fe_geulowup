@@ -5,7 +5,6 @@ import ToggleButton from '@/components/ui/Toggle';
 import { InputTagAdd } from '@/components/ui/InputTagAdd';
 import Card from '@/components/ui/Card';
 import { useModalStore } from '@/stores/useModalStore';
-import { useCreateTemplate } from '@/hooks/template/useCreateTemplate';
 import TagSearchBar from '@/components/ui/TagSearchBar';
 import { useState } from 'react';
 import { TagType } from '@/types';
@@ -18,18 +17,6 @@ export default function TestPage() {
   const dummyLikes = 100;
   const { openModal } = useModalStore();
 
-  const { mutate } = useCreateTemplate();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    mutate({
-      title: '정중한 사과문 작성법',
-      content: '불편을 드려 죄송합니다. 본문에는 진심 어린 사과의 말을 담습니다...',
-      tags: ['자기소개'],
-      isPrivate: false,
-    });
-  };
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
   const tagOptions: TagType[] = [
     '인사말',

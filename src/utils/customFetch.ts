@@ -5,7 +5,7 @@ interface CustomFetchOptions extends RequestInit {
 export const customFetch = async <T>(
   endpoint: string,
   options: CustomFetchOptions = {},
-): Promise<T> => {
+): Promise<T | undefined> => {
   const isAbsolute = /^https?:\/\//.test(endpoint);
   const url = isAbsolute ? endpoint : `/api${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
 
@@ -34,5 +34,11 @@ export const customFetch = async <T>(
     throw new Error(`API 요청 실패: ${res.status}`);
   }
 
-  return res.json();
+  const contentType = res.headers.get('Content-Type');
+  if (contentType?.includes('application/json')) {
+    const text = await res.text();
+    return text ? JSON.parse(text) : undefined;
+  }
+
+  return undefined;
 };

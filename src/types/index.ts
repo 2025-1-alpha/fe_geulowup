@@ -17,6 +17,7 @@ export type TagType =
   | '기타';
 
 export type TemplateType = {
+  templateId: number;
   title: string;
   description: string;
   tags: string[];

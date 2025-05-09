@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
+import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
@@ -12,29 +14,34 @@ import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
 
 export default function ViewModal() {
-  const template = {
-    templateId: 1001,
-    author: {
-      id: 42,
-      name: '홍길동',
-      score: 85,
-      profileImageUrl: 'https://avatars.githubusercontent.com/u/66528589?v=4',
-    },
-    isAuthor: true,
-    title: '면접에서 어필하기 좋은 자기소개',
-    content:
-      '안녕하세요. 저는 {이름} 입니다. {장소}는 여기... 책임감 있게 팀 프로젝트를 수행해 온... 안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..안녕하세요 잘부탁드립니다 더미텍스트..',
-    tags: ['자기소개', '테스트 태그'],
-    likeCount: 27,
-    isPrivate: false,
-  };
-
   const router = useRouter();
 
-  const { closeModal } = useModalStore();
+  const { selectedTemplateId, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
+  const [template, setTemplate] = useState<TemplateDetail | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const inputs = Array.from(template?.content.matchAll(/{(.*?)}/g)).map((m) => m[1]);
+  const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
+
+  useEffect(() => {
+    if (!selectedTemplateId) return;
+
+    const fetchTemplate = async () => {
+      try {
+        const data = await getTemplateDetail(selectedTemplateId);
+        setTemplate(data);
+      } catch (err) {
+        console.error('템플릿 상세 불러오기 실패:', err);
+        closeModal();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTemplate();
+  }, [selectedTemplateId]);
+
+  if (loading || !template) return <div className="p-8 text-center">불러오는 중...</div>;
 
   const handleCilckUse = () => {
     // TODO : 모달 use로 변경되도록 세팅

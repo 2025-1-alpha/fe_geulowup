@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import clsx from 'clsx';
-import { Spacing } from '../Spacing';
-import { Button } from '../Button';
+import { useModalStore } from '@/stores/useModalStore';
+import { Spacing } from '../../Spacing';
+import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
@@ -24,6 +25,7 @@ export default function ViewModal() {
     isPrivate: false,
   };
 
+  const { closeModal } = useModalStore();
   const inputs = Array.from(template?.content.matchAll(/{(.*?)}/g)).map((m) => m[1]);
 
   const handleCilckUse = () => {};
@@ -44,7 +46,7 @@ export default function ViewModal() {
             );
           })}
         </section>
-        <button>
+        <button onClick={closeModal}>
           <IconClose />
         </button>
       </section>

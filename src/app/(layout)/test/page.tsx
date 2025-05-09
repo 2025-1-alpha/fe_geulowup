@@ -3,8 +3,8 @@
 import { Button } from '@/components/ui/Button';
 import ToggleButton from '@/components/ui/Toggle';
 import { InputTagAdd } from '@/components/ui/InputTagAdd';
-import ViewModal from '@/components/ui/ViewModal';
 import Card from '@/components/ui/Card';
+import { useModalStore } from '@/stores/useModalStore';
 
 export default function TestPage() {
   const dummyTags = ['태그텍스트', '태그텍스트'];
@@ -12,13 +12,18 @@ export default function TestPage() {
   const dummyDescription =
     '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.';
   const dummyLikes = 100;
+  const { openModal } = useModalStore();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-10 text-black">
-      <Button variant="primary" size="medium" icon="dropdown" onClick={() => alert('버튼 테스트')}>
+      <Button
+        variant="primary"
+        size="medium"
+        icon="dropdown"
+        onClick={() => openModal('view', { templateId: 1001 })}
+      >
         버튼 테스트
       </Button>
-      <ViewModal />
 
       <ToggleButton />
       <InputTagAdd onClick={() => console.log('추가 버튼 클릭됨')} />

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '@/styles/scrollbar.css';
 import './globals.css';
+import ModalContainer from '@/components/ui/Modal/ModalContainer';
 
 export const metadata: Metadata = {
   title: 'GeulouUp',
@@ -17,7 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
         />
       </head>
-      <body className="mx-auto font-sans antialiased">{children}</body>
+      <body className="mx-auto font-sans antialiased">
+        {children}
+        <ModalContainer />
+      </body>
     </html>
   );
 }

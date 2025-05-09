@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTemplateStore } from '@/stores/useTemplateStore';
 import { Spacing } from '@/components/ui/Spacing';
 import Toggle from '@/components/ui/Toggle';
 import AdviceInputArea from '../AdviceInputArea';
@@ -9,7 +10,9 @@ import RecommendTemplates from '../RecommendTemplates';
 import IconHelp from '@/assets/icons/icon-help.svg';
 
 export default function AdviceEditor() {
-  const [draftContent, setDraftContent] = useState('');
+  const { currentTemplate } = useTemplateStore();
+
+  const [draftContent, setDraftContent] = useState(currentTemplate ? currentTemplate.content : '');
   const [adviceContent, setAdviceContent] = useState('');
 
   const handleChangeDraftContent = (value: string) => {

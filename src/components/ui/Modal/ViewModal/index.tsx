@@ -1,6 +1,10 @@
+'use client';
+
 import Image from 'next/image';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
+import { useTemplateStore } from '@/stores/useTemplateStore';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
@@ -25,10 +29,21 @@ export default function ViewModal() {
     isPrivate: false,
   };
 
+  const router = useRouter();
+
   const { closeModal } = useModalStore();
+  const { setCurrentTemplate } = useTemplateStore();
+
   const inputs = Array.from(template?.content.matchAll(/{(.*?)}/g)).map((m) => m[1]);
 
-  const handleCilckUse = () => {};
+  const handleCilckUse = () => {
+    // TODO : 모달 use로 변경되도록 세팅
+  };
+  const handleClickAiUse = () => {
+    setCurrentTemplate({ templateId: template.templateId, content: template.content });
+    closeModal();
+    router.push('/advice');
+  };
 
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
@@ -64,6 +79,7 @@ export default function ViewModal() {
         {inputs.map((item, idx) => (
           <button
             key={idx}
+            onClick={handleCilckUse}
             className="body-lg text-layout-grey5 border-layout-grey5 flex rounded-md border px-3 py-[9px]"
           >
             {item}
@@ -114,8 +130,8 @@ export default function ViewModal() {
           <Button state="line" icon="dropdown">
             저장하기
           </Button>
-          <Button>사용하기</Button>
-          <Button>AI로 한 번 더 수정하기</Button>
+          <Button onClick={handleCilckUse}>사용하기</Button>
+          <Button onClick={handleClickAiUse}>AI로 한 번 더 수정하기</Button>
         </section>
       </section>
     </section>

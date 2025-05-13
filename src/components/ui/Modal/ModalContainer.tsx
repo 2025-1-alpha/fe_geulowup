@@ -6,7 +6,7 @@ import EditModal from './EditModal';
 import { useEffect } from 'react';
 
 export default function ModalContainer() {
-  const { currentModal, draftContent } = useModalStore();
+  const { currentModal, draftTitle, draftContent, draftTags, selectedTemplateId } = useModalStore();
 
   useEffect(() => {
     if (currentModal) {
@@ -27,7 +27,7 @@ export default function ModalContainer() {
       <div onClick={(e) => e.stopPropagation()}>
         {currentModal === 'view' && <ViewModal />}
         {currentModal === 'create' && <EditModal mode="create" draftContent={draftContent} />}
-        {currentModal === 'edit' && <EditModal mode="edit" />}
+        {currentModal === 'edit' && selectedTemplateId != null && <EditModal mode="edit" selectedTemplateId={selectedTemplateId} draftTitle={draftTitle} draftContent={draftContent} draftTags={draftTags}/>}
       </div>
     </div>
   );

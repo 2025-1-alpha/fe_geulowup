@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
@@ -13,13 +12,16 @@ import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
 
-export default function ViewModal() {
+export default function UsingModal() {
   const router = useRouter();
 
-  const { selectedTemplateId, openModal, closeModal } = useModalStore();
-  const { setCurrentTemplate } = useTemplateStore();
+  const { selectedTemplateId, closeModal } = useModalStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState('');
+  const [replacements, setReplacements] = useState<Record<string, string>>({});
+
+  const { setCurrentTemplate } = useTemplateStore();
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -30,6 +32,7 @@ export default function ViewModal() {
       try {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
+        setContent(data?.content ?? ''); 
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -43,31 +46,35 @@ export default function ViewModal() {
 
   if (loading || !template) return <div className="p-8 text-center">불러오는 중...</div>;
 
-  const handleCilckUse = () => {
-    closeModal();
-    openModal('using', {
-          templateId : template.templateId,
-          draftTitle: template.title,
-          draftContent: template.content,
-          draftTags: template.tags
-        })
-  };
-
-  const handleClickEdit = (template  : TemplateDetail) => {
-    closeModal();
-    openModal('edit', {
-          templateId : template.templateId,
-          draftTitle: template.title,
-          draftContent: template.content,
-          draftTags: template.tags
-        })
-  }
-
   const handleClickAiUse = () => {
     setCurrentTemplate({ templateId: template.templateId, content: template.content });
     closeModal();
     router.push('/advice');
   };
+
+   const handleCopyClipBoard = (text: string) => {
+    const $textarea = document.createElement("textarea"); 
+    document.body.appendChild($textarea);
+    $textarea.value = text;
+    $textarea.select(); 
+    document.execCommand("copy"); 
+    document.body.removeChild($textarea); 
+    // TODO : 저장되었습니다와 동일하게 복사되었습니다 띄우기
+  };
+
+  const handleInputChange = (key: string, value: string) => {
+  const newReplacements = { ...replacements, [key]: value };
+  setReplacements(newReplacements);
+
+  let replaced = template?.content ?? '';
+  for (const [k, v] of Object.entries(newReplacements)) {
+    const regex = new RegExp(`{${k}}`, 'g');
+    replaced = replaced.replace(regex, v);
+  }
+
+  setContent(replaced);
+};
+
 
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
@@ -94,27 +101,29 @@ export default function ViewModal() {
       <Spacing size={12} />
       <div className="title-lg">{template.title}</div>
       <Spacing size={24} />
-      {/*  타이틀 원래 48px인데 디자인 시스템에 없어서 36px -> min-h 12만큼 늘림 */}
-      <div className={clsx('body-lg', template.isAuthor ? 'h-[312px]' : 'h-[339px]')}>
-        {template.content}
-      </div>
+      <textarea className='body-lg h-[312px] flex bg-white border border-layout-grey3 rounded-lg p-2' placeholder="내용을 입력해 주세요."
+        value={content}
+        onChange={(e) => setContent(e.target.value)}>
+        
+      </textarea>
       <Spacing size={24} />
       <section className="flex h-11 gap-3">
         {inputs.map((item, idx) => (
-          <button
+          <input
             key={idx}
-            onClick={handleCilckUse}
+            placeholder={item}
+            value={replacements[item] || ''}
+             size={(replacements[item] || item).length || 1}
+            onChange={(e) => handleInputChange(item, e.target.value)}
             className="body-lg text-layout-grey5 border-layout-grey5 flex rounded-md border px-3 py-[9px]"
-          >
-            {item}
-          </button>
+          />
         ))}
       </section>
 
       <Spacing size={24} />
       {template?.isAuthor && (
         <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
-          <button>삭제하기</button>|<button onClick={() => handleClickEdit(template)}>수정하기</button>
+          <button onClick={() => handleCopyClipBoard(content)}>복사하기</button>
         </section>
       )}
 
@@ -150,12 +159,11 @@ export default function ViewModal() {
           </section>
         </section>
         <section className="flex gap-3">
-          {/* TODO : API 연결 전에 저장하기 버튼 눌렀을 때 디자인 요청하기 */}
-          <Button state="line" icon="dropdown">
-            저장하기
+          <Button state="line">
+            사용 취소
           </Button>
-          <Button onClick={handleCilckUse}>사용하기</Button>
-          <Button onClick={handleClickAiUse}>AI로 한 번 더 수정하기</Button>
+          <Button onClick={handleClickAiUse} state="line">AI로 한 번 더 수정하기</Button>
+          <Button icon='dropdown'>저장하기</Button>
         </section>
       </section>
     </section>

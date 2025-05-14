@@ -16,7 +16,7 @@ import IconLike from '@/assets/icons/icon-like.svg';
 export default function ViewModal() {
   const router = useRouter();
 
-  const { selectedTemplateId, closeModal } = useModalStore();
+  const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,6 +46,17 @@ export default function ViewModal() {
   const handleCilckUse = () => {
     // TODO : 모달 use로 변경되도록 세팅
   };
+
+  const handleClickEdit = (template  : TemplateDetail) => {
+    closeModal();
+    openModal('edit', {
+          templateId : template.templateId,
+          draftTitle: template.title,
+          draftContent: template.content,
+          draftTags: template.tags
+        })
+  }
+
   const handleClickAiUse = () => {
     setCurrentTemplate({ templateId: template.templateId, content: template.content });
     closeModal();
@@ -97,7 +108,7 @@ export default function ViewModal() {
       <Spacing size={24} />
       {template?.isAuthor && (
         <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
-          <button>삭제하기</button>|<button>수정하기</button>
+          <button>삭제하기</button>|<button onClick={() => handleClickEdit(template)}>수정하기</button>
         </section>
       )}
 

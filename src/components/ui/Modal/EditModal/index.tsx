@@ -6,6 +6,7 @@ import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import IconClose from '@/assets/icons/icon-close.svg';
 import { useCreateTemplate } from '@/hooks/template';
+import { useEditTemplate } from '@/hooks/template';
 import { useEffect, useState } from 'react';
 
 interface TagItem {
@@ -15,20 +16,23 @@ interface TagItem {
 
 interface EditModalProps {
   mode: 'create' | 'edit';
+  selectedTemplateId?: number;
+  draftTitle?: string;
   draftContent?: string;
+  draftTags?: string[];
 }
 
-export default function EditModal({ mode, draftContent }: EditModalProps) {
-  const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
-  const [content, setContent] = useState('');
-  const [inputs, setInputs] = useState<string[]>([]);
+export default function EditModal({ mode, selectedTemplateId, draftTitle, draftContent, draftTags }: EditModalProps) {
   const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
+  const [inputs, setInputs] = useState<string[]>([]);
   const [isPrivate, setIsPrivate] = useState(false);
 
   const { closeModal } = useModalStore();
   const { mutate: createTemplate } = useCreateTemplate();
+  const { mutate: editTemplate } = useEditTemplate();
 
-  //   TODO : 현재 생성만 연결되어 있는데, 생성 수정 분기처리 하기
   //   TODO : 모든 입력 입력되어 있는지 검사하기
   const handleSaveBtn = () => {
     const tagValues = tags.map((tag) => tag.value.trim()).filter((val) => val.length > 0);
@@ -38,23 +42,53 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
       return;
     }
 
+    if (mode == "create") {
     createTemplate(
-      {
+          {
+            title: title.trim(),
+            content: content.trim(),
+            tags: tagValues,
+            isPrivate,
+          },
+          {
+            onSuccess: () => {
+              // TODO : 성공 모달 디자인 받기
+              closeModal();
+            },
+            onError: (error) => {
+              console.error('템플릿 생성 실패:', error);
+            },
+          },
+        );
+    } 
+
+    if ( mode == "edit") {
+       if (selectedTemplateId === undefined) {
+    console.error('템플릿 ID가 없습니다.');
+    return;
+  }
+
+
+    editTemplate(
+    {
+      templateId: selectedTemplateId ,
+      payload: {
         title: title.trim(),
         content: content.trim(),
         tags: tagValues,
         isPrivate,
       },
-      {
-        onSuccess: () => {
-          // TODO : 성공 모달 디자인 받기
-          closeModal();
-        },
-        onError: (error) => {
-          console.error('템플릿 저장 실패:', error);
-        },
+    },
+    {
+      onSuccess: () => {
+        closeModal();
       },
-    );
+      onError: (error) => {
+        console.error('템플릿 수정 실패:', error);
+      },
+    }
+  );
+}   
   };
 
   function generateId() {
@@ -93,10 +127,20 @@ export default function EditModal({ mode, draftContent }: EditModalProps) {
   const tagErrCheck = () => false;
 
   useEffect(() => {
-    if (mode === 'create' && draftContent) {
+    if (draftContent != undefined) {
       setContent(draftContent);
     }
-  }, [mode, draftContent]);
+
+    if (mode == "edit" && draftTitle && draftContent && draftTags) {
+      setTitle(draftTitle);
+      setTags(
+    draftTags?.map((tag) => ({
+      id: generateId(),
+      value: tag,
+    })) ?? [{ id: generateId(), value: '' }]
+  );
+    }
+  }, [draftContent]);
 
   useEffect(() => {
     const matches = Array.from(content.matchAll(/{(.*?)}/g)).map((m) => m[1]);

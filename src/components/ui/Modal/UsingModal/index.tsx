@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
@@ -63,16 +63,16 @@ export default function UsingModal() {
   };
 
   const handleInputChange = (key: string, value: string) => {
-  const newReplacements = { ...replacements, [key]: value };
-  setReplacements(newReplacements);
+    const newReplacements = { ...replacements, [key]: value };
+    setReplacements(newReplacements);
 
-  let replaced = template?.content ?? '';
-  for (const [k, v] of Object.entries(newReplacements)) {
-    const regex = new RegExp(`{${k}}`, 'g');
-    replaced = replaced.replace(regex, v);
-  }
+    let replaced = template?.content ?? '';
+    for (const [k, v] of Object.entries(newReplacements)) {
+        const regex = new RegExp(`{${k}}`, 'g');
+        replaced = replaced.replace(regex, v);
+    }
 
-  setContent(replaced);
+    setContent(replaced);
 };
 
 

@@ -49,8 +49,8 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
           `@/assets/icons/icon-ic-${id}-${code}-${selected ? 'clicked' : 'default'}.svg`
         );
         setIcon(() => iconModule.default);
-      } catch (error) {
-        console.error('아이콘 로딩 에러:', error);
+      } catch {
+        // 아이콘 로딩 실패 시 처리
         setIcon(null);
       }
     };
@@ -58,10 +58,7 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
     loadIcon();
   }, [id, code, selected]);
 
-  console.log('TagSearchButton 렌더링:', tag, '선택됨:', selected);
-
   const handleClick = () => {
-    console.log('TagSearchButton 클릭:', tag, '현재 선택 상태:', selected);
     if (onClick) {
       onClick();
     }

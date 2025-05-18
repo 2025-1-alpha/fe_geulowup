@@ -62,8 +62,8 @@ export default function ExplorePage() {
             templateId: template.templateId,
           })) ?? [];
         setRecommendTemplates(templates);
-      } catch (error) {
-        console.error('추천 템플릿 가져오기 오류:', error);
+      } catch {
+        // 에러 처리
       }
     };
 
@@ -94,8 +94,8 @@ export default function ExplorePage() {
 
         setAllTemplates(templates ?? []);
         setTotalPages(response?.totalPage ?? 0);
-      } catch (error) {
-        console.error('템플릿 가져오기 오류:', error);
+      } catch {
+        // 에러 처리
       } finally {
         setIsLoading(false);
       }
@@ -115,7 +115,6 @@ export default function ExplorePage() {
 
   // 태그 선택 핸들러
   const handleTagSelect = (tag: TagType) => {
-    console.log('태그 선택:', tag, '이전 선택된 태그:', selectedTag);
     setSelectedTag(tag === selectedTag ? undefined : tag);
     setVisibleCardCount(16); // 태그 변경 시 초기 카드 수로 리셋
   };
@@ -123,12 +122,11 @@ export default function ExplorePage() {
   // 정렬 변경 핸들러
   const handleSortChange = () => {
     setSortType((prev) => (prev === 'popular' ? 'recent' : 'popular'));
-    console.log('정렬 변경:', sortType === 'popular' ? 'recent' : 'popular');
   };
 
   // 검색 버튼 핸들러
   const handleSearchClick = () => {
-    console.log(`검색: ${selectedTag || '선택된 태그 없음'}`);
+    // 검색 로직
   };
 
   // 추천 템플릿 이전/다음 핸들러
@@ -167,11 +165,9 @@ export default function ExplorePage() {
         .writeText(selectedTemplate.content)
         .then(() => {
           alert('템플릿 내용이 클립보드에 복사되었습니다.');
-          console.log('템플릿 사용하기:', selectedTemplate.title);
           handleCloseModal();
         })
-        .catch((err) => {
-          console.error('클립보드 복사 실패:', err);
+        .catch(() => {
           alert('템플릿 복사에 실패했습니다. 다시 시도해주세요.');
         });
     } else {

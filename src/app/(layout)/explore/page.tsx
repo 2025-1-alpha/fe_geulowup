@@ -24,7 +24,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { openModal } = useModalStore();
+  const { openModal, currentModal } = useModalStore();
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -102,6 +102,14 @@ export default function ExplorePage() {
     fetchTemplates();
   }, [selectedTag, sortType, visibleCardCount]);
 
+  // 모달이 닫힐 때 카드 클릭 상태 초기화
+  useEffect(() => {
+    if (currentModal === null) {
+      // 모든 카드의 클릭 상태를 초기화하는 이벤트 발생
+      window.dispatchEvent(new Event('modal-closed'));
+    }
+  }, [currentModal]);
+
   // 필터링 및 정렬된 아이템들은 이제 API에서 이미 처리해서 가져오기 때문에 제거
   const visibleCardItems = allTemplates;
 
@@ -146,7 +154,7 @@ export default function ExplorePage() {
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setSelectedTemplate(null);
-    // 모달 닫힘 이벤트 발생 - 모든 카드의 클릭 상태 초기화
+    // 모든 카드의 클릭 상태를 초기화하는 이벤트 발생
     window.dispatchEvent(new Event('modal-closed'));
   };
 

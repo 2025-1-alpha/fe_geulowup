@@ -8,6 +8,10 @@ import { useModalStore } from '@/stores/useModalStore';
 import TagSearchBar from '@/components/ui/TagSearchBar';
 import { useState } from 'react';
 import { TagType } from '@/types';
+import SavedButton from '@/components/ui/SavedButton';
+import SavedInput from '@/components/ui/SavedInput';
+import WarningModal from '@/components/ui/Modal/WarningModal';
+import TemplateStorage, { Folder } from '@/components/ui/TemplateStorage';
 
 export default function TestPage() {
   const dummyTags = ['태그텍스트', '태그텍스트'];
@@ -37,6 +41,44 @@ export default function TestPage() {
     '기타',
   ];
 
+  // 새로운 상태 추가
+  const [folders, setFolders] = useState<string[]>(['최근 사용한 템플릿', '국민대학교 2025']);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [folderToDelete, setFolderToDelete] = useState('');
+
+  // 템플릿 스토리지 샘플 데이터
+  const initialFolders: Folder[] = [
+    {
+      id: 'folder-1',
+      name: '찜한 템플릿',
+      templates: [],
+      subFolders: [
+        {
+          id: 'folder-1-1',
+          name: '최근 사용한 템플릿',
+          templates: [
+            {
+              id: 'template-1-1-1',
+              name: '인사말 템플릿',
+              content: '안녕하세요, {이름}님. 반갑습니다.',
+            },
+          ],
+        },
+        {
+          id: 'folder-1-2',
+          name: '국민대학교 2025',
+          templates: [
+            {
+              id: 'template-1-2-1',
+              name: '교수님 메일',
+              content: '교수님, 안녕하세요. {학번} {이름}입니다.',
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
   const handleTagSelect = (tag: TagType) => {
     console.log('TestPage - 태그 선택:', tag, '이전 선택된 태그:', selectedTag);
     setSelectedTag(tag === selectedTag ? undefined : tag);
@@ -47,8 +89,86 @@ export default function TestPage() {
     alert(`검색: ${selectedTag || '선택된 태그 없음'}`);
   };
 
+  // 폴더 추가 함수
+  const handleAddFolder = (folderName: string) => {
+    setFolders([...folders, folderName]);
+  };
+
+  // 폴더명 중복 확인 함수
+  const checkDuplicate = (folderName: string) => {
+    return folders.includes(folderName);
+  };
+
+  // 삭제 확인 모달 오픈 함수
+  const openDeleteModal = (folderName: string) => {
+    setFolderToDelete(folderName);
+    setIsModalOpen(true);
+  };
+
+  // 폴더 삭제 함수
+  const handleDelete = () => {
+    setFolders(folders.filter((folder) => folder !== folderToDelete));
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-10 text-black">
+      {/* 새로운 컴포넌트 테스트 섹션 */}
+      <div className="mb-10 rounded-lg bg-white p-4">
+        <h2 className="mb-4 text-xl font-bold">UI 컴포넌트 테스트</h2>
+
+        <div className="mb-6">
+          <h3 className="mb-2 text-lg font-semibold">SavedButton</h3>
+          <div className="space-y-2">
+            <SavedButton
+              variant="default"
+              text="최근 사용한 템플릿"
+              onClick={() => console.log('Default button clicked')}
+            />
+            <SavedButton
+              variant="custom"
+              text="국민대학교 2025"
+              onClick={() => console.log('Custom button clicked')}
+              onDelete={() => openDeleteModal('국민대학교 2025')}
+            />
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <h3 className="mb-2 text-lg font-semibold">SavedInput</h3>
+          <SavedInput onAdd={handleAddFolder} checkDuplicate={checkDuplicate} />
+        </div>
+
+        <div className="mb-6">
+          <h3 className="mb-2 text-lg font-semibold">WarningModal</h3>
+          <button
+            className="rounded bg-red-500 px-4 py-2 text-white"
+            onClick={() => setIsModalOpen(true)}
+          >
+            모달 열기
+          </button>
+          <WarningModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onDelete={handleDelete}
+          />
+        </div>
+
+        <div className="mb-6">
+          <h3 className="mb-2 text-lg font-semibold">폴더 목록</h3>
+          <ul>
+            {folders.map((folder, index) => (
+              <li key={index}>{folder}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mb-6">
+          <h3 className="mb-2 text-lg font-semibold">템플릿 보관함</h3>
+          <TemplateStorage initialFolders={initialFolders} />
+        </div>
+      </div>
+
       <Button
         variant="primary"
         size="medium"

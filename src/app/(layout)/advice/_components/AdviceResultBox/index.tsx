@@ -26,10 +26,11 @@ export default function AdviceResult({ content }: AdviceResultProps) {
       </div>
       <Spacing size={12} />
       <div className="flex w-full items-end justify-end gap-6">
-        <button>
+        <button className="active:translate-y-[2px] transition-transform">
           <IconShare />
         </button>
         <button
+        className="active:translate-y-[2px] transition-transform"
           onClick={() =>
             openModal('create', {
               draftContent: content,
@@ -38,7 +39,8 @@ export default function AdviceResult({ content }: AdviceResultProps) {
         >
           <IconSave />
         </button>
-        <button>
+        <button className="active:translate-y-[2px] transition-transform"
+        onClick={() => navigator.clipboard.writeText(content)}>
           <IconCopy />
         </button>
       </div>

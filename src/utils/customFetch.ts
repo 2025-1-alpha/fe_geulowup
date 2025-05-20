@@ -14,7 +14,7 @@ interface CustomFetchOptions extends RequestInit {
 export const customFetch = async <T>(
   endpoint: string,
   options: CustomFetchOptions = {},
-): Promise<T | undefined> => {
+): Promise<T> => {
   try {
     const isAbsolute = /^https?:\/\//.test(endpoint);
     const url = isAbsolute ? endpoint : `/api${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
@@ -22,29 +22,23 @@ export const customFetch = async <T>(
     const headers = new Headers(options.headers || {});
     headers.set('Content-Type', 'application/json');
 
-    // 인증 토큰은 쿠키에 포함되어 자동으로 전송됨
     const res = await fetch(url, {
       ...options,
       headers,
-      // credentials: 'include'를 설정하여 쿠키가 항상 전송되도록 함
-      credentials: 'include',
+      credentials: 'include', // 쿠키 항상 포함
     });
 
     if (!res.ok) {
       const responseText = await res.text();
 
-      // 401 에러 처리 (인증 실패)
       if (res.status === 401 && !options.skipAuth) {
-        // 스토어의 토큰 클리어
         useAuthStore.getState().clearToken();
 
         if (typeof window !== 'undefined') {
-          // 로그인 페이지로 리다이렉트
           window.location.replace('/login');
         }
       }
 
-      // 사용자 지정 에러 핸들러가 있으면 실행
       if (options.errorHandler) {
         options.errorHandler(res.status, responseText);
       }
@@ -52,14 +46,16 @@ export const customFetch = async <T>(
       throw new Error(`API 요청 실패: ${res.status} - ${responseText || '응답 없음'}`);
     }
 
-    // 응답 형식에 따라 처리
+    // ✅ 응답이 JSON인지 확인
     const contentType = res.headers.get('Content-Type');
     if (contentType?.includes('application/json')) {
       const text = await res.text();
-      return text ? JSON.parse(text) : undefined;
+      if (!text) throw new Error('빈 응답입니다.');
+      return JSON.parse(text) as T;
     }
 
-    return undefined;
+    // ❌ JSON이 아닌 경우
+    throw new Error('응답이 JSON 형식이 아닙니다.');
   } catch (error) {
     console.error('API 요청 중 오류 발생:', error);
     throw error;

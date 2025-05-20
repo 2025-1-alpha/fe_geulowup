@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
+import { useUnsaveModalStore } from "@/stores/useUnsaveModalStore";
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
@@ -16,6 +17,7 @@ export default function UsingModal() {
   const router = useRouter();
 
   const { selectedTemplateId, closeModal } = useModalStore();
+  const { openUnsaveModal } = useUnsaveModalStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
@@ -92,7 +94,7 @@ export default function UsingModal() {
             );
           })}
         </section>
-        <button onClick={closeModal}>
+        <button onClick={openUnsaveModal}>
           <IconClose />
         </button>
       </section>
@@ -107,8 +109,8 @@ export default function UsingModal() {
         
       </textarea>
       <Spacing size={24} />
-      <section className="flex h-11 gap-3">
-        {inputs.map((item, idx) => (
+      <section className="flex h-11 justify-between">
+        <section className='flex gap-3'>{inputs.map((item, idx) => (
           <input
             key={idx}
             placeholder={item}
@@ -117,15 +119,14 @@ export default function UsingModal() {
             onChange={(e) => handleInputChange(item, e.target.value)}
             className="body-lg text-layout-grey5 border-layout-grey5 flex rounded-md border px-3 py-[9px]"
           />
-        ))}
+        ))}</section>
+         <section className="button-lg text-layout-grey5 flex h-[28px] mr-3">
+          <button onClick={() => handleCopyClipBoard(content)}>복사하기</button>
+        </section>
       </section>
 
       <Spacing size={24} />
-      {template?.isAuthor && (
-        <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
-          <button onClick={() => handleCopyClipBoard(content)}>복사하기</button>
-        </section>
-      )}
+       
 
       <section className="flex h-[80px] w-full items-end justify-between">
         {/* 작성자 정보 */}
@@ -159,7 +160,7 @@ export default function UsingModal() {
           </section>
         </section>
         <section className="flex gap-3">
-          <Button state="line">
+          <Button state="line" onClick={openUnsaveModal}>
             사용 취소
           </Button>
           <Button onClick={handleClickAiUse} state="line">AI로 한 번 더 수정하기</Button>

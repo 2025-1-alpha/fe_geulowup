@@ -184,7 +184,7 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       </p>
       <Spacing size={24} />
       <textarea
-        className="body-lg flex h-[287px]"
+        className="body-lg flex h-[287px] bg-white border border-layout-grey3 rounded-lg p-2"
         placeholder="내용을 입력해 주세요."
         value={content}
         onChange={(e) => setContent(e.target.value)}

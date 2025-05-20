@@ -12,12 +12,14 @@ interface AdviceInputAreaProps {
   draftContent: string;
   onChangeDraftContent: (value: string) => void;
   onSubmit: () => void;
+  onChangeTags: (values: string[]) => void;
 }
 
 export default function AdviceInputArea({
   draftContent,
   onChangeDraftContent,
   onSubmit,
+  onChangeTags
 }: AdviceInputAreaProps) {
   const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
 
@@ -34,21 +36,18 @@ export default function AdviceInputArea({
         newTags.push({ id: generateId(), value: '' });
       }
 
+      onChangeTags(newTags.map((tag) => tag.value));
       return newTags;
     });
   };
 
   const handleTagRemove = (id: string) => {
     setTags((prev) => {
-      const newTags = prev.filter((tag) => tag.id !== id);
-
-      // 모두 삭제되면 빈 인풋 하나 추가
-      if (newTags.length === 0) {
-        return [{ id: generateId(), value: '' }];
-      }
-
-      return newTags;
-    });
+    const newTags = prev.filter((tag) => tag.id !== id);
+    const finalTags = newTags.length === 0 ? [{ id: generateId(), value: '' }] : newTags;
+    onChangeTags(finalTags.map((tag) => tag.value));
+    return finalTags;
+  });
   };
 
   const tagErrCheck = () => {

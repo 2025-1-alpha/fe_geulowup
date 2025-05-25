@@ -1,4 +1,3 @@
-import { Spacing } from '@/components/ui/Spacing';
 import ArchiveSidebar from './_components/ArchiveSidebar';
 import ArchiveContent from './_components/ArchiveContent';
 import ArchiveCreateButton from './_components/ArchiveCreateButton';
@@ -14,7 +13,7 @@ export default function ArchivePage() {
             <ArchiveCreateButton />
           </div>
 
-          <Spacing size={40} />
+          <div className="mt-10" />
 
           {/* 사이드바와 메인 콘텐츠 */}
           <div className="flex gap-6">

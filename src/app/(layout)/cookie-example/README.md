@@ -1,128 +1,137 @@
-# 쿠키 기반 인증 및 상태 관리 가이드
+# 🍪 쿠키 사용 예제 페이지
 
-이 문서는 `cookieUtils.ts`에 구현된 쿠키 관련 유틸리티 함수들의 사용법을 설명합니다.
+이 페이지는 프로젝트에서 사용하는 모든 쿠키 관련 기능들의 실제 동작 예제를 제공합니다.
 
-## 목차
+## 📋 제공하는 예제들
 
-1. [기본 쿠키 사용법](#1-기본-쿠키-사용법)
-2. [JSON 데이터 저장](#2-json-데이터-저장)
-3. [인증 토큰 관리](#3-인증-토큰-관리)
-4. [보안 및 옵션 설정](#4-보안-및-옵션-설정)
-5. [서버 컴포넌트에서 사용](#5-서버-컴포넌트에서-사용)
+### 1. 기본 쿠키 사용
+- `setCookie()`, `getCookie()`, `removeCookie()` 기본 함수 사용법
+- 쿠키 옵션 설정 (만료시간, 경로 등)
 
-## 1. 기본 쿠키 사용법
+### 2. JSON 쿠키 사용
+- `setJSONCookie()`, `getJSONCookie()` 함수로 객체 데이터 저장
+- 복잡한 데이터 구조 쿠키 관리
 
+### 3. 인증 토큰 관리
+- `useAuthStore` Zustand 스토어 사용법
+- 토큰 설정/삭제 및 상태 확인
+
+### 4. 사용자 선호도 관리 ⭐ NEW
+- 테마, 폰트 크기, AI 모드 등 사용자 설정
+- `useUserPreferences` 훅 사용법
+
+### 5. 찜하기 기능 ⭐ NEW
+- 템플릿 찜하기/해제 기능
+- `useLikes` 훅으로 찜 상태 관리
+
+### 6. 드래프트 저장 ⭐ NEW
+- 임시 저장 기능 구현
+- `useDrafts` 훅으로 드래프트 관리
+
+### 7. 세션 정보 ⭐ NEW
+- 페이지 방문 기록, 세션 ID 관리
+- `useSession` 훅 사용법
+
+### 8. 직접 헬퍼 함수 사용 ⭐ NEW
+- React Hook 없이 직접 쿠키 조작
+- 고급 사용법 및 커스터마이징
+
+## 🚀 다른 페이지에서 사용하는 방법
+
+### React Hook 사용 (권장)
 ```typescript
-import { getCookie, setCookie, removeCookie, COOKIE_DEFAULTS } from '@/utils/cookieUtils';
+// 사용자 선호도
+import { useUserPreferences } from '@/hooks/useCookieState';
+const { prefs, updatePrefs } = useUserPreferences();
 
-// 쿠키 설정 - 기본
-setCookie('myCookie', '쿠키값');
+// 찜하기
+import { useLikes } from '@/hooks/useCookieState';
+const { likes, toggleLike, isLiked } = useLikes();
 
-// 쿠키 설정 - 유효기간 지정
-setCookie('tempCookie', '임시값', { 
-  'max-age': COOKIE_DEFAULTS.MAX_AGE.ONE_DAY // 1일
-});
-
-// 쿠키 읽기
-const value = getCookie('myCookie'); // '쿠키값' 또는 null (쿠키가 없는 경우)
-
-// 쿠키 삭제
-removeCookie('myCookie');
+// 드래프트
+import { useDrafts } from '@/hooks/useCookieState';
+const { drafts, addDraft, removeDraft } = useDrafts();
 ```
 
-## 2. JSON 데이터 저장
-
-객체나 배열 같은 복잡한 데이터를 쿠키에 저장할 때 사용합니다.
-
+### 직접 헬퍼 함수 사용
 ```typescript
-import { getJSONCookie, setJSONCookie } from '@/utils/cookieUtils';
+import { userPrefsHelper, likesHelper, draftHelper } from '@/utils/cookieHelpers';
 
-// JSON 데이터 설정
-const userPrefs = { 
-  theme: 'dark', 
-  fontSize: 16,
-  notifications: true 
-};
-setJSONCookie('userPrefs', userPrefs);
-
-// JSON 데이터 읽기
-const prefs = getJSONCookie('userPrefs');
-if (prefs) {
-  console.log(prefs.theme); // 'dark'
-}
+// 직접 조작
+userPrefsHelper.update({ theme: 'dark' });
+likesHelper.add(templateId);
+draftHelper.add({ title: '제목', content: '내용', tags: [], sourcePageId: 'advice' });
 ```
 
-## 3. 인증 토큰 관리
+## 📁 관련 파일 구조
 
-Zustand 스토어를 통한 인증 상태 관리:
-
-```typescript
-import { useAuthStore } from '@/stores/useAuthStore';
-
-// 컴포넌트 내부에서
-const { token, setToken, clearToken } = useAuthStore();
-
-// 로그인 성공 후 토큰 저장
-setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6...');
-
-// 현재 토큰 확인
-console.log(token);
-
-// 로그아웃 (토큰 삭제)
-clearToken();
+```
+src/
+├── types/cookieTypes.ts          # 쿠키 데이터 타입 정의
+├── constants/cookieKeys.ts       # 쿠키 키 상수
+├── utils/
+│   ├── cookieUtils.ts           # 기본 쿠키 유틸리티
+│   └── cookieHelpers.ts         # 도메인별 헬퍼 함수
+├── hooks/useCookieState.ts      # React Hook들
+└── stores/useAuthStore.ts       # 인증 스토어
 ```
 
-또는 컴포넌트 외부에서 사용:
+## 🎯 각 페이지별 활용 예시
 
+### advice 페이지
 ```typescript
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAdviceState, useDrafts } from '@/hooks/useCookieState';
 
-// API 호출 함수 내부 등에서
-const token = useAuthStore.getState().token;
-const clearToken = useAuthStore.getState().clearToken;
+// 페이지 상태 저장
+const { state, updateState } = useAdviceState();
+updateState({ lastDraftContent: content, aiModeEnabled: true });
+
+// 드래프트 자동 저장
+const { addDraft } = useDrafts();
+addDraft({ content, sourcePageId: 'advice' });
 ```
 
-## 4. 보안 및 옵션 설정
-
-다양한 옵션으로 쿠키 보안을 강화할 수 있습니다:
-
+### explore 페이지
 ```typescript
-import { setCookie, COOKIE_DEFAULTS } from '@/utils/cookieUtils';
+import { useExploreState, useLikes } from '@/hooks/useCookieState';
 
-// 보안 강화 쿠키
-setCookie('secureData', '민감한 정보', {
-  'max-age': COOKIE_DEFAULTS.MAX_AGE.ONE_WEEK,
-  secure: true,  // HTTPS에서만 전송
-  sameSite: 'strict',  // CSRF 방어
-  path: '/account'  // 특정 경로에서만 접근 가능
-});
+// 검색/필터 상태 저장
+const { state, updateState } = useExploreState();
+updateState({ selectedTags: ['태그1'], sortType: 'popular' });
+
+// 찜하기 기능
+const { toggleLike, isLiked } = useLikes();
 ```
 
-## 5. 서버 컴포넌트에서 사용
-
-Next.js 서버 컴포넌트에서는 다음과 같이 사용합니다:
-
+### archive 페이지
 ```typescript
-// 서버 컴포넌트 (.server.ts 또는 Server Component)
-import { cookies } from 'next/headers';
+import { useLikes, useDrafts } from '@/hooks/useCookieState';
 
-export async function getServerSideProps(context) {
-  // 쿠키 읽기
-  const token = cookies().get('auth-storage')?.value;
-  
-  if (!token) {
-    return { redirect: { destination: '/login', permanent: false } };
-  }
-  
-  // 토큰으로 데이터 조회
-  const userData = await fetchUserData(token);
-  
-  return { props: { userData } };
-}
+// 찜한 템플릿 목록 표시
+const { likes } = useLikes();
+
+// 저장된 드래프트 목록 표시
+const { drafts } = useDrafts();
 ```
 
-## 참고 사항
+## 🔧 커스터마이징
 
-- `HttpOnly` 옵션은 클라이언트에서 설정할 수 없으므로, 서버 측 응답에서 설정해야 합니다.
-- 로컬 개발 환경에서는 `secure: true` 옵션이 적용되지 않습니다. 프로덕션 환경에서만 자동으로 활성화됩니다.
-- 쿠키 관련 상수는 `COOKIE_DEFAULTS`에서 제공되며, 필요에 따라 값을 변경할 수 있습니다. 
+새로운 쿠키 데이터 타입이 필요한 경우:
+
+1. `src/types/cookieTypes.ts`에 인터페이스 추가
+2. `src/constants/cookieKeys.ts`에 키 상수 추가
+3. `src/utils/cookieHelpers.ts`에 헬퍼 함수 추가
+4. `src/hooks/useCookieState.ts`에 React Hook 추가
+
+## 🐛 디버깅
+
+- 브라우저 개발자 도구 > Application > Cookies에서 실제 쿠키 확인
+- 콘솔에서 `document.cookie`로 모든 쿠키 확인
+- 각 예제 버튼을 클릭하여 실시간으로 쿠키 변화 확인
+
+## ⚠️ 주의사항
+
+- 쿠키는 4KB 제한이 있으므로 큰 데이터는 적절히 분할
+- 민감한 정보는 쿠키에 저장하지 말 것
+- 개발 환경에서는 `secure: false`, 프로덕션에서는 `secure: true`
+- 페이지별 쿠키는 해당 경로에서만 접근 가능 

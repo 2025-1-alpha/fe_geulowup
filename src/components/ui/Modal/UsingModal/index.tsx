@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
-import { useUnsaveModalStore } from "@/stores/useUnsaveModalStore";
+import { useUnsaveModalStore } from '@/stores/useUnsaveModalStore';
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
+import IconCopy from '@/assets/icons/icon-copy.svg';
 
 export default function UsingModal() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function UsingModal() {
       try {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
-        setContent(data?.content ?? ''); 
+        setContent(data?.content ?? '');
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -54,13 +55,13 @@ export default function UsingModal() {
     router.push('/advice');
   };
 
-   const handleCopyClipBoard = (text: string) => {
-    const $textarea = document.createElement("textarea"); 
+  const handleCopyClipBoard = (text: string) => {
+    const $textarea = document.createElement('textarea');
     document.body.appendChild($textarea);
     $textarea.value = text;
-    $textarea.select(); 
-    document.execCommand("copy"); 
-    document.body.removeChild($textarea); 
+    $textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild($textarea);
     // TODO : 저장되었습니다와 동일하게 복사되었습니다 띄우기
   };
 
@@ -70,13 +71,12 @@ export default function UsingModal() {
 
     let replaced = template?.content ?? '';
     for (const [k, v] of Object.entries(newReplacements)) {
-        const regex = new RegExp(`{${k}}`, 'g');
-        replaced = replaced.replace(regex, v);
+      const regex = new RegExp(`{${k}}`, 'g');
+      replaced = replaced.replace(regex, v);
     }
 
     setContent(replaced);
-};
-
+  };
 
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
@@ -103,30 +103,36 @@ export default function UsingModal() {
       <Spacing size={12} />
       <div className="title-lg">{template.title}</div>
       <Spacing size={24} />
-      <textarea className='body-lg h-[312px] flex bg-white border border-layout-grey3 rounded-lg p-2' placeholder="내용을 입력해 주세요."
+      <textarea
+        className="body-lg border-layout-grey3 flex h-[312px] rounded-lg border bg-white p-2"
+        placeholder="내용을 입력해 주세요."
         value={content}
-        onChange={(e) => setContent(e.target.value)}>
-        
-      </textarea>
+        onChange={(e) => setContent(e.target.value)}
+      ></textarea>
       <Spacing size={24} />
       <section className="flex h-11 justify-between">
-        <section className='flex gap-3'>{inputs.map((item, idx) => (
-          <input
-            key={idx}
-            placeholder={item}
-            value={replacements[item] || ''}
-             size={(replacements[item] || item).length || 1}
-            onChange={(e) => handleInputChange(item, e.target.value)}
-            className="body-lg text-layout-grey5 border-layout-grey5 flex rounded-md border px-3 py-[9px]"
-          />
-        ))}</section>
-         <section className="button-lg text-layout-grey5 flex h-[28px] mr-3">
-          <button onClick={() => handleCopyClipBoard(content)}>복사하기</button>
+        <section className="flex gap-3">
+          {inputs.map((item, idx) => (
+            <input
+              key={idx}
+              placeholder={item}
+              value={replacements[item] || ''}
+              size={(replacements[item] || item).length || 1}
+              onChange={(e) => handleInputChange(item, e.target.value)}
+              className="body-lg text-layout-grey5 border-layout-grey5 flex rounded-md border px-3 py-[9px]"
+            />
+          ))}
+        </section>
+        <section className="button-lg text-layout-grey5 mr-3 flex h-[28px]">
+          <button onClick={() => handleCopyClipBoard(content)} className="flex items-center gap-1">
+            {/* TODO : 복사되었습니다 팝업 필요 */}
+            <IconCopy className="scale-75" />
+            복사하기
+          </button>
         </section>
       </section>
 
       <Spacing size={24} />
-       
 
       <section className="flex h-[80px] w-full items-end justify-between">
         {/* 작성자 정보 */}
@@ -163,8 +169,10 @@ export default function UsingModal() {
           <Button state="line" onClick={openUnsaveModal}>
             사용 취소
           </Button>
-          <Button onClick={handleClickAiUse} state="line">AI로 한 번 더 수정하기</Button>
-          <Button icon='dropdown'>저장하기</Button>
+          <Button onClick={handleClickAiUse} state="line">
+            AI로 한 번 더 수정하기
+          </Button>
+          <Button icon="dropdown">저장하기</Button>
         </section>
       </section>
     </section>

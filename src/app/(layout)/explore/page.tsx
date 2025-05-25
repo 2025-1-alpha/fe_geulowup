@@ -13,7 +13,6 @@ import { TagType, TemplateType } from '@/types';
 import { getTemplates } from '@/services/template/getTemplates';
 import { getTemplatesRecommendation } from '@/services/template/getTemplatesRecommendation';
 import { useModalStore } from '@/stores/useModalStore';
-import { useCardStore } from '@/stores/useCardStore';
 
 export default function ExplorePage() {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
@@ -25,8 +24,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { openModal, currentModal } = useModalStore();
-  const { clearAllCards } = useCardStore();
+  const { openModal } = useModalStore();
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -62,8 +60,8 @@ export default function ExplorePage() {
             templateId: template.templateId,
           })) ?? [];
         setRecommendTemplates(templates);
-      } catch {
-        // 에러 처리
+      } catch (error) {
+        console.error('추천 템플릿 가져오기 오류:', error);
       }
     };
 
@@ -94,8 +92,8 @@ export default function ExplorePage() {
 
         setAllTemplates(templates ?? []);
         setTotalPages(response?.totalPage ?? 0);
-      } catch {
-        // 에러 처리
+      } catch (error) {
+        console.error('템플릿 가져오기 오류:', error);
       } finally {
         setIsLoading(false);
       }
@@ -103,14 +101,6 @@ export default function ExplorePage() {
 
     fetchTemplates();
   }, [selectedTag, sortType, visibleCardCount]);
-
-  // 컴포넌트 마운트 시와 모달이 닫힐 때만 카드 클릭 상태 초기화
-  useEffect(() => {
-    // 모달이 닫힐 때만 카드 클릭 상태를 초기화
-    if (currentModal === null) {
-      clearAllCards();
-    }
-  }, [clearAllCards, currentModal]);
 
   // 필터링 및 정렬된 아이템들은 이제 API에서 이미 처리해서 가져오기 때문에 제거
   const visibleCardItems = allTemplates;
@@ -123,6 +113,7 @@ export default function ExplorePage() {
 
   // 태그 선택 핸들러
   const handleTagSelect = (tag: TagType) => {
+    console.log('태그 선택:', tag, '이전 선택된 태그:', selectedTag);
     setSelectedTag(tag === selectedTag ? undefined : tag);
     setVisibleCardCount(16); // 태그 변경 시 초기 카드 수로 리셋
   };
@@ -130,11 +121,12 @@ export default function ExplorePage() {
   // 정렬 변경 핸들러
   const handleSortChange = () => {
     setSortType((prev) => (prev === 'popular' ? 'recent' : 'popular'));
+    console.log('정렬 변경:', sortType === 'popular' ? 'recent' : 'popular');
   };
 
   // 검색 버튼 핸들러
   const handleSearchClick = () => {
-    // 검색 로직
+    console.log(`검색: ${selectedTag || '선택된 태그 없음'}`);
   };
 
   // 추천 템플릿 이전/다음 핸들러
@@ -156,7 +148,8 @@ export default function ExplorePage() {
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setSelectedTemplate(null);
-    clearAllCards();
+    // 모달 닫힘 이벤트 발생 - 모든 카드의 클릭 상태 초기화
+    window.dispatchEvent(new Event('modal-closed'));
   };
 
   // 화면에 표시할 추천 템플릿 (3개씩)
@@ -172,9 +165,11 @@ export default function ExplorePage() {
         .writeText(selectedTemplate.content)
         .then(() => {
           alert('템플릿 내용이 클립보드에 복사되었습니다.');
+          console.log('템플릿 사용하기:', selectedTemplate.title);
           handleCloseModal();
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error('클립보드 복사 실패:', err);
           alert('템플릿 복사에 실패했습니다. 다시 시도해주세요.');
         });
     } else {

@@ -17,6 +17,13 @@ export default function AdviceEditor() {
   const { mutate, data, status } = usePostAdvice();
 
   const isLoading = status === 'pending';
+  const isError = status === 'error';
+
+  const adviceResultContent = isLoading
+    ? '텍스트 생성 중...'
+    : isError
+      ? '오류가 발생했어요. 다시 시도해 주세요.'
+      : data?.result || '';
 
   const handleChangeDraftContent = (value: string) => {
     setDraftContent(value);
@@ -53,7 +60,7 @@ export default function AdviceEditor() {
           />
         </section>
         <Spacing size={12} horizontal />
-        <AdviceResult content={isLoading ? '텍스트 생성 중...' : data?.result || ''} />
+        <AdviceResult content={adviceResultContent} />
       </section>
     </section>
   );

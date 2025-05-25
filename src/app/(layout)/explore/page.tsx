@@ -13,7 +13,6 @@ import { TagType, TemplateType } from '@/types';
 import { getTemplates } from '@/services/template/getTemplates';
 import { getTemplatesRecommendation } from '@/services/template/getTemplatesRecommendation';
 import { useModalStore } from '@/stores/useModalStore';
-import { useCardStore } from '@/stores/useCardStore';
 
 export default function ExplorePage() {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
@@ -26,7 +25,6 @@ export default function ExplorePage() {
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const { openModal } = useModalStore();
-  const { clearAllCards } = useCardStore();
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -150,8 +148,8 @@ export default function ExplorePage() {
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setSelectedTemplate(null);
-    // 모달 닫힘 시 모든 카드의 클릭 상태 초기화 (이벤트 대신 직접 호출)
-    clearAllCards();
+    // 모달 닫힘 이벤트 발생 - 모든 카드의 클릭 상태 초기화
+    window.dispatchEvent(new Event('modal-closed'));
   };
 
   // 화면에 표시할 추천 템플릿 (3개씩)

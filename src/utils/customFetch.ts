@@ -1,5 +1,3 @@
-import { useAuthStore } from '@/stores/useAuthStore';
-
 interface CustomFetchOptions extends RequestInit {
   skipAuth?: boolean;
 }
@@ -15,7 +13,7 @@ export const customFetch = async <T>(
   headers.set('Content-Type', 'application/json');
 
   if (typeof window !== 'undefined' && !options.skipAuth) {
-    const token = useAuthStore.getState().token;
+    const token = localStorage.getItem('token');
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }

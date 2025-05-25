@@ -14,17 +14,23 @@ export const customFetch = async <T>(
   const headers = new Headers(options.headers || {});
   headers.set('Content-Type', 'application/json');
 
+  if (typeof window !== 'undefined' && !options.skipAuth) {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+  }
+
   const res = await fetch(url, {
     ...options,
     headers,
-    credentials: 'include',
+    credentials: options.skipAuth ? 'omit' : 'include',
   });
 
   if (!res.ok) {
     if (res.status === 401 && !options.skipAuth) {
       if (typeof window !== 'undefined') {
         window.location.replace('/login');
-        useAuthStore.getState().clearToken();
       }
     }
     throw new Error(`API 요청 실패: ${res.status}`);

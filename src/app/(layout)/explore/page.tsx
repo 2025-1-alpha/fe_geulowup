@@ -25,7 +25,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { openModal, currentModal } = useModalStore();
+  const { openModal } = useModalStore();
   const { clearAllCards } = useCardStore();
 
   const tagOptions: TagType[] = [
@@ -104,14 +104,6 @@ export default function ExplorePage() {
     fetchTemplates();
   }, [selectedTag, sortType, visibleCardCount]);
 
-  // 컴포넌트 마운트 시와 모달이 닫힐 때만 카드 클릭 상태 초기화
-  useEffect(() => {
-    // 모달이 닫힐 때만 카드 클릭 상태를 초기화
-    if (currentModal === null) {
-      clearAllCards();
-    }
-  }, [clearAllCards, currentModal]);
-
   // 필터링 및 정렬된 아이템들은 이제 API에서 이미 처리해서 가져오기 때문에 제거
   const visibleCardItems = allTemplates;
 
@@ -156,6 +148,7 @@ export default function ExplorePage() {
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setSelectedTemplate(null);
+    // 모달 닫힘 시 모든 카드의 클릭 상태 초기화 (이벤트 대신 직접 호출)
     clearAllCards();
   };
 

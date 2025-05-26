@@ -7,6 +7,7 @@ import { Button } from '../../Button';
 import IconClose from '@/assets/icons/icon-close.svg';
 import { useCreateTemplate } from '@/hooks/template';
 import { useEditTemplate } from '@/hooks/template';
+import { usePostPlaceholder } from '@/hooks/models/usePostPlaceholders';
 import { useEffect, useState } from 'react';
 
 interface TagItem {
@@ -38,9 +39,11 @@ export default function EditModal({
   const { closeModal } = useModalStore();
   const { mutate: createTemplate, status: createTemplateStatus } = useCreateTemplate();
   const { mutate: editTemplate, status: editTemplateStatus } = useEditTemplate();
+  const { mutate: placeholderContent, status: placeholderStatus, data } = usePostPlaceholder();
 
   const createIsLoading = createTemplateStatus == 'pending';
   const editIsLoading = editTemplateStatus == 'pending';
+  const placeholderIsLoading = placeholderStatus == 'pending';
 
   //   TODO : 모든 입력 입력되어 있는지 검사하기
   const handleSaveBtn = () => {
@@ -126,6 +129,25 @@ export default function EditModal({
 
       return newTags;
     });
+  };
+
+  const handlePlaceholderBtn = () => {
+    placeholderContent(
+      { content: content },
+      {
+        onSuccess: (data) => {
+          if (data?.result) {
+            setContent(data.result);
+          } else {
+            alert('내용이 너무 적습니다. 다시 시도해 주세요.');
+          }
+        },
+        onError: (error) => {
+          console.error('자동 빈칸 만들기 실패:', error);
+          alert('오류가 발생했습니다. 다시 시도해 주세요.');
+        },
+      },
+    );
   };
 
   const handleCancelEditBtn = () => {
@@ -230,7 +252,9 @@ export default function EditModal({
             수정 취소
           </Button>
         )}
-        <Button state="line">자동 빈칸 만들기</Button>
+        <Button state="line" onClick={handlePlaceholderBtn} disabled={placeholderIsLoading}>
+          자동 빈칸 만들기
+        </Button>
         <Button icon="dropdown" onClick={handleSaveBtn} disabled={createIsLoading || editIsLoading}>
           {createIsLoading || editIsLoading ? '저장 중...' : '저장하기'}
         </Button>

@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { TagType } from '@/types';
 import TagSearchBar from '@/components/ui/TagSearchBar';
 import { Spacing } from '@/components/ui/Spacing';
+import ArrowUpDownIcon from '@/assets/icons/icon-arrow-up-down.svg';
 import ArchiveCardGrid from '../ArchiveCardGrid';
 
 export default function ArchiveContent() {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
+  const [sortType, setSortType] = useState<'popular' | 'latest'>('popular');
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -37,6 +39,10 @@ export default function ArchiveContent() {
     console.log('검색:', selectedTag);
   };
 
+  const handleSortChange = () => {
+    setSortType(sortType === 'popular' ? 'latest' : 'popular');
+  };
+
   return (
     <div className="flex-1">
       {/* 태그 검색바 */}
@@ -47,6 +53,19 @@ export default function ArchiveContent() {
         onTagSelect={handleTagSelect}
         onSearchClick={handleSearchClick}
       />
+
+      <Spacing size={28} />
+
+      {/* 정렬 버튼 */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleSortChange}
+          className="bg-layout-grey1 text-layout-grey6 flex h-[36px] w-[87px] items-center justify-center gap-1 rounded"
+        >
+          <ArrowUpDownIcon />
+          <span>{sortType === 'popular' ? '인기순' : '최신순'}</span>
+        </button>
+      </div>
 
       <Spacing size={40} />
 

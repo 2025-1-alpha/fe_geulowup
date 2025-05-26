@@ -69,7 +69,7 @@ export default function ArchiveCardGrid() {
           <button
             onClick={handleLoadMore}
             disabled={isLoading}
-            className={`border-primary-navy4 text-primary-navy4 hover:bg-primary-navy1 rounded-[6px] border px-6 py-2 transition-colors ${
+            className={`border-primary-navy4 text-primary-navy4 hover:bg-primary-navy1 button-md h-[52px] w-[210px] rounded-[6px] border transition-colors ${
               isLoading ? 'cursor-not-allowed opacity-70' : ''
             }`}
           >

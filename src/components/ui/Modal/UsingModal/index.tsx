@@ -179,7 +179,7 @@ export default function UsingModal() {
             AI로 한 번 더 수정하기
           </Button>
           <div className="flex flex-col gap-2">
-            {dropdown && <Dropdown templateId={50} />}
+            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} />}
             <Button icon="dropdown" onClick={handleDropdown}>
               저장하기
             </Button>

@@ -158,7 +158,7 @@ export default function ViewModal() {
         </section>
         <section className="flex items-end gap-3">
           <div className="flex flex-col gap-2">
-            {dropdown && <Dropdown templateId={50} />}
+            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} />}
             <Button icon="dropdown" state="line" onClick={handleDropdown}>
               저장하기
             </Button>

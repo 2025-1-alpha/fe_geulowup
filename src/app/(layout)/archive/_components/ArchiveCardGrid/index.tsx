@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Card from '@/components/ui/Card';
 import { useModalStore } from '@/stores/useModalStore';
-import { useCardStore } from '@/stores/useCardStore';
 
 // 임시 더미 데이터 - templateId 추가
 const dummyCards = Array.from({ length: 15 }, (_, index) => ({
@@ -21,15 +20,14 @@ export default function ArchiveCardGrid() {
   const [visibleCards, setVisibleCards] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
   const { openModal, currentModal } = useModalStore();
-  const { clearAllCards } = useCardStore();
 
   // 컴포넌트 마운트 시와 모달이 닫힐 때만 카드 클릭 상태 초기화
   useEffect(() => {
     // 모달이 닫힐 때만 카드 클릭 상태를 초기화
     if (currentModal === null) {
-      clearAllCards();
+      // clearAllCards(); // useCardStore가 없으므로 주석 처리
     }
-  }, [clearAllCards, currentModal]);
+  }, [currentModal]);
 
   const handleLoadMore = () => {
     setIsLoading(true);

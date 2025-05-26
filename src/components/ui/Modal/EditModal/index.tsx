@@ -39,7 +39,7 @@ export default function EditModal({
   const { closeModal } = useModalStore();
   const { mutate: createTemplate, status: createTemplateStatus } = useCreateTemplate();
   const { mutate: editTemplate, status: editTemplateStatus } = useEditTemplate();
-  const { mutate: placeholderContent, status: placeholderStatus, data } = usePostPlaceholder();
+  const { mutate: placeholderContent, status: placeholderStatus } = usePostPlaceholder();
 
   const createIsLoading = createTemplateStatus == 'pending';
   const editIsLoading = editTemplateStatus == 'pending';

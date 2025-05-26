@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import CardTag from '@/components/ui/CardTag';
 import CardLike from '@/components/ui/CardLike';
-import { useCardStore } from '@/stores/useCardStore';
 
 type variantType = 'large' | 'medium' | 'small' | 'promote';
 
@@ -27,9 +26,7 @@ const Card: React.FC<CardProps> = ({
   onClick,
   className,
 }) => {
-  const cardId = `${title}-${variant}`;
-  const { clickedCards, setCardClicked } = useCardStore();
-  const isClicked = clickedCards[cardId] || false;
+  const [isClicked, setIsClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
@@ -113,9 +110,45 @@ const Card: React.FC<CardProps> = ({
     };
   }, [description, variant, state]);
 
+  // 클릭 상태 유지
+  useEffect(() => {
+    if (isClicked) {
+      // 클릭 상태를 로컬 스토리지에 저장하여 페이지 새로고침 후에도 유지
+      const cardId = `${title}-${variant}`;
+      localStorage.setItem(`card-clicked-${cardId}`, 'true');
+    }
+  }, [isClicked, title, variant]);
+
+  // 컴포넌트 마운트 시 이전 클릭 상태 복원
+  useEffect(() => {
+    const cardId = `${title}-${variant}`;
+    const wasClicked = localStorage.getItem(`card-clicked-${cardId}`);
+    if (wasClicked === 'true') {
+      setIsClicked(true);
+    }
+  }, [title, variant]);
+
+  // 모달 닫힘 이벤트 감지
+  useEffect(() => {
+    // 모달 닫힘 이벤트 리스너 설정
+    const handleModalClose = () => {
+      const cardId = `${title}-${variant}`;
+      localStorage.removeItem(`card-clicked-${cardId}`);
+      setIsClicked(false);
+    };
+
+    // 사용자 정의 이벤트 생성 및 구독
+    window.addEventListener('modal-closed', handleModalClose);
+
+    // cleanup
+    return () => {
+      window.removeEventListener('modal-closed', handleModalClose);
+    };
+  }, [title, variant]);
+
   const handleClick = () => {
     if (!isClicked) {
-      setCardClicked(cardId, true);
+      setIsClicked(true);
     }
 
     if (onClick) {

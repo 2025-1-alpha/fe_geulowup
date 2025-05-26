@@ -1,56 +1,42 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '@/components/ui/Card';
-
-const templates = [
-  {
-    templateId: 1,
-    title: '글로우업을 소개하기',
-    content:
-      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-    likeCount: 100,
-    tagText: ['태그 텍스트', '테스트'],
-  },
-  {
-    templateId: 2,
-    title: '글로우업을 소개하기',
-    content:
-      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-    likeCount: 50,
-    tagText: ['태그 텍스트', '테스트'],
-  },
-  {
-    templateId: 3,
-    title: '글로우업을 소개하기',
-    content:
-      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-    likeCount: 50,
-    tagText: ['태그 텍스트', '테스트'],
-  },
-  {
-    templateId: 4,
-    title: '글로우업을 소개하기',
-    content:
-      '안녕하세요 잘 부탁드립니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-    likeCount: 50,
-    tagText: ['태그 텍스트', '테스트'],
-  },
-];
+import { TemplateType } from '@/types';
+import { useTemplatesRecommendation } from '@/hooks/template/useTemplatesRecommendation';
+import { useTemplatesLikes } from '@/hooks/template/useTemplateLikes';
 
 export default function RecommendTemplates() {
+  const { data: recommendData } = useTemplatesRecommendation();
+  const { data: likeData } = useTemplatesLikes();
+
   const asideList = [
     { label: 'recommend', text: '추천 템플릿' },
     { label: 'like', text: '찜한 템플릿' },
   ];
 
   const [asideState, setAsideState] = useState('recommend');
+  const [templates, setTemplates] = useState<TemplateType[]>([]);
 
   const handleAside = (label: string) => {
     setAsideState(label);
-    // 선택에 맞춰서 카드 리스트 api 연결
   };
+
+  useEffect(() => {
+    const response = asideState === 'recommend' ? recommendData : likeData;
+    const templates =
+      response?.templates.map((templates) => ({
+        title: templates.title,
+        description: templates.content,
+        tags: templates.tags,
+        likes: templates.likeCount,
+        content: templates.content,
+        templateId: templates.templateId,
+      })) ?? [];
+
+    setTemplates(templates);
+  }, [recommendData, likeData, asideState]);
 
   return (
     <section className="z-10 flex">
@@ -81,9 +67,9 @@ export default function RecommendTemplates() {
               key={template.templateId}
               variant="small"
               title={template.title}
-              description={template.content}
-              tags={template.tagText}
-              likes={template.likeCount}
+              description={template.description}
+              tags={template.tags}
+              likes={template.likes}
             />
           ))}
         </section>

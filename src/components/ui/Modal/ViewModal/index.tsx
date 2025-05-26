@@ -12,6 +12,7 @@ import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
+import Dropdown from '../../Dropdown';
 
 export default function ViewModal() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function ViewModal() {
   const { setCurrentTemplate } = useTemplateStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dropdown, setDropdown] = useState(false);
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -46,27 +48,31 @@ export default function ViewModal() {
   const handleCilckUse = () => {
     closeModal();
     openModal('using', {
-          templateId : template.templateId,
-          draftTitle: template.title,
-          draftContent: template.content,
-          draftTags: template.tags
-        })
+      templateId: template.templateId,
+      draftTitle: template.title,
+      draftContent: template.content,
+      draftTags: template.tags,
+    });
   };
 
-  const handleClickEdit = (template  : TemplateDetail) => {
+  const handleClickEdit = (template: TemplateDetail) => {
     closeModal();
     openModal('edit', {
-          templateId : template.templateId,
-          draftTitle: template.title,
-          draftContent: template.content,
-          draftTags: template.tags
-        })
-  }
+      templateId: template.templateId,
+      draftTitle: template.title,
+      draftContent: template.content,
+      draftTags: template.tags,
+    });
+  };
 
   const handleClickAiUse = () => {
     setCurrentTemplate({ templateId: template.templateId, content: template.content });
     closeModal();
     router.push('/advice');
+  };
+
+  const handleDropdown = () => {
+    setDropdown((prev) => !prev);
   };
 
   return (
@@ -114,7 +120,8 @@ export default function ViewModal() {
       <Spacing size={24} />
       {template?.isAuthor && (
         <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
-          <button>삭제하기</button>|<button onClick={() => handleClickEdit(template)}>수정하기</button>
+          <button>삭제하기</button>|
+          <button onClick={() => handleClickEdit(template)}>수정하기</button>
         </section>
       )}
 
@@ -149,11 +156,13 @@ export default function ViewModal() {
             </div>
           </section>
         </section>
-        <section className="flex gap-3">
-          {/* TODO : API 연결 전에 저장하기 버튼 눌렀을 때 디자인 요청하기 */}
-          <Button state="line" icon="dropdown">
-            저장하기
-          </Button>
+        <section className="flex items-end gap-3">
+          <div className="flex flex-col gap-2">
+            {dropdown && <Dropdown templateId={50} />}
+            <Button icon="dropdown" state="line" onClick={handleDropdown}>
+              저장하기
+            </Button>
+          </div>
           <Button onClick={handleCilckUse}>사용하기</Button>
           <Button onClick={handleClickAiUse}>AI로 한 번 더 수정하기</Button>
         </section>

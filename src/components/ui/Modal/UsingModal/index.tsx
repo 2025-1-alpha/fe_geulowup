@@ -24,6 +24,7 @@ export default function UsingModal() {
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
   const [replacements, setReplacements] = useState<Record<string, string>>({});
+  const [dropdown, setDropdown] = useState(false);
 
   const { setCurrentTemplate } = useTemplateStore();
 
@@ -77,6 +78,10 @@ export default function UsingModal() {
     }
 
     setContent(replaced);
+  };
+
+  const handleDropdown = () => {
+    setDropdown((prev) => !prev);
   };
 
   return (
@@ -174,8 +179,10 @@ export default function UsingModal() {
             AI로 한 번 더 수정하기
           </Button>
           <div className="flex flex-col gap-2">
-            <Dropdown templateId={50} />
-            <Button icon="dropdown">저장하기</Button>
+            {dropdown && <Dropdown templateId={50} />}
+            <Button icon="dropdown" onClick={handleDropdown}>
+              저장하기
+            </Button>
           </div>
         </section>
       </section>

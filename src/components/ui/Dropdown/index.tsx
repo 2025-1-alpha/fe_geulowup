@@ -25,8 +25,8 @@ export default function Dropdown({
   }, []);
 
   return (
-    <section className="bg-layout-grey2 h-max-[180px] z-30 flex w-[210px] flex-col rounded-md p-4">
-      <section className="flex flex-col items-start gap-1">
+    <section className="bg-layout-grey2 z-30 flex max-h-[180px] w-[210px] flex-col gap-3 rounded-md p-4">
+      <section className="flex max-h-[104px] flex-col items-start gap-1 overflow-y-auto">
         {folders.map((folder) => (
           <button
             key={folder.folderId}

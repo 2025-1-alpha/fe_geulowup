@@ -22,7 +22,13 @@ interface EditModalProps {
   draftTags?: string[];
 }
 
-export default function EditModal({ mode, selectedTemplateId, draftTitle, draftContent, draftTags }: EditModalProps) {
+export default function EditModal({
+  mode,
+  selectedTemplateId,
+  draftTitle,
+  draftContent,
+  draftTags,
+}: EditModalProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
@@ -42,53 +48,52 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       return;
     }
 
-    if (mode == "create") {
-    createTemplate(
-          {
+    if (mode == 'create') {
+      createTemplate(
+        {
+          title: title.trim(),
+          content: content.trim(),
+          tags: tagValues,
+          isPrivate,
+        },
+        {
+          onSuccess: () => {
+            // TODO : 성공 모달 디자인 받기
+            closeModal();
+          },
+          onError: (error) => {
+            console.error('템플릿 생성 실패:', error);
+          },
+        },
+      );
+    }
+
+    if (mode == 'edit') {
+      if (selectedTemplateId === undefined) {
+        console.error('템플릿 ID가 없습니다.');
+        return;
+      }
+
+      editTemplate(
+        {
+          templateId: selectedTemplateId,
+          payload: {
             title: title.trim(),
             content: content.trim(),
             tags: tagValues,
             isPrivate,
           },
-          {
-            onSuccess: () => {
-              // TODO : 성공 모달 디자인 받기
-              closeModal();
-            },
-            onError: (error) => {
-              console.error('템플릿 생성 실패:', error);
-            },
+        },
+        {
+          onSuccess: () => {
+            closeModal();
           },
-        );
-    } 
-
-    if ( mode == "edit") {
-       if (selectedTemplateId === undefined) {
-    console.error('템플릿 ID가 없습니다.');
-    return;
-  }
-
-
-    editTemplate(
-    {
-      templateId: selectedTemplateId ,
-      payload: {
-        title: title.trim(),
-        content: content.trim(),
-        tags: tagValues,
-        isPrivate,
-      },
-    },
-    {
-      onSuccess: () => {
-        closeModal();
-      },
-      onError: (error) => {
-        console.error('템플릿 수정 실패:', error);
-      },
+          onError: (error) => {
+            console.error('템플릿 수정 실패:', error);
+          },
+        },
+      );
     }
-  );
-}   
   };
 
   function generateId() {
@@ -131,14 +136,14 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       setContent(draftContent);
     }
 
-    if (mode == "edit" && draftTitle && draftContent && draftTags) {
+    if (mode == 'edit' && draftTitle && draftContent && draftTags) {
       setTitle(draftTitle);
       setTags(
-    draftTags?.map((tag) => ({
-      id: generateId(),
-      value: tag,
-    })) ?? [{ id: generateId(), value: '' }]
-  );
+        draftTags?.map((tag) => ({
+          id: generateId(),
+          value: tag,
+        })) ?? [{ id: generateId(), value: '' }],
+      );
     }
   }, [draftContent]);
 
@@ -184,7 +189,7 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       </p>
       <Spacing size={24} />
       <textarea
-        className="body-lg flex h-[287px] bg-white border border-layout-grey3 rounded-lg p-2"
+        className="body-lg border-layout-grey3 flex h-[287px] rounded-lg border bg-white p-2"
         placeholder="내용을 입력해 주세요."
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -227,9 +232,7 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
         {/* <Button icon="dropdown" onClick={handleSaveBtn} disabled={isLoading}>
           {isLoading ? '저장 중...' : '저장하기'}
         </Button> */}
-        <Button icon="dropdown" onClick={handleSaveBtn}>
-          저장하기
-        </Button>
+        <Button onClick={handleSaveBtn}>저장하기</Button>
       </section>
     </section>
   );

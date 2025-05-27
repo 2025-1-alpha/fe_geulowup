@@ -58,10 +58,7 @@ export const TagSearchButton: React.FC<TagSearchButtonProps> = ({
     loadIcon();
   }, [id, code, selected]);
 
-  console.log('TagSearchButton 렌더링:', tag, '선택됨:', selected);
-
   const handleClick = () => {
-    console.log('TagSearchButton 클릭:', tag, '현재 선택 상태:', selected);
     if (onClick) {
       onClick();
     }

@@ -1,6 +1,6 @@
 import ArchiveSidebar from './_components/ArchiveSidebar';
 import ArchiveContent from './_components/ArchiveContent';
-import ArchiveCreateButton from './_components/ArchiveCreateButton';
+import { Button } from '@/components/ui/Button';
 
 export default function ArchivePage() {
   return (
@@ -10,7 +10,9 @@ export default function ArchivePage() {
           {/* 페이지 제목과 새 템플릿 만들기 버튼 */}
           <div className="flex h-[44px] items-center justify-between">
             <p className="title-lg text-layout-grey7">보관함</p>
-            <ArchiveCreateButton />
+            <Button variant="primary" icon="add" size="medium">
+              새 템플릿 만들기
+            </Button>
           </div>
 
           <div className="mt-10" />

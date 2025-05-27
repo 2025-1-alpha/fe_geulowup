@@ -20,6 +20,7 @@ export default function ViewModal() {
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
+  const [folderId, setFolderId] = useState<number>();
   const [loading, setLoading] = useState(true);
   const [dropdown, setDropdown] = useState(false);
 
@@ -32,6 +33,7 @@ export default function ViewModal() {
       try {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
+        setFolderId(data?.savedFolder?.folderId ?? 0);
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -158,7 +160,7 @@ export default function ViewModal() {
         </section>
         <section className="flex items-end gap-3">
           <div className="flex flex-col gap-2">
-            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} />}
+            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} savedFolderId={folderId} />}
             <Button icon="dropdown" state="line" onClick={handleDropdown}>
               저장하기
             </Button>

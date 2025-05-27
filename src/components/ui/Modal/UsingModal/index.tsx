@@ -23,6 +23,7 @@ export default function UsingModal() {
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
+  const [folderId, setFolderId] = useState<number>();
   const [replacements, setReplacements] = useState<Record<string, string>>({});
   const [dropdown, setDropdown] = useState(false);
 
@@ -38,6 +39,7 @@ export default function UsingModal() {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
         setContent(data?.content ?? '');
+        setFolderId(data?.savedFolder?.folderId ?? 0);
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -62,7 +64,6 @@ export default function UsingModal() {
     document.body.appendChild($textarea);
     $textarea.value = text;
     $textarea.select();
-    document.execCommand('copy');
     document.body.removeChild($textarea);
     // TODO : 저장되었습니다와 동일하게 복사되었습니다 띄우기
   };
@@ -179,7 +180,7 @@ export default function UsingModal() {
             AI로 한 번 더 수정하기
           </Button>
           <div className="flex flex-col gap-2">
-            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} />}
+            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} savedFolderId={folderId} />}
             <Button icon="dropdown" onClick={handleDropdown}>
               저장하기
             </Button>

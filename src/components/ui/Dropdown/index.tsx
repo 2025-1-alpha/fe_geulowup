@@ -13,7 +13,7 @@ export default function Dropdown({
   content?: string;
 }) {
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [selectedFolderId, setSelectedFolderId] = useState<number | undefined>(savedFolderId);
+  const [selectedFolderId, setSelectedFolderId] = useState<number | undefined>(savedFolderId || 1);
 
   const { mutate: saveTemplate } = useSaveTemplate();
 
@@ -44,7 +44,7 @@ export default function Dropdown({
         },
         {
           onSuccess: () => {
-            // TODO : 저장시 팝업 띄우기
+            // TODO : 저장시 팝업 띄우기 + 드롭다운 닫기
             console.log(templateId, selectedFolderId);
           },
           onError: (error) => {

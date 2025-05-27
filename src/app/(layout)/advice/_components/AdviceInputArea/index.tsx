@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Spacing } from '@/components/ui/Spacing';
 import { InputTag } from '@/components/ui/InputTag';
@@ -12,12 +12,14 @@ interface AdviceInputAreaProps {
   draftContent: string;
   onChangeDraftContent: (value: string) => void;
   onSubmit: () => void;
+  onChangeTags: (values: string[]) => void;
 }
 
 export default function AdviceInputArea({
   draftContent,
   onChangeDraftContent,
   onSubmit,
+  onChangeTags,
 }: AdviceInputAreaProps) {
   const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
 
@@ -41,15 +43,15 @@ export default function AdviceInputArea({
   const handleTagRemove = (id: string) => {
     setTags((prev) => {
       const newTags = prev.filter((tag) => tag.id !== id);
-
-      // 모두 삭제되면 빈 인풋 하나 추가
-      if (newTags.length === 0) {
-        return [{ id: generateId(), value: '' }];
-      }
-
-      return newTags;
+      const finalTags = newTags.length === 0 ? [{ id: generateId(), value: '' }] : newTags;
+      onChangeTags(finalTags.map((tag) => tag.value));
+      return finalTags;
     });
   };
+
+  useEffect(() => {
+    onChangeTags(tags.map((tag) => tag.value));
+  }, [tags]);
 
   const tagErrCheck = () => {
     // TODO : 나중에 Error 체크 부분 추가하기. 현재는 무조건 false

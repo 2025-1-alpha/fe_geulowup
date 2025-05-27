@@ -128,6 +128,24 @@ const Card: React.FC<CardProps> = ({
     }
   }, [title, variant]);
 
+  // 모달 닫힘 이벤트 감지
+  useEffect(() => {
+    // 모달 닫힘 이벤트 리스너 설정
+    const handleModalClose = () => {
+      const cardId = `${title}-${variant}`;
+      localStorage.removeItem(`card-clicked-${cardId}`);
+      setIsClicked(false);
+    };
+
+    // 사용자 정의 이벤트 생성 및 구독
+    window.addEventListener('modal-closed', handleModalClose);
+
+    // cleanup
+    return () => {
+      window.removeEventListener('modal-closed', handleModalClose);
+    };
+  }, [title, variant]);
+
   const handleClick = () => {
     if (!isClicked) {
       setIsClicked(true);
@@ -156,9 +174,7 @@ const Card: React.FC<CardProps> = ({
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-1 flex-col">
           <div className="mb-[8px] flex flex-wrap gap-1">
-            {tags.map((tag, idx) => (
-              <CardTag key={idx} text={tag} />
-            ))}
+            {tags && tags.map((tag, idx) => <CardTag key={idx} text={tag} />)}
           </div>
           <div className={titleStyle}>{title}</div>
           <div

@@ -1,13 +1,15 @@
 import { Spacing } from '@/components/ui/Spacing';
-import IconShare from '@/assets/icons/icon-share.svg';
 import IconSave from '@/assets/icons/icon-save.svg';
 import IconCopy from '@/assets/icons/icon-copy.svg';
+import { useModalStore } from '@/stores/useModalStore';
 
 interface AdviceResultProps {
   content: string;
 }
 
 export default function AdviceResult({ content }: AdviceResultProps) {
+  const { openModal } = useModalStore();
+
   return (
     <section className="border-layout-grey3 bg-layout-grey1 mt-11 flex h-[684px] w-[520px] flex-col rounded-[7px] border px-3 py-4">
       <p className="title-sm text-layout-grey7">AI 수정 결과</p>
@@ -22,11 +24,23 @@ export default function AdviceResult({ content }: AdviceResultProps) {
         )}
       </div>
       <Spacing size={12} />
-      {/* TODO : 디자인 맟줘서 수정 필요 */}
       <div className="flex w-full items-end justify-end gap-6">
-        <IconShare />
-        <IconSave />
-        <IconCopy />
+        <button
+          className="transition-transform active:translate-y-[2px]"
+          onClick={() =>
+            openModal('create', {
+              draftContent: content,
+            })
+          }
+        >
+          <IconSave />
+        </button>
+        <button
+          className="transition-transform active:translate-y-[2px]"
+          onClick={() => navigator.clipboard.writeText(content)}
+        >
+          <IconCopy />
+        </button>
       </div>
     </section>
   );

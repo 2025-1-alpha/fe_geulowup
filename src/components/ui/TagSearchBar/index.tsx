@@ -5,24 +5,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import Arrow from '@/components/ui/Arrow';
 import TagSearchButton from '@/components/ui/TagSearchButton';
 import SearchIcon from '@/assets/icons/icon-tag-searchbar-popup.svg';
-
-type TagType =
-  | '인사말'
-  | '자기소개'
-  | '사과문'
-  | '부탁글'
-  | '감사글'
-  | '제안글'
-  | '공지글'
-  | '소개글'
-  | '후기작성'
-  | '소셜글'
-  | '고객응대'
-  | '교수문의'
-  | '조별활동'
-  | '공모전'
-  | '지원서'
-  | '기타';
+import { TagType } from '@/types';
 
 type TagSearchBarProps = {
   size: 'big' | 'small';
@@ -45,14 +28,12 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
 
-  // 컴포넌트 마운트 시와 tags 변경 시 스크롤 상태 업데이트
   useEffect(() => {
     updateScrollState();
     window.addEventListener('resize', updateScrollState);
     return () => window.removeEventListener('resize', updateScrollState);
   }, [tags]);
 
-  // 스크롤 상태 업데이트 함수
   const updateScrollState = () => {
     if (!containerRef.current) return;
 
@@ -65,11 +46,10 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const scrollAmount = 200; // 스크롤 단위
+    const scrollAmount = 200;
     const currentScroll = container.scrollLeft;
     const maxScrollWidth = container.scrollWidth - container.clientWidth;
 
-    // 최대 스크롤 위치 업데이트
     setMaxScroll(maxScrollWidth);
 
     let newScrollPosition;
@@ -96,7 +76,6 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
 
   const sizeClass = size === 'big' ? 'w-[1320px]' : 'w-[984px]';
 
-  // 태그 선택 핸들러
   const handleTagClick = (tag: TagType) => {
     console.log('TagSearchBar - 태그 클릭:', tag, '현재 선택된 태그:', selectedTag);
     if (onTagSelect) {
@@ -162,18 +141,5 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
     </div>
   );
 };
-
-// 스크롤바를 숨기기 위한 글로벌 스타일
-// src/app/globals.css에 추가될 내용
-/*
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-*/
 
 export default TagSearchBar;

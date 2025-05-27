@@ -1,26 +1,43 @@
 'use client';
 
 import { useState } from 'react';
+import { useTemplateStore } from '@/stores/useTemplateStore';
 import { Spacing } from '@/components/ui/Spacing';
 import Toggle from '@/components/ui/Toggle';
 import AdviceInputArea from '../AdviceInputArea';
 import AdviceResult from '../AdviceResultBox';
 import RecommendTemplates from '../RecommendTemplates';
 import IconHelp from '@/assets/icons/icon-help.svg';
+import { usePostAdvice } from '@/hooks/models/usePostAdvice';
 
 export default function AdviceEditor() {
-  const [draftContent, setDraftContent] = useState('');
-  const [adviceContent, setAdviceContent] = useState('');
+  const { currentTemplate } = useTemplateStore();
+  const [draftContent, setDraftContent] = useState(currentTemplate?.content || '');
+  const [tags, setTags] = useState<string[]>([]);
+  const { mutate, data, status } = usePostAdvice();
+
+  const isLoading = status === 'pending';
+  const isError = status === 'error';
+
+  const adviceResultContent = isLoading
+    ? '텍스트 생성 중...'
+    : isError
+      ? '오류가 발생했어요. 다시 시도해 주세요.'
+      : data?.result || '';
 
   const handleChangeDraftContent = (value: string) => {
     setDraftContent(value);
   };
 
-  const handleSubmit = () => {
-    // 임시 코드 : 현재는 입력 그대로 set함
-    setAdviceContent(draftContent);
+  const handleChangeTags = (values: string[]) => {
+    setTags(values);
+  };
 
-    // TODO : API 연결 시 여기서 보내고, 작성된 글 set하기
+  const handleSubmit = () => {
+    mutate({
+      content: draftContent,
+      tags: tags.filter((tag) => tag.trim() !== ''),
+    });
   };
 
   return (
@@ -38,11 +55,12 @@ export default function AdviceEditor() {
           <AdviceInputArea
             draftContent={draftContent}
             onChangeDraftContent={handleChangeDraftContent}
+            onChangeTags={handleChangeTags}
             onSubmit={handleSubmit}
           />
         </section>
         <Spacing size={12} horizontal />
-        <AdviceResult content={adviceContent} />
+        <AdviceResult content={adviceResultContent} />
       </section>
     </section>
   );

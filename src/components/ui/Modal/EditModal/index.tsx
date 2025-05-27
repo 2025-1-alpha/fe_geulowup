@@ -255,7 +255,7 @@ export default function EditModal({
         <Button state="line" onClick={handlePlaceholderBtn} disabled={placeholderIsLoading}>
           자동 빈칸 만들기
         </Button>
-        <Button icon="dropdown" onClick={handleSaveBtn} disabled={createIsLoading || editIsLoading}>
+        <Button onClick={handleSaveBtn} disabled={createIsLoading || editIsLoading}>
           {createIsLoading || editIsLoading ? '저장 중...' : '저장하기'}
         </Button>
       </section>

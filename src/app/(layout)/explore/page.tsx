@@ -25,7 +25,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { openModal } = useModalStore();
+  const { openModal, closeModal, currentModal } = useModalStore();
   const [userName, setUserName] = useState<string>('사용자');
 
   const tagOptions: TagType[] = [

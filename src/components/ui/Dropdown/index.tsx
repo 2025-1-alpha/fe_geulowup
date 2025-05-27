@@ -13,7 +13,7 @@ export default function Dropdown({
   content?: string;
 }) {
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [selectedFolderId, setSelectedFolderId] = useState<number | undefined>(savedFolderId || 1);
+  const [selectedFolderId, setSelectedFolderId] = useState<number | undefined>(savedFolderId);
 
   const { mutate: saveTemplate } = useSaveTemplate();
 

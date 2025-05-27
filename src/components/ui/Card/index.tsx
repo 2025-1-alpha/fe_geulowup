@@ -163,7 +163,7 @@ const Card: React.FC<CardProps> = ({
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
       className={clsx(
-        'z-10 flex flex-col justify-between rounded-[8px] p-[16px] transition-all',
+        'z-10 flex flex-col justify-between rounded-[6px] p-[16px] transition-all',
         sizeStyle[variant],
         backgroundStyle[variant][state],
         variant === 'small' && state === 'hover' ? 'z-30' : 'z-10',

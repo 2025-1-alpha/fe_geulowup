@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import IconEdit from '@/assets/icons/icon-edit.svg';
 
@@ -12,6 +12,21 @@ interface MypageDataProps {
 
 export default function MypageData({ profileImage, nickname, onNicknameChange }: MypageDataProps) {
   const [currentNickname, setCurrentNickname] = useState(nickname);
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr);
+        if (userData.name) {
+          setCurrentNickname(userData.name);
+          onNicknameChange(userData.name);
+        }
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+      }
+    }
+  }, []);
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newNickname = e.target.value;

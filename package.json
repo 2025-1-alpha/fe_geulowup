@@ -10,12 +10,12 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@svgr/cli": "^8.1.0",
     "@tanstack/react-query": "^5.75.5",
     "clsx": "^2.1.1",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "svgr": "^2.0.0",
     "tailwind-scrollbar-hide": "^2.0.0",
     "zustand": "^5.0.4"
   },

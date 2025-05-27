@@ -47,6 +47,7 @@ export default function Dropdown({
         {
           onSuccess: () => {
             setToastVisible(true);
+            // TODO : 추후 저장하면 드롭다운 닫히도록 수정
           },
           onError: (error) => {
             console.error('템플릿 수정 실패:', error);

@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import React, { useRef, useState, useEffect } from 'react';
 import Arrow from '@/components/ui/Arrow';
 import TagSearchButton from '@/components/ui/TagSearchButton';
+import TagSearchPopup from '@/components/ui/TagSearchPopup';
 import SearchIcon from '@/assets/icons/icon-tag-searchbar-popup.svg';
 import { TagType } from '@/types';
 
@@ -27,6 +28,7 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
+  const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
 
   useEffect(() => {
     updateScrollState();
@@ -83,6 +85,24 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
     }
   };
 
+  const handleSearchIconClick = () => {
+    setIsSearchPopupOpen(!isSearchPopupOpen);
+    if (onSearchClick) {
+      onSearchClick();
+    }
+  };
+
+  const handleSearchPopupTagSelect = (tag: TagType) => {
+    if (onTagSelect) {
+      onTagSelect(tag);
+    }
+    setIsSearchPopupOpen(false);
+  };
+
+  const handleSearchPopupClose = () => {
+    setIsSearchPopupOpen(false);
+  };
+
   return (
     <div
       className={clsx(
@@ -126,16 +146,25 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
           onClick={() => handleScroll('right')}
         />
 
-        <div className="ml-3">
+        <div className="relative ml-3">
           <button
             type="button"
-            onClick={onSearchClick}
+            onClick={handleSearchIconClick}
             className="bg-primary-navy4 flex h-[44px] w-[44px] items-center justify-center rounded-tr-md rounded-br-md"
           >
             <div className="p-2">
               <SearchIcon />
             </div>
           </button>
+
+          <TagSearchPopup
+            tags={tags}
+            selectedTag={selectedTag}
+            onTagSelect={handleSearchPopupTagSelect}
+            onClose={handleSearchPopupClose}
+            isOpen={isSearchPopupOpen}
+            className="right-0"
+          />
         </div>
       </div>
     </div>

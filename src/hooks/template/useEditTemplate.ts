@@ -4,12 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 
 export const useEditTemplate = () => {
   return useMutation({
-    mutationFn: ({
-      templateId,
-      payload,
-    }: {
-      templateId: number;
-      payload: TemplateRequset;
-    }) => editTemplate(templateId, payload),
+    mutationFn: ({ templateId, payload }: { templateId: number; payload: TemplateRequset }) =>
+      editTemplate(templateId, payload),
   });
 };

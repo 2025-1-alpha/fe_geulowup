@@ -158,7 +158,10 @@ export default function UsingModal() {
         {/* 작성자 정보 */}
         <section className="flex items-center gap-3">
           <Image
-            src={template.author.profileImageUrl}
+            src={
+              template.author.profileImageUrl ||
+              'https://github.com/user-attachments/assets/9c948b08-a78b-44cb-b572-f2a934b70c45'
+            }
             alt="작성자 프로필"
             width={80}
             height={80}

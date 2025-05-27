@@ -1,17 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-
 type ToggleProps = {
-  defaultState?: 'on' | 'off';
+  isOn: boolean;
+  onToggle: () => void;
 };
 
-export default function Toggle({ defaultState = 'off' }: ToggleProps) {
-  const [isOn, setIsOn] = useState(defaultState === 'on');
-
+export default function Toggle({ isOn, onToggle }: ToggleProps) {
   return (
     <button
-      onClick={() => setIsOn(!isOn)}
+      onClick={onToggle}
       className="bg-layout-grey2 border-layout-grey3 flex h-[26px] w-[42px] items-center rounded-[14px] border p-0.5"
     >
       <div

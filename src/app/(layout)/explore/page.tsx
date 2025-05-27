@@ -9,6 +9,7 @@ import Arrow from '@/components/ui/Arrow';
 import WandIcon from '@/assets/icons/icon-lucide-wand.svg';
 import MagnifyIcon from '@/assets/icons/icon-magnify.svg';
 import ArrowUpDownIcon from '@/assets/icons/icon-arrow-up-down.svg';
+import { Button } from '@/components/ui/Button';
 import { TagType, TemplateType } from '@/types';
 import { getTemplates } from '@/services/template/getTemplates';
 import { getTemplatesRecommendation } from '@/services/template/getTemplatesRecommendation';
@@ -24,7 +25,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { openModal } = useModalStore();
+  const { currentModal, openModal, closeModal } = useModalStore();
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -142,14 +143,18 @@ export default function ExplorePage() {
 
   // 모달 열기 핸들러
   const handleOpenModal = (templateId: number) => {
+    const templateToOpen =
+      allTemplates.find((t) => t.templateId === templateId) ||
+      recommendTemplates.find((t) => t.templateId === templateId);
+    if (templateToOpen) {
+      setSelectedTemplate(templateToOpen);
+    }
     openModal('view', { templateId });
   };
 
-  // 모달 닫기 핸들러
-  const handleCloseModal = () => {
+  // 모달 닫기 핸들러 (useModalStore의 closeModal을 사용하므로 이 함수는 선택 해제만 담당)
+  const clearSelectedTemplate = () => {
     setSelectedTemplate(null);
-    // 모달 닫힘 이벤트 발생 - 모든 카드의 클릭 상태 초기화
-    window.dispatchEvent(new Event('modal-closed'));
   };
 
   // 화면에 표시할 추천 템플릿 (3개씩)
@@ -166,7 +171,7 @@ export default function ExplorePage() {
         .then(() => {
           alert('템플릿 내용이 클립보드에 복사되었습니다.');
           console.log('템플릿 사용하기:', selectedTemplate.title);
-          handleCloseModal();
+          closeModal();
         })
         .catch((err) => {
           console.error('클립보드 복사 실패:', err);
@@ -176,6 +181,15 @@ export default function ExplorePage() {
       alert('템플릿 내용이 없습니다.');
     }
   };
+
+  // 모달 상태 변경 감지하여 카드 선택 해제
+  useEffect(() => {
+    if (currentModal === null && selectedTemplate) {
+      setSelectedTemplate(null);
+      // Card 컴포넌트들이 클릭 상태를 해제하도록 이벤트 발생
+      window.dispatchEvent(new Event('modal-closed'));
+    }
+  }, [currentModal, selectedTemplate]);
 
   return (
     <>
@@ -249,71 +263,68 @@ export default function ExplorePage() {
                 <p className="body-md text-layout-grey7 h-[25px] w-[850px]">
                   키워드 태그를 통해 다양한 상황에 맞는 템플릿을 찾아 보세요!
                 </p>
-                <Spacing size={40} />
+                <Spacing size={24} />
                 <TagSearchBar
-                  size="big"
                   tags={tagOptions}
                   selectedTag={selectedTag}
                   onTagSelect={handleTagSelect}
                   onSearchClick={handleSearchClick}
+                  size="big"
                 />
               </div>
 
-              <Spacing size={80} />
+              <Spacing size={40} />
 
-              <div>
-                <div className="flex items-center justify-between">
-                  <h2 className="text-layout-grey7 title-md">템플릿 목록</h2>
-
-                  <button
-                    onClick={handleSortChange}
-                    className="bg-layout-grey1 text-layout-grey6 flex h-[36px] w-[87px] items-center justify-center gap-1 rounded"
-                  >
-                    <ArrowUpDownIcon className="h-4 w-4" />
-                    <span>{sortType === 'popular' ? '인기순' : '최신순'}</span>
-                  </button>
-                </div>
-                <Spacing size={40} />
-
-                {visibleCardItems.length === 0 ? (
-                  <div className="text-layout-grey6 py-10 text-center">
-                    <p>선택한 태그에 맞는 템플릿이 없습니다.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-4 gap-x-[13.33px] gap-y-[12px]">
-                    {visibleCardItems.map((item, index) => (
-                      <Card
-                        key={index}
-                        variant="large"
-                        title={item.title}
-                        description={item.description}
-                        tags={item.tags}
-                        likes={item.likes}
-                        onClick={() => handleOpenModal(item.templateId)}
-                        className="cursor-pointer transition-shadow hover:shadow-md"
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {visibleCardItems.length > 0 && visibleCardCount < totalPages * 16 && (
-                  <div className="mt-[80px] flex justify-center">
-                    <button
-                      onClick={handleLoadMore}
-                      disabled={isLoading}
-                      className={`border-primary-navy4 text-primary-navy4 hover:bg-primary-navy1 rounded-[6px] border px-6 py-2 transition-colors ${isLoading ? 'cursor-not-allowed opacity-70' : ''}`}
-                    >
-                      {isLoading ? '로딩 중...' : '더 불러오기'}
-                    </button>
-                  </div>
-                )}
-
-                <div className="text-layout-grey5 mt-4 text-xs">
-                  {selectedTag
-                    ? `선택된 태그: ${selectedTag} | 결과: ${allTemplates.length}개`
-                    : '모든 템플릿 표시 중'}
-                </div>
+              {/* 정렬 버튼 */}
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSortChange}
+                  className="text-layout-grey5 hover:text-layout-grey7 body-sm mb-4 flex items-center"
+                >
+                  <ArrowUpDownIcon className="mr-1 h-4 w-4" />
+                  {sortType === 'popular' ? '인기순' : '최신순'}
+                </button>
               </div>
+
+              {/* 템플릿 카드 목록 */}
+              {isLoading && visibleCardItems.length === 0 ? (
+                <div className="flex h-[200px] items-center justify-center">
+                  <p className="text-layout-grey5 body-lg">템플릿을 불러오는 중입니다...</p>
+                </div>
+              ) : !isLoading && visibleCardItems.length === 0 ? (
+                <div className="flex h-[200px] items-center justify-center">
+                  <p className="text-layout-grey5 body-lg">
+                    {selectedTag
+                      ? `'${selectedTag}' 태그에 해당하는 템플릿이 없습니다.`
+                      : '템플릿이 없습니다.'}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-x-[12px] gap-y-[20px] sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  {visibleCardItems.map((template, index) => (
+                    <Card
+                      key={index}
+                      variant="large"
+                      title={template.title}
+                      description={template.description}
+                      tags={template.tags}
+                      likes={template.likes}
+                      onClick={() => {
+                        handleOpenModal(template.templateId);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* 더보기 버튼 */}
+              {visibleCardItems.length > 0 && totalPages > 1 && !isLoading && (
+                <div className="mt-10 flex justify-center">
+                  <Button variant="grey" state="line" size="large" onClick={handleLoadMore}>
+                    더 보기
+                  </Button>
+                </div>
+              )}
             </div>
           </section>
         </section>
@@ -326,7 +337,7 @@ export default function ExplorePage() {
             backgroundColor: 'rgba(0,0,0,0.05)',
             backdropFilter: 'blur(3px)',
           }}
-          onClick={handleCloseModal}
+          onClick={clearSelectedTemplate}
         >
           <div className="flex h-full w-full items-center justify-center p-4">
             <div
@@ -338,7 +349,7 @@ export default function ExplorePage() {
                   {selectedTemplate.title || '제목 없음'}
                 </h3>
                 <button
-                  onClick={handleCloseModal}
+                  onClick={clearSelectedTemplate}
                   className="text-layout-grey6 hover:text-layout-grey7"
                 >
                   닫기
@@ -375,7 +386,7 @@ export default function ExplorePage() {
               <div className="mt-6 flex justify-end gap-3">
                 <button
                   className="border-layout-grey3 hover:bg-layout-grey1 rounded-md border px-4 py-2 transition-colors"
-                  onClick={handleCloseModal}
+                  onClick={clearSelectedTemplate}
                 >
                   취소
                 </button>

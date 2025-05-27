@@ -1,13 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MypageData from './_components/MypageData';
 import MypageGlow from './_components/MypageGlow';
 import MypageCancelAccount from './_components/MypageCancelAccount';
 
 export default function MyPage() {
-  const [nickname, setNickname] = useState('사용자닉네임');
+  const [nickname, setNickname] = useState('');
   const glowScore = 1213;
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr);
+        if (userData.name) {
+          setNickname(userData.name);
+        }
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+      }
+    }
+  }, []);
 
   const handleNicknameChange = (newNickname: string) => {
     setNickname(newNickname);

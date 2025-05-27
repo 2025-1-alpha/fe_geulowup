@@ -25,7 +25,8 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { currentModal, openModal, closeModal } = useModalStore();
+  const { openModal } = useModalStore();
+  const [userName, setUserName] = useState<string>('사용자');
 
   const tagOptions: TagType[] = [
     '인사말',
@@ -67,6 +68,57 @@ export default function ExplorePage() {
     };
 
     fetchRecommendTemplates();
+  }, []);
+
+  // 사용자 이름 로드 및 설정
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log('Loaded token:', token);
+    if (token) {
+      try {
+        const payloadBase64Url = token.split('.')[1];
+        console.log('Payload Base64URL (raw from token):', payloadBase64Url);
+
+        if (payloadBase64Url) {
+          // Base64URL을 표준 Base64로 변환
+          let base64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+          while (base64.length % 4) {
+            base64 += '=';
+          }
+          console.log('Payload Base64 (after B64URL to B64 conversion):', base64);
+
+          const binaryString = atob(base64); // 변환된 base64 문자열 사용
+          console.log('Decoded Binary String (raw from atob):', binaryString);
+
+          // 바이너리 문자열을 Uint8Array로 변환
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+
+          // Uint8Array를 UTF-8 문자열로 디코딩
+          const decodedPayloadUtf8 = new TextDecoder('utf-8').decode(bytes);
+          console.log('Decoded Payload (UTF-8 string):', decodedPayloadUtf8);
+
+          const parsedPayload = JSON.parse(decodedPayloadUtf8);
+          console.log('Parsed Payload (JS object):', parsedPayload);
+
+          if (parsedPayload && parsedPayload.name) {
+            setUserName(parsedPayload.name);
+            console.log('User name set to state:', parsedPayload.name);
+
+            localStorage.setItem('user', JSON.stringify({ name: parsedPayload.name }));
+            console.log('User object saved to localStorage:', { name: parsedPayload.name });
+          } else {
+            console.log('Name not found in parsed payload or payload is null');
+          }
+        } else {
+          console.log('payloadBase64Url is undefined or empty');
+        }
+      } catch (error) {
+        console.error('토큰 디코딩, 사용자 이름 추출 또는 로컬 스토리지 저장 실패:', error);
+      }
+    }
   }, []);
 
   // 전체 템플릿 데이터 가져오기
@@ -209,7 +261,7 @@ export default function ExplorePage() {
                 </div>
                 <Spacing size={8} />
                 <p className="body-md text-layout-grey7">
-                  AI가 [username]님을 위해 추천한 맞춤형 템플릿을 사용해 보세요!
+                  AI가 {userName}님을 위해 추천한 맞춤형 템플릿을 사용해 보세요!
                 </p>
                 <Spacing size={40} />
 

@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import ArchiveFolderStatus from '../ArchiveFolderStatus';
 import ArchiveFolderInput from '../ArchiveFolderInput';
 import ArchiveModalWarning from '../ArchiveModalWarning';
+import { useFolders } from '@/hooks/folder/useFolders';
+import { useCreateFolder } from '@/hooks/folder/useCreateFolder';
+import { useDeleteFolder } from '@/hooks/folder/useDeleteFolder';
 
 interface ArchiveSidebarProps {
   selectedFolderId: string;
@@ -15,19 +18,27 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
   const router = useRouter();
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [folderToDelete, setFolderToDelete] = useState<string | null>(null);
+  const [folderToDelete, setFolderToDelete] = useState<number | null>(null);
 
-  // 테스트용 더미 데이터
-  const [folders, setFolders] = useState([
-    { id: '1', name: '찜한 템플릿', templateCount: 32 },
-    { id: '2', name: '최근 사용한 템플릿', templateCount: 5 },
-    { id: '3', name: '사용자 폴더1', templateCount: 8 },
-    { id: '4', name: '사용자 폴더2', templateCount: 3 },
-  ]);
+  // 폴더 목록 API 연동
+  const { data: foldersData } = useFolders();
+  const createFolderMutation = useCreateFolder();
+  const deleteFolderMutation = useDeleteFolder();
 
-  const handleFolderClick = (folderId: string) => {
-    onFolderSelect(folderId);
-    console.log('폴더 선택:', folderId);
+  // 찜한 템플릿, 최근 사용한 템플릿은 고정
+  const fixedFolders = [
+    { id: 1, name: '찜한 템플릿' },
+    { id: 2, name: '최근 사용한 템플릿' },
+  ];
+
+  // 폴더 목록 합치기
+  const folders = [
+    ...fixedFolders,
+    ...(foldersData?.folders?.map((f) => ({ id: f.folderId, name: f.name })) || []),
+  ];
+
+  const handleFolderClick = (folderId: number) => {
+    onFolderSelect(folderId.toString());
   };
 
   const handleFolderDoubleClick = (folderId: string) => {
@@ -39,19 +50,15 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
   };
 
   const handleFolderSave = (folderName: string) => {
-    console.log('폴더 저장:', folderName);
-    // 새 폴더를 목록에 추가
-    const newFolder = {
-      id: Date.now().toString(),
-      name: folderName,
-      templateCount: 0,
-    };
-    setFolders((prev) => [...prev, newFolder]);
-    setIsCreatingFolder(false);
+    createFolderMutation.mutate(
+      { name: folderName },
+      {
+        onSuccess: () => setIsCreatingFolder(false),
+      },
+    );
   };
 
   const handleFolderCancel = () => {
-    console.log('폴더 생성 취소');
     setIsCreatingFolder(false);
   };
 
@@ -59,19 +66,21 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
     router.push('/explore');
   };
 
-  const handleDeleteClick = (folderId: string) => {
+  const handleDeleteClick = (folderId: number) => {
     setFolderToDelete(folderId);
     setDeleteModalOpen(true);
   };
 
   const handleDeleteConfirm = () => {
     if (folderToDelete) {
-      setFolders((prev) => prev.filter((folder) => folder.id !== folderToDelete));
-      console.log('폴더 삭제:', folderToDelete);
-      // 삭제된 폴더가 현재 선택된 폴더라면 기본 폴더로 변경
-      if (selectedFolderId === folderToDelete) {
-        onFolderSelect('1'); // 찜한 템플릿으로 변경
-      }
+      deleteFolderMutation.mutate(folderToDelete, {
+        onSuccess: () => {
+          // 삭제된 폴더가 현재 선택된 폴더라면 기본 폴더로 변경
+          if (selectedFolderId === folderToDelete.toString()) {
+            onFolderSelect('1');
+          }
+        },
+      });
     }
     setDeleteModalOpen(false);
     setFolderToDelete(null);
@@ -88,17 +97,17 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
       style={{ width: '312px', height: '640px' }}
     >
       <div className="flex-1">
-        {/* 기존 폴더들 */}
+        {/* 폴더 목록 */}
         {folders.map((folder) => (
           <ArchiveFolderStatus
             key={folder.id}
-            folderId={folder.id}
+            folderId={folder.id.toString()}
             folderName={folder.name}
-            isSelected={selectedFolderId === folder.id}
-            isDeletable={folder.id !== '1' && folder.id !== '2'} // 찜한 템플릿, 최근 사용한 템플릿 제외
-            onClick={handleFolderClick}
-            onDoubleClick={handleFolderDoubleClick}
-            onDelete={handleDeleteClick}
+            isSelected={selectedFolderId === folder.id.toString()}
+            isDeletable={folder.id !== 1 && folder.id !== 2}
+            onClick={() => handleFolderClick(folder.id)}
+            onDoubleClick={() => handleFolderDoubleClick(folder.id.toString())}
+            onDelete={() => handleDeleteClick(folder.id)}
           />
         ))}
 
@@ -117,6 +126,7 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
           <button
             className="button-md text-layout-grey4 hover:text-layout-grey6 hover:bg-layout-grey3 w-full rounded-lg px-4 py-3 text-left transition-all duration-200"
             onClick={handleCreateFolderClick}
+            disabled={createFolderMutation.isPending}
           >
             + 폴더 만들기
           </button>

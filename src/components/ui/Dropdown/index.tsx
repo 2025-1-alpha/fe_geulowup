@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getFolders, Folder } from '@/services/folders/getFolders';
 import { useSaveTemplate } from '@/hooks/template/useTemplateSave';
 import { Button } from '../Button';
+import Toast from '../Toast';
 
 export default function Dropdown({
   templateId,
@@ -13,7 +14,8 @@ export default function Dropdown({
   content?: string;
 }) {
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [selectedFolderId, setSelectedFolderId] = useState<number | undefined>(savedFolderId);
+  const [selectedFolderId, setSelectedFolderId] = useState<number>(savedFolderId || 1);
+  const [toastVisible, setToastVisible] = useState(false);
 
   const { mutate: saveTemplate } = useSaveTemplate();
 
@@ -44,8 +46,7 @@ export default function Dropdown({
         },
         {
           onSuccess: () => {
-            // TODO : 저장시 팝업 띄우기 + 드롭다운 닫기
-            console.log(templateId, selectedFolderId);
+            setToastVisible(true);
           },
           onError: (error) => {
             console.error('템플릿 수정 실패:', error);
@@ -73,6 +74,7 @@ export default function Dropdown({
         <Button size="xsmall" onClick={handleSaveBtn}>
           저장하기
         </Button>
+        {toastVisible && <Toast message="저장되었습니다." onClose={() => setToastVisible(false)} />}
       </section>
     </section>
   );

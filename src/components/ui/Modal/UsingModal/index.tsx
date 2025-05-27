@@ -14,6 +14,7 @@ import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
 import IconCopy from '@/assets/icons/icon-copy.svg';
 import Dropdown from '../../Dropdown';
+import Toast from '../../Toast';
 
 export default function UsingModal() {
   const router = useRouter();
@@ -26,6 +27,8 @@ export default function UsingModal() {
   const [folderId, setFolderId] = useState<number>();
   const [replacements, setReplacements] = useState<Record<string, string>>({});
   const [dropdown, setDropdown] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const { setCurrentTemplate } = useTemplateStore();
 
@@ -85,6 +88,11 @@ export default function UsingModal() {
     setDropdown((prev) => !prev);
   };
 
+  const triggerToast = (message: string) => {
+    setToastMessage(message);
+    setToastVisible(true);
+  };
+
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
       {/* 태그 */}
@@ -131,8 +139,13 @@ export default function UsingModal() {
           ))}
         </section>
         <section className="button-lg text-layout-grey5 mr-3 flex h-[28px]">
-          <button onClick={() => handleCopyClipBoard(content)} className="flex items-center gap-1">
-            {/* TODO : 복사되었습니다 팝업 필요 */}
+          <button
+            onClick={() => {
+              handleCopyClipBoard(content);
+              triggerToast('복사되었습니다.');
+            }}
+            className="flex items-center gap-1"
+          >
             <IconCopy className="scale-75" />
             복사하기
           </button>
@@ -186,6 +199,7 @@ export default function UsingModal() {
             </Button>
           </div>
         </section>
+        {toastVisible && <Toast message={toastMessage} onClose={() => setToastVisible(false)} />}
       </section>
     </section>
   );

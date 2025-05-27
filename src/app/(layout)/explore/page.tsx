@@ -4,7 +4,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Spacing } from '@/components/ui/Spacing';
 import TagSearchBar from '@/components/ui/TagSearchBar';
 import Card from '@/components/ui/Card';
-import CardTag from '@/components/ui/CardTag';
 import Arrow from '@/components/ui/Arrow';
 import WandIcon from '@/assets/icons/icon-lucide-wand.svg';
 import MagnifyIcon from '@/assets/icons/icon-magnify.svg';
@@ -25,7 +24,7 @@ export default function ExplorePage() {
   const [recommendTemplates, setRecommendTemplates] = useState<TemplateType[]>([]);
   const [allTemplates, setAllTemplates] = useState<TemplateType[]>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const { openModal, closeModal, currentModal } = useModalStore();
+  const { openModal, currentModal } = useModalStore();
   const [userName, setUserName] = useState<string>('사용자');
 
   const tagOptions: TagType[] = [
@@ -204,35 +203,11 @@ export default function ExplorePage() {
     openModal('view', { templateId });
   };
 
-  // 모달 닫기 핸들러 (useModalStore의 closeModal을 사용하므로 이 함수는 선택 해제만 담당)
-  const clearSelectedTemplate = () => {
-    setSelectedTemplate(null);
-  };
-
   // 화면에 표시할 추천 템플릿 (3개씩)
   const visibleRecommendTemplates = recommendTemplates.slice(
     currentRecommendIndex,
     currentRecommendIndex + 3,
   );
-
-  // 템플릿 사용 핸들러
-  const handleUseTemplate = () => {
-    if (selectedTemplate?.content) {
-      navigator.clipboard
-        .writeText(selectedTemplate.content)
-        .then(() => {
-          alert('템플릿 내용이 클립보드에 복사되었습니다.');
-          console.log('템플릿 사용하기:', selectedTemplate.title);
-          closeModal();
-        })
-        .catch((err) => {
-          console.error('클립보드 복사 실패:', err);
-          alert('템플릿 복사에 실패했습니다. 다시 시도해주세요.');
-        });
-    } else {
-      alert('템플릿 내용이 없습니다.');
-    }
-  };
 
   // 모달 상태 변경 감지하여 카드 선택 해제
   useEffect(() => {
@@ -381,79 +356,6 @@ export default function ExplorePage() {
           </section>
         </section>
       </div>
-
-      {selectedTemplate && (
-        <div
-          className="fixed inset-0 z-50"
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.05)',
-            backdropFilter: 'blur(3px)',
-          }}
-          onClick={clearSelectedTemplate}
-        >
-          <div className="flex h-full w-full items-center justify-center p-4">
-            <div
-              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="title-md text-layout-grey7">
-                  {selectedTemplate.title || '제목 없음'}
-                </h3>
-                <button
-                  onClick={clearSelectedTemplate}
-                  className="text-layout-grey6 hover:text-layout-grey7"
-                >
-                  닫기
-                </button>
-              </div>
-
-              <div className="mb-6">
-                <p className="body-md text-layout-grey7 mb-4">
-                  {selectedTemplate.description || '설명이 없는 템플릿입니다.'}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedTemplate.tags && selectedTemplate.tags.length > 0 ? (
-                    selectedTemplate.tags.map((tag, idx) => <CardTag key={idx} text={tag} />)
-                  ) : (
-                    <p className="text-layout-grey5 text-sm">태그 정보가 없습니다.</p>
-                  )}
-                </div>
-              </div>
-
-              {selectedTemplate.content ? (
-                <div className="bg-layout-grey1 mt-4 mb-6 rounded-md p-4">
-                  <p className="text-layout-grey7 text-sm whitespace-pre-line">
-                    {selectedTemplate.content}
-                  </p>
-                </div>
-              ) : (
-                <div className="bg-layout-grey1 mt-4 mb-6 flex items-center justify-center rounded-md p-4">
-                  <p className="text-layout-grey6 py-8 text-sm">
-                    현재 템플릿 내용을 불러올 수 없습니다.
-                  </p>
-                </div>
-              )}
-
-              <div className="mt-6 flex justify-end gap-3">
-                <button
-                  className="border-layout-grey3 hover:bg-layout-grey1 rounded-md border px-4 py-2 transition-colors"
-                  onClick={clearSelectedTemplate}
-                >
-                  취소
-                </button>
-                <button
-                  className="bg-primary-navy4 hover:bg-primary-navy5 rounded-md px-4 py-2 text-white transition-colors"
-                  onClick={handleUseTemplate}
-                  disabled={!selectedTemplate.content}
-                >
-                  템플릿 사용하기
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

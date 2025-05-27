@@ -19,7 +19,7 @@ import Toast from '../../Toast';
 export default function UsingModal() {
   const router = useRouter();
 
-  const { selectedTemplateId, closeModal } = useModalStore();
+  const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { openUnsaveModal } = useUnsaveModalStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -93,6 +93,11 @@ export default function UsingModal() {
     setToastVisible(true);
   };
 
+  const handleAuthor = () => {
+    closeModal();
+    openModal('profile');
+  };
+
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
       {/* 태그 */}
@@ -157,16 +162,18 @@ export default function UsingModal() {
       <section className="flex h-[80px] w-full items-end justify-between">
         {/* 작성자 정보 */}
         <section className="flex items-center gap-3">
-          <Image
-            src={
-              template.author.profileImageUrl ||
-              'https://github.com/user-attachments/assets/9c948b08-a78b-44cb-b572-f2a934b70c45'
-            }
-            alt="작성자 프로필"
-            width={80}
-            height={80}
-            className="rounded-sm"
-          />
+          <button onClick={handleAuthor}>
+            <Image
+              src={
+                template.author.profileImageUrl ||
+                'https://github.com/user-attachments/assets/9c948b08-a78b-44cb-b572-f2a934b70c45'
+              }
+              alt="작성자 프로필"
+              width={80}
+              height={80}
+              className="rounded-sm"
+            />
+          </button>
 
           <section className="flex gap-6">
             <div className="flex flex-col items-center justify-center gap-[18px]">

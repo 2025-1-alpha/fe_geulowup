@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import ToggleButton from '@/components/ui/Toggle';
 import { InputTagAdd } from '@/components/ui/InputTagAdd';
 import Card from '@/components/ui/Card';
 import { useModalStore } from '@/stores/useModalStore';
@@ -63,7 +62,6 @@ export default function TestPage() {
         버튼 테스트
       </Button>
 
-      <ToggleButton />
       <InputTagAdd onClick={() => console.log('추가 버튼 클릭됨')} />
       <div className="mt-10 space-y-10">
         <div>

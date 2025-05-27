@@ -8,14 +8,22 @@ interface ModalState {
   draftTitle?: string;
   draftContent?: string;
   draftTags?: string[];
-  openModal: (type: ModalType, options?: { templateId?: number; draftContent?: string; draftTitle?: string; draftTags?: string[] }) => void;
+  openModal: (
+    type: ModalType,
+    options?: {
+      templateId?: number;
+      draftContent?: string;
+      draftTitle?: string;
+      draftTags?: string[];
+    },
+  ) => void;
   closeModal: () => void;
 }
 
 export const useModalStore = create<ModalState>((set) => ({
   currentModal: null,
   selectedTemplateId: null,
-  draftTitle:'',
+  draftTitle: '',
   draftContent: '',
   draftTags: [],
 
@@ -25,8 +33,7 @@ export const useModalStore = create<ModalState>((set) => ({
       selectedTemplateId: options?.templateId ?? null,
       draftTitle: options?.draftTitle ?? '',
       draftContent: options?.draftContent ?? '',
-      draftTags: options?.draftTags ?? []
-
+      draftTags: options?.draftTags ?? [],
     })),
 
   closeModal: () =>
@@ -35,6 +42,6 @@ export const useModalStore = create<ModalState>((set) => ({
       selectedTemplateId: null,
       draftTitle: '',
       draftContent: '',
-      draftTags:[]
+      draftTags: [],
     })),
 }));

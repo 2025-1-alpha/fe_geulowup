@@ -12,7 +12,11 @@ import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
+import IconCopy from '@/assets/icons/icon-copy.svg';
+import IconTrash from '@/assets/icons/icon-trash.svg';
+import IconEraser from '@/assets/icons/icon-eraser.svg';
 import Dropdown from '../../Dropdown';
+import Toast from '../../Toast';
 
 export default function ViewModal() {
   const router = useRouter();
@@ -23,6 +27,8 @@ export default function ViewModal() {
   const [folderId, setFolderId] = useState<number>();
   const [loading, setLoading] = useState(true);
   const [dropdown, setDropdown] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -77,6 +83,20 @@ export default function ViewModal() {
     setDropdown((prev) => !prev);
   };
 
+  const handleCopyClipBoard = (text: string) => {
+    const $textarea = document.createElement('textarea');
+    document.body.appendChild($textarea);
+    $textarea.value = text;
+    $textarea.select();
+    document.body.removeChild($textarea);
+    triggerToast('복사되었습니다.');
+  };
+
+  const triggerToast = (message: string) => {
+    setToastMessage(message);
+    setToastVisible(true);
+  };
+
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
       {/* 태그 */}
@@ -120,12 +140,29 @@ export default function ViewModal() {
       </section>
 
       <Spacing size={24} />
-      {template?.isAuthor && (
-        <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
-          <button>삭제하기</button>|
-          <button onClick={() => handleClickEdit(template)}>수정하기</button>
-        </section>
-      )}
+      <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
+        {template?.isAuthor && (
+          <>
+            <button className="flex items-center gap-1">
+              <IconTrash />
+              삭제하기
+            </button>
+            |
+            <button onClick={() => handleClickEdit(template)} className="flex items-center gap-1">
+              <IconEraser />
+              수정하기
+            </button>
+            |
+          </>
+        )}
+        <button
+          onClick={() => handleCopyClipBoard(template.content)}
+          className="flex items-center gap-1"
+        >
+          <IconCopy className="scale-75" />
+          복사하기
+        </button>
+      </section>
 
       <section className="flex h-[80px] w-full items-end justify-between">
         {/* 작성자 정보 */}
@@ -168,6 +205,7 @@ export default function ViewModal() {
           <Button onClick={handleCilckUse}>사용하기</Button>
           <Button onClick={handleClickAiUse}>AI로 한 번 더 수정하기</Button>
         </section>
+        {toastVisible && <Toast message={toastMessage} onClose={() => setToastVisible(false)} />}
       </section>
     </section>
   );

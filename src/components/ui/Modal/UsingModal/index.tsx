@@ -13,6 +13,8 @@ import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
 import IconCopy from '@/assets/icons/icon-copy.svg';
+import Dropdown from '../../Dropdown';
+import Toast from '../../Toast';
 
 export default function UsingModal() {
   const router = useRouter();
@@ -22,7 +24,11 @@ export default function UsingModal() {
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
+  const [folderId, setFolderId] = useState<number>();
   const [replacements, setReplacements] = useState<Record<string, string>>({});
+  const [dropdown, setDropdown] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const { setCurrentTemplate } = useTemplateStore();
 
@@ -36,6 +42,7 @@ export default function UsingModal() {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
         setContent(data?.content ?? '');
+        setFolderId(data?.savedFolder?.folderId ?? 0);
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -60,7 +67,6 @@ export default function UsingModal() {
     document.body.appendChild($textarea);
     $textarea.value = text;
     $textarea.select();
-    document.execCommand('copy');
     document.body.removeChild($textarea);
     // TODO : 저장되었습니다와 동일하게 복사되었습니다 띄우기
   };
@@ -76,6 +82,15 @@ export default function UsingModal() {
     }
 
     setContent(replaced);
+  };
+
+  const handleDropdown = () => {
+    setDropdown((prev) => !prev);
+  };
+
+  const triggerToast = (message: string) => {
+    setToastMessage(message);
+    setToastVisible(true);
   };
 
   return (
@@ -124,8 +139,13 @@ export default function UsingModal() {
           ))}
         </section>
         <section className="button-lg text-layout-grey5 mr-3 flex h-[28px]">
-          <button onClick={() => handleCopyClipBoard(content)} className="flex items-center gap-1">
-            {/* TODO : 복사되었습니다 팝업 필요 */}
+          <button
+            onClick={() => {
+              handleCopyClipBoard(content);
+              triggerToast('복사되었습니다.');
+            }}
+            className="flex items-center gap-1"
+          >
             <IconCopy className="scale-75" />
             복사하기
           </button>
@@ -165,15 +185,21 @@ export default function UsingModal() {
             </div>
           </section>
         </section>
-        <section className="flex gap-3">
+        <section className="flex items-end gap-3">
           <Button state="line" onClick={openUnsaveModal}>
             사용 취소
           </Button>
           <Button onClick={handleClickAiUse} state="line">
             AI로 한 번 더 수정하기
           </Button>
-          <Button icon="dropdown">저장하기</Button>
+          <div className="flex flex-col gap-2">
+            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} savedFolderId={folderId} />}
+            <Button icon="dropdown" onClick={handleDropdown}>
+              저장하기
+            </Button>
+          </div>
         </section>
+        {toastVisible && <Toast message={toastMessage} onClose={() => setToastVisible(false)} />}
       </section>
     </section>
   );

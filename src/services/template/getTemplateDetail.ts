@@ -14,6 +14,8 @@ export interface TemplateDetail {
   tags: string[];
   likeCount: number;
   isPrivate: boolean;
+  saved?: boolean;
+  savedFolder?: { folderId: number; name: string };
 }
 
 export const getTemplateDetail = async (templateId: number): Promise<TemplateDetail | null> => {

@@ -12,6 +12,11 @@ import { Button } from '../../Button';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
+import IconCopy from '@/assets/icons/icon-copy.svg';
+import IconTrash from '@/assets/icons/icon-trash.svg';
+import IconEraser from '@/assets/icons/icon-eraser.svg';
+import Dropdown from '../../Dropdown';
+import Toast from '../../Toast';
 
 export default function ViewModal() {
   const router = useRouter();
@@ -19,7 +24,11 @@ export default function ViewModal() {
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
+  const [folderId, setFolderId] = useState<number>();
   const [loading, setLoading] = useState(true);
+  const [dropdown, setDropdown] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -30,6 +39,7 @@ export default function ViewModal() {
       try {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
+        setFolderId(data?.savedFolder?.folderId ?? 0);
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -46,27 +56,45 @@ export default function ViewModal() {
   const handleCilckUse = () => {
     closeModal();
     openModal('using', {
-          templateId : template.templateId,
-          draftTitle: template.title,
-          draftContent: template.content,
-          draftTags: template.tags
-        })
+      templateId: template.templateId,
+      draftTitle: template.title,
+      draftContent: template.content,
+      draftTags: template.tags,
+    });
   };
 
-  const handleClickEdit = (template  : TemplateDetail) => {
+  const handleClickEdit = (template: TemplateDetail) => {
     closeModal();
     openModal('edit', {
-          templateId : template.templateId,
-          draftTitle: template.title,
-          draftContent: template.content,
-          draftTags: template.tags
-        })
-  }
+      templateId: template.templateId,
+      draftTitle: template.title,
+      draftContent: template.content,
+      draftTags: template.tags,
+    });
+  };
 
   const handleClickAiUse = () => {
     setCurrentTemplate({ templateId: template.templateId, content: template.content });
     closeModal();
     router.push('/advice');
+  };
+
+  const handleDropdown = () => {
+    setDropdown((prev) => !prev);
+  };
+
+  const handleCopyClipBoard = (text: string) => {
+    const $textarea = document.createElement('textarea');
+    document.body.appendChild($textarea);
+    $textarea.value = text;
+    $textarea.select();
+    document.body.removeChild($textarea);
+    triggerToast('복사되었습니다.');
+  };
+
+  const triggerToast = (message: string) => {
+    setToastMessage(message);
+    setToastVisible(true);
   };
 
   return (
@@ -112,11 +140,29 @@ export default function ViewModal() {
       </section>
 
       <Spacing size={24} />
-      {template?.isAuthor && (
-        <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
-          <button>삭제하기</button>|<button onClick={() => handleClickEdit(template)}>수정하기</button>
-        </section>
-      )}
+      <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
+        {template?.isAuthor && (
+          <>
+            <button className="flex items-center gap-1">
+              <IconTrash />
+              삭제하기
+            </button>
+            |
+            <button onClick={() => handleClickEdit(template)} className="flex items-center gap-1">
+              <IconEraser />
+              수정하기
+            </button>
+            |
+          </>
+        )}
+        <button
+          onClick={() => handleCopyClipBoard(template.content)}
+          className="flex items-center gap-1"
+        >
+          <IconCopy className="scale-75" />
+          복사하기
+        </button>
+      </section>
 
       <section className="flex h-[80px] w-full items-end justify-between">
         {/* 작성자 정보 */}
@@ -149,14 +195,17 @@ export default function ViewModal() {
             </div>
           </section>
         </section>
-        <section className="flex gap-3">
-          {/* TODO : API 연결 전에 저장하기 버튼 눌렀을 때 디자인 요청하기 */}
-          <Button state="line" icon="dropdown">
-            저장하기
-          </Button>
+        <section className="flex items-end gap-3">
+          <div className="flex flex-col gap-2">
+            {dropdown && <Dropdown templateId={selectedTemplateId ?? 0} savedFolderId={folderId} />}
+            <Button icon="dropdown" state="line" onClick={handleDropdown}>
+              저장하기
+            </Button>
+          </div>
           <Button onClick={handleCilckUse}>사용하기</Button>
           <Button onClick={handleClickAiUse}>AI로 한 번 더 수정하기</Button>
         </section>
+        {toastVisible && <Toast message={toastMessage} onClose={() => setToastVisible(false)} />}
       </section>
     </section>
   );

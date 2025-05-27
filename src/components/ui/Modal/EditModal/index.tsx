@@ -7,6 +7,7 @@ import { Button } from '../../Button';
 import IconClose from '@/assets/icons/icon-close.svg';
 import { useCreateTemplate } from '@/hooks/template';
 import { useEditTemplate } from '@/hooks/template';
+import { usePostPlaceholder } from '@/hooks/models/usePostPlaceholders';
 import { useEffect, useState } from 'react';
 
 interface TagItem {
@@ -22,7 +23,13 @@ interface EditModalProps {
   draftTags?: string[];
 }
 
-export default function EditModal({ mode, selectedTemplateId, draftTitle, draftContent, draftTags }: EditModalProps) {
+export default function EditModal({
+  mode,
+  selectedTemplateId,
+  draftTitle,
+  draftContent,
+  draftTags,
+}: EditModalProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<TagItem[]>([{ id: generateId(), value: '' }]);
@@ -30,8 +37,13 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
   const [isPrivate, setIsPrivate] = useState(false);
 
   const { closeModal } = useModalStore();
-  const { mutate: createTemplate } = useCreateTemplate();
-  const { mutate: editTemplate } = useEditTemplate();
+  const { mutate: createTemplate, status: createTemplateStatus } = useCreateTemplate();
+  const { mutate: editTemplate, status: editTemplateStatus } = useEditTemplate();
+  const { mutate: placeholderContent, status: placeholderStatus } = usePostPlaceholder();
+
+  const createIsLoading = createTemplateStatus == 'pending';
+  const editIsLoading = editTemplateStatus == 'pending';
+  const placeholderIsLoading = placeholderStatus == 'pending';
 
   //   TODO : 모든 입력 입력되어 있는지 검사하기
   const handleSaveBtn = () => {
@@ -42,53 +54,52 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       return;
     }
 
-    if (mode == "create") {
-    createTemplate(
-          {
+    if (mode == 'create') {
+      createTemplate(
+        {
+          title: title.trim(),
+          content: content.trim(),
+          tags: tagValues,
+          isPrivate,
+        },
+        {
+          onSuccess: () => {
+            // TODO : 성공 모달 디자인 받기
+            closeModal();
+          },
+          onError: (error) => {
+            console.error('템플릿 생성 실패:', error);
+          },
+        },
+      );
+    }
+
+    if (mode == 'edit') {
+      if (selectedTemplateId === undefined) {
+        console.error('템플릿 ID가 없습니다.');
+        return;
+      }
+
+      editTemplate(
+        {
+          templateId: selectedTemplateId,
+          payload: {
             title: title.trim(),
             content: content.trim(),
             tags: tagValues,
             isPrivate,
           },
-          {
-            onSuccess: () => {
-              // TODO : 성공 모달 디자인 받기
-              closeModal();
-            },
-            onError: (error) => {
-              console.error('템플릿 생성 실패:', error);
-            },
+        },
+        {
+          onSuccess: () => {
+            closeModal();
           },
-        );
-    } 
-
-    if ( mode == "edit") {
-       if (selectedTemplateId === undefined) {
-    console.error('템플릿 ID가 없습니다.');
-    return;
-  }
-
-
-    editTemplate(
-    {
-      templateId: selectedTemplateId ,
-      payload: {
-        title: title.trim(),
-        content: content.trim(),
-        tags: tagValues,
-        isPrivate,
-      },
-    },
-    {
-      onSuccess: () => {
-        closeModal();
-      },
-      onError: (error) => {
-        console.error('템플릿 수정 실패:', error);
-      },
+          onError: (error) => {
+            console.error('템플릿 수정 실패:', error);
+          },
+        },
+      );
     }
-  );
-}   
   };
 
   function generateId() {
@@ -120,6 +131,25 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
     });
   };
 
+  const handlePlaceholderBtn = () => {
+    placeholderContent(
+      { content: content },
+      {
+        onSuccess: (data) => {
+          if (data?.result) {
+            setContent(data.result);
+          } else {
+            alert('내용이 너무 적습니다. 다시 시도해 주세요.');
+          }
+        },
+        onError: (error) => {
+          console.error('자동 빈칸 만들기 실패:', error);
+          alert('오류가 발생했습니다. 다시 시도해 주세요.');
+        },
+      },
+    );
+  };
+
   const handleCancelEditBtn = () => {
     closeModal();
   };
@@ -131,14 +161,14 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       setContent(draftContent);
     }
 
-    if (mode == "edit" && draftTitle && draftContent && draftTags) {
+    if (mode == 'edit' && draftTitle && draftContent && draftTags) {
       setTitle(draftTitle);
       setTags(
-    draftTags?.map((tag) => ({
-      id: generateId(),
-      value: tag,
-    })) ?? [{ id: generateId(), value: '' }]
-  );
+        draftTags?.map((tag) => ({
+          id: generateId(),
+          value: tag,
+        })) ?? [{ id: generateId(), value: '' }],
+      );
     }
   }, [draftContent]);
 
@@ -184,7 +214,7 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
       </p>
       <Spacing size={24} />
       <textarea
-        className="body-lg flex h-[287px] bg-white border border-layout-grey3 rounded-lg p-2"
+        className="body-lg border-layout-grey3 flex h-[287px] rounded-lg border bg-white p-2"
         placeholder="내용을 입력해 주세요."
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -222,13 +252,11 @@ export default function EditModal({ mode, selectedTemplateId, draftTitle, draftC
             수정 취소
           </Button>
         )}
-        <Button>자동 빈칸 만들기</Button>
-        {/* TODO : 추후 isLoading 달아서 로딩 처리하기  */}
-        {/* <Button icon="dropdown" onClick={handleSaveBtn} disabled={isLoading}>
-          {isLoading ? '저장 중...' : '저장하기'}
-        </Button> */}
-        <Button icon="dropdown" onClick={handleSaveBtn}>
-          저장하기
+        <Button state="line" onClick={handlePlaceholderBtn} disabled={placeholderIsLoading}>
+          자동 빈칸 만들기
+        </Button>
+        <Button icon="dropdown" onClick={handleSaveBtn} disabled={createIsLoading || editIsLoading}>
+          {createIsLoading || editIsLoading ? '저장 중...' : '저장하기'}
         </Button>
       </section>
     </section>

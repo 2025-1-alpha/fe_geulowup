@@ -6,9 +6,13 @@ import ArchiveFolderStatus from '../ArchiveFolderStatus';
 import ArchiveFolderInput from '../ArchiveFolderInput';
 import ArchiveModalWarning from '../ArchiveModalWarning';
 
-export default function ArchiveSidebar() {
+interface ArchiveSidebarProps {
+  selectedFolderId: string;
+  onFolderSelect: (folderId: string) => void;
+}
+
+export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: ArchiveSidebarProps) {
   const router = useRouter();
-  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [folderToDelete, setFolderToDelete] = useState<string | null>(null);
@@ -22,7 +26,7 @@ export default function ArchiveSidebar() {
   ]);
 
   const handleFolderClick = (folderId: string) => {
-    setSelectedFolderId(folderId);
+    onFolderSelect(folderId);
     console.log('폴더 선택:', folderId);
   };
 
@@ -64,6 +68,10 @@ export default function ArchiveSidebar() {
     if (folderToDelete) {
       setFolders((prev) => prev.filter((folder) => folder.id !== folderToDelete));
       console.log('폴더 삭제:', folderToDelete);
+      // 삭제된 폴더가 현재 선택된 폴더라면 기본 폴더로 변경
+      if (selectedFolderId === folderToDelete) {
+        onFolderSelect('1'); // 찜한 템플릿으로 변경
+      }
     }
     setDeleteModalOpen(false);
     setFolderToDelete(null);
@@ -86,7 +94,6 @@ export default function ArchiveSidebar() {
             key={folder.id}
             folderId={folder.id}
             folderName={folder.name}
-            templateCount={folder.templateCount}
             isSelected={selectedFolderId === folder.id}
             isDeletable={folder.id !== '1' && folder.id !== '2'} // 찜한 템플릿, 최근 사용한 템플릿 제외
             onClick={handleFolderClick}

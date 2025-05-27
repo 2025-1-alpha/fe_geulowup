@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import IconTrash from '@/assets/icons/icon-trash.svg';
 
 // 타입 정의
-type FolderState = 'default' | 'hover' | 'click';
+type FolderState = 'default' | 'hover';
 
 interface ArchiveFolderStatusProps {
   folderId: string;
   folderName: string;
-  templateCount: number;
   isSelected?: boolean;
   isDeletable?: boolean;
   onClick?: (folderId: string) => void;
@@ -20,28 +19,36 @@ interface ArchiveFolderStatusProps {
 export default function ArchiveFolderStatus({
   folderId,
   folderName,
+  isSelected = false,
   isDeletable = false,
   onClick,
   onDoubleClick,
   onDelete,
 }: ArchiveFolderStatusProps) {
   const [currentState, setCurrentState] = useState<FolderState>('default');
-  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // isSelected가 변경될 때 내부 상태 초기화
+  useEffect(() => {
+    if (isSelected) {
+      setCurrentState('default'); // 선택된 상태에서는 내부 상태를 default로 초기화
+    }
+  }, [isSelected]);
 
   const handleMouseEnter = () => {
-    if (currentState !== 'click') {
+    // 선택된 상태가 아닐 때만 hover 상태로 변경
+    if (!isSelected) {
       setCurrentState('hover');
     }
   };
 
   const handleMouseLeave = () => {
-    if (currentState !== 'click') {
+    // 선택된 상태가 아닐 때만 default 상태로 변경
+    if (!isSelected) {
       setCurrentState('default');
     }
   };
 
   const handleClick = () => {
-    setCurrentState('click');
     onClick?.(folderId);
   };
 
@@ -54,44 +61,25 @@ export default function ArchiveFolderStatus({
     onDelete?.(folderId);
   };
 
-  // 전역 클릭 이벤트 리스너로 클릭 상태 해제
-  useEffect(() => {
-    const handleGlobalClick = (event: MouseEvent) => {
-      // 현재 버튼이 클릭된 것이 아니고, 클릭 상태인 경우에만 해제
-      if (
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node) &&
-        currentState === 'click'
-      ) {
-        setCurrentState('default');
-      }
-    };
-
-    // 전역 클릭 이벤트 리스너 등록
-    document.addEventListener('click', handleGlobalClick);
-
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      document.removeEventListener('click', handleGlobalClick);
-    };
-  }, [currentState]);
-
   // 상태별 스타일 정의
   const getStateStyles = () => {
+    // 선택된 상태가 최우선 (click 상태)
+    if (isSelected) {
+      return 'bg-transparent text-layout-grey7'; // click 상태: 배경색 투명, 글자색 grey7
+    }
+
+    // 선택되지 않은 상태에서만 hover/default 적용
     switch (currentState) {
       case 'hover':
-        return 'bg-layout-grey3 text-layout-grey7';
-      case 'click':
-        return 'bg-transparent text-layout-grey7';
+        return 'bg-layout-grey3 text-layout-grey7'; // hover 상태: 배경색 grey3, 글자색 grey7
       default:
-        return 'bg-transparent text-layout-grey5';
+        return 'bg-transparent text-layout-grey5'; // default 상태: 배경색 투명, 글자색 grey5
     }
   };
 
   return (
     <button
-      ref={buttonRef}
-      className={`group flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-all duration-200 ${getStateStyles()} `}
+      className={`group flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-all duration-200 ${getStateStyles()}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}

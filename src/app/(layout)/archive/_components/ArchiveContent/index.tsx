@@ -7,7 +7,11 @@ import { Spacing } from '@/components/ui/Spacing';
 import ArrowUpDownIcon from '@/assets/icons/icon-arrow-up-down.svg';
 import ArchiveCardGrid from '../ArchiveCardGrid';
 
-export default function ArchiveContent() {
+interface ArchiveContentProps {
+  selectedFolderId: string;
+}
+
+export default function ArchiveContent({ selectedFolderId }: ArchiveContentProps) {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>(undefined);
   const [sortType, setSortType] = useState<'popular' | 'latest'>('popular');
 
@@ -36,7 +40,7 @@ export default function ArchiveContent() {
 
   const handleSearchClick = () => {
     // 검색 로직 (추후 구현)
-    console.log('검색:', selectedTag);
+    console.log('검색:', selectedTag, '폴더:', selectedFolderId);
   };
 
   const handleSortChange = () => {
@@ -70,7 +74,11 @@ export default function ArchiveContent() {
       <Spacing size={40} />
 
       {/* 카드 그리드 */}
-      <ArchiveCardGrid />
+      <ArchiveCardGrid
+        selectedFolderId={selectedFolderId}
+        selectedTag={selectedTag}
+        sortType={sortType}
+      />
     </div>
   );
 }

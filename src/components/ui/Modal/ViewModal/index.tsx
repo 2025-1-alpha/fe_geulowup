@@ -97,6 +97,13 @@ export default function ViewModal() {
     setToastVisible(true);
   };
 
+  const handleAuthor = () => {
+    closeModal();
+    openModal('profile', {
+      templateId: template.templateId,
+    });
+  };
+
   return (
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
       {/* 태그 */}
@@ -167,25 +174,30 @@ export default function ViewModal() {
       <section className="flex h-[80px] w-full items-end justify-between">
         {/* 작성자 정보 */}
         <section className="flex items-center gap-3">
-          <Image
-            src={
-              template.author.profileImageUrl ||
-              'https://github.com/user-attachments/assets/9c948b08-a78b-44cb-b572-f2a934b70c45'
-            }
-            alt="작성자 프로필"
-            width={80}
-            height={80}
-            className="rounded-sm"
-          />
+          <button onClick={handleAuthor}>
+            <Image
+              src={
+                template.author.profileImageUrl ||
+                'https://github.com/user-attachments/assets/9c948b08-a78b-44cb-b572-f2a934b70c45'
+              }
+              alt="작성자 프로필"
+              width={80}
+              height={80}
+              className="rounded-sm"
+            />
+          </button>
 
           <section className="flex gap-6">
-            <div className="flex flex-col items-center justify-center gap-[18px]">
+            <button
+              onClick={handleAuthor}
+              className="flex flex-col items-center justify-center gap-[18px]"
+            >
               <div className="title-sm flex">{template.author.name}</div>
               <div className="body-lg flex gap-1">
                 <IconGlowScore />
                 {template.author.score}
               </div>
-            </div>
+            </button>
 
             <div className="border-layout-grey5 flex h-16 w-0 border" />
 

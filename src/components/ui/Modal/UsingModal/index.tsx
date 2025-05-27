@@ -21,6 +21,7 @@ export default function UsingModal() {
 
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { openUnsaveModal } = useUnsaveModalStore();
+  const [templateId, setTemplateId] = useState<number>();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
@@ -40,6 +41,7 @@ export default function UsingModal() {
     const fetchTemplate = async () => {
       try {
         const data = await getTemplateDetail(selectedTemplateId);
+        setTemplateId(data?.templateId ?? 0);
         setTemplate(data);
         setContent(data?.content ?? '');
         setFolderId(data?.savedFolder?.folderId ?? 0);
@@ -95,7 +97,7 @@ export default function UsingModal() {
 
   const handleAuthor = () => {
     closeModal();
-    openModal('profile');
+    openModal('profile', { templateId: templateId });
   };
 
   return (
@@ -176,13 +178,16 @@ export default function UsingModal() {
           </button>
 
           <section className="flex gap-6">
-            <div className="flex flex-col items-center justify-center gap-[18px]">
+            <button
+              onClick={handleAuthor}
+              className="flex flex-col items-center justify-center gap-[18px]"
+            >
               <div className="title-sm flex">{template.author.name}</div>
               <div className="body-lg flex gap-1">
                 <IconGlowScore />
                 {template.author.score}
               </div>
-            </div>
+            </button>
 
             <div className="border-layout-grey5 flex h-16 w-0 border" />
 

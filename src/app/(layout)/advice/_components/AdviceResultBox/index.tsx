@@ -1,5 +1,4 @@
 import { Spacing } from '@/components/ui/Spacing';
-import IconShare from '@/assets/icons/icon-share.svg';
 import IconSave from '@/assets/icons/icon-save.svg';
 import IconCopy from '@/assets/icons/icon-copy.svg';
 import { useModalStore } from '@/stores/useModalStore';
@@ -26,11 +25,8 @@ export default function AdviceResult({ content }: AdviceResultProps) {
       </div>
       <Spacing size={12} />
       <div className="flex w-full items-end justify-end gap-6">
-        <button className="active:translate-y-[2px] transition-transform">
-          <IconShare />
-        </button>
         <button
-        className="active:translate-y-[2px] transition-transform"
+          className="transition-transform active:translate-y-[2px]"
           onClick={() =>
             openModal('create', {
               draftContent: content,
@@ -39,8 +35,10 @@ export default function AdviceResult({ content }: AdviceResultProps) {
         >
           <IconSave />
         </button>
-        <button className="active:translate-y-[2px] transition-transform"
-        onClick={() => navigator.clipboard.writeText(content)}>
+        <button
+          className="transition-transform active:translate-y-[2px]"
+          onClick={() => navigator.clipboard.writeText(content)}
+        >
           <IconCopy />
         </button>
       </div>

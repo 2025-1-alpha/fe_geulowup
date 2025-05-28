@@ -9,7 +9,7 @@ import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconArrowUpDown from '@/assets/icons/icon-arrow-up-down.svg';
 
 export default function ProfileModal() {
-  const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
+  const [sortType, setSortType] = useState<'latest' | 'popular'>('popular');
 
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { data: authorData } = useAuthorDetail(selectedTemplateId as number);
@@ -81,7 +81,7 @@ export default function ProfileModal() {
           className="bg-layout-grey1 hover:bg-layout-grey2 flex h-9 w-22 items-center justify-center gap-1 rounded-md transition-colors"
         >
           <IconArrowUpDown />
-          {sortType === 'latest' ? '인기순' : '최신순'}
+          {sortType === 'popular' ? '인기순' : '최신순'}
         </button>
       </div>
 

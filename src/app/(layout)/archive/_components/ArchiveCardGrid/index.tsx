@@ -15,66 +15,6 @@ interface ArchiveCardGridProps {
   sortType: 'popular' | 'latest';
 }
 
-// 템플릿 데이터 타입 정의 (현재 사용되지 않음 - API 타입으로 대체됨)
-// interface TemplateData {
-//   id: string;
-//   templateId: number;
-//   title: string;
-//   description: string;
-//   tags: string[];
-//   likes: number;
-//   content: string;
-//   folderId: string;
-// }
-
-// 폴더별 더미 데이터 (현재 사용되지 않음 - API 연동으로 대체됨)
-// const folderData: Record<string, TemplateData[]> = {
-//   '1': Array.from({ length: 32 }, (_, index) => ({
-//     id: `fav_${index + 1}`,
-//     templateId: index + 1,
-//     title: `찜한 템플릿 ${index + 1}`,
-//     description:
-//       '찜한 템플릿입니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-//     tags: ['인사말', '자기소개'],
-//     likes: 150 + index,
-//     content: `찜한 템플릿 ${index + 1}의 내용입니다.\n\n안녕하세요 잘 부탁드립니다.`,
-//     folderId: '1',
-//   })),
-//   '2': Array.from({ length: 5 }, (_, index) => ({
-//     id: `recent_${index + 1}`,
-//     templateId: 100 + index + 1,
-//     title: `최근 사용한 템플릿 ${index + 1}`,
-//     description:
-//       '최근에 사용한 템플릿입니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-//     tags: ['감사글', '공지글'],
-//     likes: 80 + index,
-//     content: `최근 사용한 템플릿 ${index + 1}의 내용입니다.\n\n감사합니다.`,
-//     folderId: '2',
-//   })),
-//   '3': Array.from({ length: 8 }, (_, index) => ({
-//     id: `user1_${index + 1}`,
-//     templateId: 200 + index + 1,
-//     title: `사용자 폴더1 템플릿 ${index + 1}`,
-//     description:
-//       '사용자가 만든 폴더의 템플릿입니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-//     tags: ['부탁글', '제안글'],
-//     likes: 60 + index,
-//     content: `사용자 폴더1 템플릿 ${index + 1}의 내용입니다.\n\n잘 부탁드립니다.`,
-//     folderId: '3',
-//   })),
-//   '4': Array.from({ length: 3 }, (_, index) => ({
-//     id: `user2_${index + 1}`,
-//     templateId: 300 + index + 1,
-//     title: `사용자 폴더2 템플릿 ${index + 1}`,
-//     description:
-//       '사용자가 만든 폴더의 템플릿입니다. 글로우업 글쓰기 서비스는 여러 상황에서 사용자의 글쓰기 경험을 돕고자 합니다.',
-//     tags: ['후기작성', '소셜글'],
-//     likes: 40 + index,
-//     content: `사용자 폴더2 템플릿 ${index + 1}의 내용입니다.\n\n감사합니다.`,
-//     folderId: '4',
-//   })),
-// };
-
 export default function ArchiveCardGrid({
   selectedFolderId,
   selectedTag,
@@ -82,7 +22,7 @@ export default function ArchiveCardGrid({
 }: ArchiveCardGridProps) {
   const [visibleCards, setVisibleCards] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
-  const { openModal, currentModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   // 폴더별 데이터 API 연동
   const isLikes = selectedFolderId === '1';
@@ -124,14 +64,6 @@ export default function ArchiveCardGrid({
   const displayedCards = filteredTemplates.slice(0, visibleCards);
   const hasMoreCards = visibleCards < filteredTemplates.length;
 
-  // 컴포넌트 마운트 시와 모달이 닫힐 때만 카드 클릭 상태 초기화
-  useEffect(() => {
-    // 모달이 닫힐 때만 카드 클릭 상태를 초기화
-    if (currentModal === null) {
-      // clearAllCards(); // useCardStore가 없으므로 주석 처리
-    }
-  }, [currentModal]);
-
   // 폴더가 변경될 때 visibleCards 초기화
   useEffect(() => {
     setVisibleCards(15);
@@ -139,14 +71,13 @@ export default function ArchiveCardGrid({
 
   const handleLoadMore = () => {
     setIsLoading(true);
-    // 더 불러오기 로직 (추후 API 연결)
     setTimeout(() => {
       setVisibleCards((prev) => prev + 15);
       setIsLoading(false);
     }, 1000);
   };
 
-  // 모달 열기 핸들러 - 카드 클릭 시 모달 연결을 위한 상태 처리
+  // 모달 열기 핸들러
   const handleCardClick = (templateId: number, cardData: Template) => {
     console.log('카드 클릭:', {
       templateId,
@@ -156,7 +87,6 @@ export default function ArchiveCardGrid({
       timestamp: new Date().toISOString(),
     });
 
-    // 모달 열기 - 모달 스토어에서 지원하는 파라미터만 전달
     openModal('view', {
       templateId,
     });

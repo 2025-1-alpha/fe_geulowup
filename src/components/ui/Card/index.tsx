@@ -15,6 +15,9 @@ interface CardProps {
   likes: number;
   onClick?: () => void;
   className?: string;
+  isSelected?: boolean;
+  onSelectionChange?: (cardId: string) => void;
+  cardId?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -25,14 +28,15 @@ const Card: React.FC<CardProps> = ({
   likes,
   onClick,
   className,
+  isSelected = false,
+  onSelectionChange,
+  cardId,
 }) => {
-  const [isClicked, setIsClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const [truncatedDescription, setTruncatedDescription] = useState(description);
 
-  const state = isClicked ? 'click' : isHovered ? 'hover' : 'default';
+  const state = isSelected ? 'click' : isHovered ? 'hover' : 'default';
 
   const sizeStyle: Record<variantType, string> = {
     large: 'w-[320px] h-[204px]',
@@ -74,7 +78,7 @@ const Card: React.FC<CardProps> = ({
       'w-[168px] h-[26px] overflow-hidden text-ellipsis whitespace-nowrap',
   );
 
-  // 3줄 제한을 위한 커스텀 로직 추가
+  // 3줄 제한을 위한 커스텀 로직
   useEffect(() => {
     function truncateToThreeLines() {
       const element = descriptionRef.current;
@@ -110,47 +114,13 @@ const Card: React.FC<CardProps> = ({
     };
   }, [description, variant, state]);
 
-  // 클릭 상태 유지
-  useEffect(() => {
-    if (isClicked) {
-      // 클릭 상태를 로컬 스토리지에 저장하여 페이지 새로고침 후에도 유지
-      const cardId = `${title}-${variant}`;
-      localStorage.setItem(`card-clicked-${cardId}`, 'true');
-    }
-  }, [isClicked, title, variant]);
-
-  // 컴포넌트 마운트 시 이전 클릭 상태 복원
-  useEffect(() => {
-    const cardId = `${title}-${variant}`;
-    const wasClicked = localStorage.getItem(`card-clicked-${cardId}`);
-    if (wasClicked === 'true') {
-      setIsClicked(true);
-    }
-  }, [title, variant]);
-
-  // 모달 닫힘 이벤트 감지
-  useEffect(() => {
-    // 모달 닫힘 이벤트 리스너 설정
-    const handleModalClose = () => {
-      const cardId = `${title}-${variant}`;
-      localStorage.removeItem(`card-clicked-${cardId}`);
-      setIsClicked(false);
-    };
-
-    // 사용자 정의 이벤트 생성 및 구독
-    window.addEventListener('modal-closed', handleModalClose);
-
-    // cleanup
-    return () => {
-      window.removeEventListener('modal-closed', handleModalClose);
-    };
-  }, [title, variant]);
-
   const handleClick = () => {
-    if (!isClicked) {
-      setIsClicked(true);
+    // 선택 상태 변경 (cardId가 있고 onSelectionChange가 제공된 경우에만)
+    if (cardId && onSelectionChange) {
+      onSelectionChange(cardId);
     }
 
+    // 기존 onClick 핸들러 호출
     if (onClick) {
       onClick();
     }
@@ -158,7 +128,6 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div
-      ref={cardRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
@@ -167,7 +136,7 @@ const Card: React.FC<CardProps> = ({
         sizeStyle[variant],
         backgroundStyle[variant][state],
         variant === 'small' && state === 'hover' ? 'z-30' : 'z-10',
-        isClicked ? 'clicked' : '', // 클릭 상태를 나타내는 CSS 클래스 추가
+        isSelected ? 'selected' : '', // 선택 상태를 나타내는 CSS 클래스
         className,
       )}
     >

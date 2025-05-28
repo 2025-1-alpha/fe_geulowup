@@ -5,6 +5,7 @@ import { useUnsaveModalStore } from '@/stores/useUnsaveModalStore';
 import ViewModal from './ViewModal';
 import EditModal from './EditModal';
 import UsingModal from './UsingModal';
+import ProfileModal from './ProfileModal';
 import UnSaveModal from './UnsaveModal';
 import { useEffect } from 'react';
 
@@ -34,6 +35,7 @@ export default function ModalContainer() {
           <div onClick={(e) => e.stopPropagation()}>
             {currentModal === 'view' && <ViewModal />}
             {currentModal === 'create' && <EditModal mode="create" draftContent={draftContent} />}
+            {currentModal === 'profile' && <ProfileModal />}
             {currentModal === 'edit' && selectedTemplateId != null && (
               <EditModal
                 mode="edit"

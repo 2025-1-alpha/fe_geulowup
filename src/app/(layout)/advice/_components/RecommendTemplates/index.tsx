@@ -60,7 +60,7 @@ export default function RecommendTemplates() {
           더 찾아보기
         </Link>
       </aside>
-      <section className="custom-scrollbar z-20 ml-4 flex w-[648px] flex-1 rotate-x-180 overflow-x-scroll scroll-smooth">
+      <section className="custom-scrollbar-x z-20 ml-4 flex w-[648px] flex-1 rotate-x-180 overflow-x-scroll scroll-smooth">
         <section className="mb-2 flex max-h-full rotate-x-180 gap-2">
           {templates.map((template) => (
             <Card

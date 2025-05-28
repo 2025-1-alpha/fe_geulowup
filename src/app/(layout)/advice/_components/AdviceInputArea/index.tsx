@@ -81,7 +81,7 @@ export default function AdviceInputArea({
       <p className="button-md">키워드 입력</p>
       <Spacing size={8} />
 
-      <div className="custom-scrollbar max-w-[760px] rotate-x-180 scroll-smooth">
+      <div className="custom-scrollbar-x max-w-[760px] rotate-x-180 scroll-smooth">
         <div className="mb-3 flex w-max rotate-x-180 flex-nowrap gap-2">
           {tags.map((tag) => (
             <InputTag

@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import MypageData from './_components/MypageData';
-import MypageGlow from './_components/MypageGlow';
-import MypageCancelAccount from './_components/MypageCancelAccount';
+import MypageData from './_components/MypageData/index';
+import MypageGlow from './_components/MypageGlow/index';
+import MypageCancelAccount from './_components/MypageCancelAccount/index';
 
 export default function MyPage() {
   const [nickname, setNickname] = useState('');
-  const glowScore = 1213;
+  const glowScore = 78.5;
 
   useEffect(() => {
     const userStr = localStorage.getItem('user');

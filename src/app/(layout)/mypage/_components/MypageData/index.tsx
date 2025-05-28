@@ -1,42 +1,69 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import IconEdit from '@/assets/icons/icon-edit.svg';
 import IconProfilePic from '@/assets/icons/icon-profilepic.svg';
+import { usePatchUserProfileImage } from '@/hooks/user/usePatchUserProfileImage';
 
 interface MypageDataProps {
   profileImage?: string;
   nickname: string;
   onNicknameChange: (nickname: string) => void;
+  isNicknameUpdating?: boolean;
 }
 
-export default function MypageData({ profileImage, nickname, onNicknameChange }: MypageDataProps) {
+export default function MypageData({
+  profileImage,
+  nickname,
+  onNicknameChange,
+  isNicknameUpdating,
+}: MypageDataProps) {
   const [currentNickname, setCurrentNickname] = useState(nickname);
+  const { mutate: patchProfileImage, isPending: isPatchingProfileImage } =
+    usePatchUserProfileImage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      try {
-        const userData = JSON.parse(userStr);
-        if (userData.name) {
-          setCurrentNickname(userData.name);
-          onNicknameChange(userData.name);
-        }
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-      }
-    }
-  }, []);
+    setCurrentNickname(nickname);
+  }, [nickname]);
 
-  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newNickname = e.target.value;
-    setCurrentNickname(newNickname);
-    onNicknameChange(newNickname);
+  const handleNicknameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentNickname(e.target.value);
+  };
+
+  const handleNicknameBlur = () => {
+    if (nickname !== currentNickname) {
+      onNicknameChange(currentNickname);
+    }
+  };
+
+  const handleProfileImageEditClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+      patchProfileImage(formData, {
+        onError: (err) => {
+          console.error('프로필 이미지 변경 실패:', err);
+        },
+      });
+    }
   };
 
   return (
     <div className="flex flex-col">
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleProfileImageChange}
+        accept="image/*"
+        style={{ display: 'none' }}
+      />
       <div className="flex items-end gap-4">
         <div className="bg-layout-grey2 h-[200px] w-[200px] overflow-hidden rounded-[12.5px]">
           {profileImage ? (
@@ -54,9 +81,14 @@ export default function MypageData({ profileImage, nickname, onNicknameChange }:
           )}
         </div>
 
-        <button type="button" className="button-sm text-layout-grey6 flex items-center gap-1">
+        <button
+          type="button"
+          className="button-sm text-layout-grey6 flex items-center gap-1 disabled:opacity-50"
+          onClick={handleProfileImageEditClick}
+          disabled={isPatchingProfileImage}
+        >
           <IconEdit aria-label="편집 아이콘" />
-          프로필 사진 수정
+          {isPatchingProfileImage ? '업로드 중...' : '프로필 사진 수정'}
         </button>
       </div>
 
@@ -66,9 +98,11 @@ export default function MypageData({ profileImage, nickname, onNicknameChange }:
           <input
             type="text"
             value={currentNickname}
-            onChange={handleNicknameChange}
-            className="body-lg text-layout-grey7 h-full w-full bg-transparent outline-none"
+            onChange={handleNicknameInputChange}
+            onBlur={handleNicknameBlur}
+            className="body-lg text-layout-grey7 h-full w-full bg-transparent outline-none disabled:opacity-50"
             placeholder="닉네임을 입력하세요"
+            disabled={isNicknameUpdating}
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-export interface TemplateRequset {
+export interface TemplateRequest {
   templateId?: number;
   title: string;
   content: string;

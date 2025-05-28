@@ -1,21 +1,43 @@
-.custom-scrollbar {
+.custom-scrollbar-x {
   overflow-x: scroll;
   scroll-behavior: smooth;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
+.custom-scrollbar-x::-webkit-scrollbar {
   height: 4px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
+.custom-scrollbar-x::-webkit-scrollbar-thumb {
   background-color: #e0e0e0; /* grey2 */
   border-radius: 2px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
+.custom-scrollbar-x::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-button {
+.custom-scrollbar-x::-webkit-scrollbar-button {
+  display: none;
+}
+
+.custom-scrollbar-y {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar-thumb {
+  background-color: #e0e0e0; /* grey2 */
+  border-radius: 2px;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar-button {
   display: none;
 }

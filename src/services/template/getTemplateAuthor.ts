@@ -1,5 +1,13 @@
-import { TemplateRequset } from '@/types/templateRequest';
 import { customFetch } from '@/utils/customFetch';
+
+export interface AuthorRequest {
+  templateId?: number;
+  title: string;
+  content: string;
+  tags: string[];
+  isPrivate: boolean;
+  likeCount: number;
+}
 
 export interface AuthorDetail {
   author: {
@@ -9,7 +17,7 @@ export interface AuthorDetail {
     profileImageUrl: string;
   };
   templateTotalCount: number;
-  templates: TemplateRequset;
+  templates: AuthorRequest[];
 }
 
 export const getTemplateAuthor = async (templateId: number): Promise<AuthorDetail | null> => {

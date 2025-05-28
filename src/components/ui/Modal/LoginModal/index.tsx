@@ -34,8 +34,8 @@ export default function LoginModal() {
         >
           로그인하기
         </Button>
-        <Spacing size={25} />
       </section>
+        <Spacing size={25} />
     </section>
   );
 }

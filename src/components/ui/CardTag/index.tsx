@@ -7,7 +7,7 @@ interface CardTagProps {
 
 const CardTag: React.FC<CardTagProps> = ({ text }) => {
   return (
-    <div className="bg-primary-navy4 flex h-[24px] w-[80px] items-center justify-center rounded-full text-sm text-white">
+    <div className="bg-primary-navy4 flex h-[24px] w-[80px] items-center justify-center rounded-[5px] text-sm text-white">
       {text}
     </div>
   );

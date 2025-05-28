@@ -60,6 +60,8 @@ export default function Step1() {
       job: role,
       tags: preferences,
     });
+
+    localStorage.setItem('user', JSON.stringify({ name: username }));
   };
 
   return (

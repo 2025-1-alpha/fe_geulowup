@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -8,6 +9,7 @@ import Logo from '@/assets/logo.svg';
 
 export default function Header() {
   const pathname = usePathname();
+  const [isLogin, setIsLogin] = useState(false);
 
   const menus = [
     { label: '조언받기', href: '/advice' },
@@ -15,10 +17,11 @@ export default function Header() {
     { label: '보관함', href: '/archive' },
   ];
 
-  {
-    /* TODO : 쿠키에서 로그인 여부 받아서 수정할 수 있도록 하기 */
-  }
-  const isLogin = true;
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    setIsLogin(!!(token && user));
+  }, []);
 
   return (
     <header className="bg-layout-grey1 mx-auto mb-[100px] flex min-w-screen items-center justify-between px-24 py-3">
@@ -29,7 +32,6 @@ export default function Header() {
         <nav className="flex gap-20">
           {menus.map((menu) => {
             const isActive = pathname.startsWith(menu.href);
-
             return (
               <Link
                 key={menu.href}
@@ -51,7 +53,6 @@ export default function Header() {
           <Button
             variant="grey"
             size="small"
-            // TODO : 로그아웃 연결
             onClick={() => {
               alert('로그아웃!');
             }}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import IconEdit from '@/assets/icons/icon-edit.svg';
+import IconProfilePic from '@/assets/icons/icon-profilepic.svg';
 
 interface MypageDataProps {
   profileImage?: string;
@@ -48,7 +49,7 @@ export default function MypageData({ profileImage, nickname, onNicknameChange }:
             />
           ) : (
             <div className="bg-layout-grey3 flex h-full w-full items-center justify-center">
-              <span className="text-layout-grey5 button-sm">이미지 없음</span>
+              <IconProfilePic aria-label="기본 프로필 이미지" />
             </div>
           )}
         </div>

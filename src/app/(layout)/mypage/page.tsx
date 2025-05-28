@@ -7,7 +7,7 @@ import MypageCancelAccount from './_components/MypageCancelAccount/index';
 
 export default function MyPage() {
   const [nickname, setNickname] = useState('');
-  const glowScore = 78.5;
+  const glowScore = 95.3;
 
   useEffect(() => {
     const userStr = localStorage.getItem('user');

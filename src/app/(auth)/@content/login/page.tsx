@@ -1,3 +1,5 @@
+'use client';
+
 import { Spacing } from '@/components/ui/Spacing';
 import Logo from '@/assets/logo.svg';
 import IconKaKao from '@/assets/icons/icon-kakao.svg';
@@ -14,11 +16,21 @@ export default function LoginPage() {
       <Spacing size={120} />
       <section className="flex flex-col gap-3">
         {/* TODO : api 연결할 때 onClick 연결 필요 */}
-        <button className="flex h-[45px] w-[300px] items-center justify-center rounded-md bg-[#fee500] p-[14px]">
+        <button
+          onClick={() => {
+            window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URI}/oauth2/authorization/kakao`;
+          }}
+          className="flex h-[45px] w-[300px] items-center justify-center rounded-md bg-[#fee500] p-[14px]"
+        >
           <IconKaKao />
           <KakaoText />
         </button>
-        <button className="border-layout-grey4 flex h-[45px] w-[300px] items-center justify-center rounded-md border p-[14px]">
+        <button
+          onClick={() => {
+            window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URI}/oauth2/authorization/google`;
+          }}
+          className="border-layout-grey4 flex h-[45px] w-[300px] items-center justify-center rounded-md border p-[14px]"
+        >
           <IconGoogle />
           <GoogleText />
         </button>

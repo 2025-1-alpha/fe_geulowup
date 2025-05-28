@@ -6,6 +6,7 @@ import { Spacing } from '@/components/ui/Spacing';
 import { Button } from '@/components/ui/Button';
 import { StepBar } from '@/components/ui/StepBar';
 import { useSignupStore } from '@/stores/signUpStore';
+import { useSignUp } from '@/hooks/users/useSignUp';
 import IconArrowDown from '@/assets/icons/icon-arrow-down.svg';
 import IconArrowBack from '@/assets/icons/icon-arrow-back.svg';
 
@@ -35,7 +36,8 @@ const category = [
 
 export default function Step1() {
   const router = useRouter();
-  const { preferences, setPreferences, clearPreferences } = useSignupStore();
+  const { username, role, preferences, setPreferences, clearPreferences } = useSignupStore();
+  const { mutate: signUp } = useSignUp();
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -50,6 +52,14 @@ export default function Step1() {
 
   const handleNextBtn = () => {
     router.push('/sign-up-complete');
+  };
+
+  const handleSignUp = () => {
+    signUp({
+      name: username,
+      job: role,
+      tags: preferences,
+    });
   };
 
   return (
@@ -111,11 +121,24 @@ export default function Step1() {
       </div>
       <Spacing size={40} />
       <div className="flex w-full justify-between">
-        <Button size="small" state="line" onClick={handleSkipBtn}>
+        <Button
+          size="small"
+          state="line"
+          onClick={() => {
+            handleSkipBtn();
+            handleSignUp();
+          }}
+        >
           건너뛰기
         </Button>
         {preferences.length >= 3 ? (
-          <Button size="small" onClick={handleNextBtn}>
+          <Button
+            size="small"
+            onClick={() => {
+              handleNextBtn();
+              handleSignUp();
+            }}
+          >
             다음으로
           </Button>
         ) : (

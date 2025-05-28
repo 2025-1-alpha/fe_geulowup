@@ -11,13 +11,13 @@ import { checkAuth } from '@/utils/checkAuth';
 
 export default function RecommendTemplates() {
   const { requireAuth } = useAuth();
-   const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
     if (typeof window !== 'undefined') {
       return checkAuth();
     }
     return false;
   });
-  
+
   const { data: recommendData } = useTemplatesRecommendation();
   const { data: likeData } = useTemplatesLikes({ enabled: isAuthenticated });
 
@@ -42,15 +42,15 @@ export default function RecommendTemplates() {
 
   useEffect(() => {
     let response;
-    
+
     if (asideState === 'recommend') {
       response = recommendData;
     } else if (asideState === 'like' && isAuthenticated) {
       response = likeData;
     } else {
-      response = null; 
+      response = null;
     }
-    
+
     const templates =
       response?.templates.map((templates) => ({
         title: templates.title,

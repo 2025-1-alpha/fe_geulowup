@@ -25,7 +25,7 @@ export default function Header() {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     setIsLogin(!!(token && user));
-  }, []);
+  }, [isLogin]);
 
   return (
     <header className="bg-layout-grey1 mx-auto mb-[100px] flex min-w-screen items-center justify-between px-24 py-3">
@@ -66,7 +66,9 @@ export default function Header() {
             variant="grey"
             size="small"
             onClick={() => {
-              alert('로그아웃!');
+              window.localStorage.removeItem('token');
+              window.localStorage.removeItem('user');
+              window.location.reload();
             }}
           >
             로그아웃

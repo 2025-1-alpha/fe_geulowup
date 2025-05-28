@@ -181,7 +181,7 @@ export default function EditModal({
     <section className="bg-layout-white flex h-[700px] w-[1204px] flex-col rounded-[10px] p-9">
       {/* 태그 */}
       <section className="flex justify-between">
-        <div className="custom-scrollbar max-w-[760px] rotate-x-180 scroll-smooth">
+        <div className="custom-scrollbar-x max-w-[760px] rotate-x-180 scroll-smooth">
           <div className="mb-3 flex w-max rotate-x-180 flex-nowrap gap-2">
             {tags.map((tag) => (
               <InputTag

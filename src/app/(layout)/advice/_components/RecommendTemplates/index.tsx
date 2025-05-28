@@ -6,10 +6,20 @@ import Card from '@/components/ui/Card';
 import { TemplateType } from '@/types';
 import { useTemplatesRecommendation } from '@/hooks/template/useTemplatesRecommendation';
 import { useTemplatesLikes } from '@/hooks/template/useTemplateLikes';
+import { useAuth } from '@/hooks/useAuth';
+import { checkAuth } from '@/utils/checkAuth';
 
 export default function RecommendTemplates() {
+  const { requireAuth } = useAuth();
+   const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return checkAuth();
+    }
+    return false;
+  });
+  
   const { data: recommendData } = useTemplatesRecommendation();
-  const { data: likeData } = useTemplatesLikes();
+  const { data: likeData } = useTemplatesLikes({ enabled: isAuthenticated });
 
   const asideList = [
     { label: 'recommend', text: '추천 템플릿' },
@@ -19,12 +29,28 @@ export default function RecommendTemplates() {
   const [asideState, setAsideState] = useState('recommend');
   const [templates, setTemplates] = useState<TemplateType[]>([]);
 
+  useEffect(() => {
+    setIsAuthenticated(checkAuth());
+  }, []);
+
   const handleAside = (label: string) => {
+    if (label === 'like' && !requireAuth()) {
+      return;
+    }
     setAsideState(label);
   };
 
   useEffect(() => {
-    const response = asideState === 'recommend' ? recommendData : likeData;
+    let response;
+    
+    if (asideState === 'recommend') {
+      response = recommendData;
+    } else if (asideState === 'like' && isAuthenticated) {
+      response = likeData;
+    } else {
+      response = null; 
+    }
+    
     const templates =
       response?.templates.map((templates) => ({
         title: templates.title,
@@ -36,7 +62,7 @@ export default function RecommendTemplates() {
       })) ?? [];
 
     setTemplates(templates);
-  }, [recommendData, likeData, asideState]);
+  }, [recommendData, likeData, asideState, isAuthenticated]);
 
   return (
     <section className="z-10 flex">

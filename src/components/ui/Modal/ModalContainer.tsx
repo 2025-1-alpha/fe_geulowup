@@ -2,16 +2,19 @@
 
 import { useModalStore } from '@/stores/useModalStore';
 import { useUnsaveModalStore } from '@/stores/useUnsaveModalStore';
+import { useLoginModalStore } from '@/stores/useLoginModal';
 import ViewModal from './ViewModal';
 import EditModal from './EditModal';
 import UsingModal from './UsingModal';
 import ProfileModal from './ProfileModal';
 import UnSaveModal from './UnsaveModal';
+import LoginModal from './LoginModal';
 import { useEffect } from 'react';
 
 export default function ModalContainer() {
   const { currentModal, draftTitle, draftContent, draftTags, selectedTemplateId } = useModalStore();
   const { isUnsaveOpen } = useUnsaveModalStore();
+  const { isLoginOpen} = useLoginModalStore();
 
   useEffect(() => {
     if (currentModal) {
@@ -25,7 +28,7 @@ export default function ModalContainer() {
     };
   }, [currentModal]);
 
-  if (!currentModal && !isUnsaveOpen) return null;
+  if (!currentModal && !isUnsaveOpen && !isLoginOpen) return null;
 
   return (
     <>
@@ -54,6 +57,13 @@ export default function ModalContainer() {
         <div className="fixed inset-0 z-[1010] flex items-center justify-center bg-black/40">
           <div onClick={(e) => e.stopPropagation()}>
             <UnSaveModal />
+          </div>
+        </div>
+      )}
+      {isLoginOpen && (
+        <div className="fixed inset-0 z-[1010] flex items-center justify-center bg-black/40">
+          <div onClick={(e) => e.stopPropagation()}>
+            <LoginModal />
           </div>
         </div>
       )}

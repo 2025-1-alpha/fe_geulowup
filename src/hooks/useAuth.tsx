@@ -1,14 +1,15 @@
 import { checkAuth } from '@/utils/checkAuth';
-import { useUnsaveModalStore } from '@/stores/useUnsaveModalStore';
+import { useLoginModalStore } from '@/stores/useLoginModal';
 
 export const useAuth = () => {
-  const { openUnsaveModal } = useUnsaveModalStore();
+  const { isLoginOpen, openLoginModal } = useLoginModalStore();
 
   const requireAuth = (): boolean => {
     const isAuthenticated = checkAuth();
 
     if (!isAuthenticated) {
-      openUnsaveModal();
+      openLoginModal();
+      console.log(isLoginOpen)
       return false;
     }
 

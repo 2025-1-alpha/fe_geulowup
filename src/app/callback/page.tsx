@@ -15,6 +15,13 @@ function CallbackContent() {
     switch (type) {
       case 'NEW_USER':
         router.replace('/sign-up/step1');
+
+        if (accessToken) {
+          localStorage.setItem('token', accessToken);
+        } else {
+          alert('다시 시도해 주세요!');
+          router.replace('/login');
+        }
         break;
       case 'SUCCESS':
       default:

@@ -8,6 +8,7 @@ import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { useDeleteTemplate } from '@/hooks/template/useTemplateDeletes';
+import {useTemplateUse} from '@/hooks/template/useTemplateUse' 
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import ArchiveModalWarning from '@/app/(layout)/archive/_components/ArchiveModalWarning';
@@ -34,6 +35,8 @@ export default function ViewModal() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { mutate: templateDelete } = useDeleteTemplate();
+  const {mutate : templateUse} = useTemplateUse();
+
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -59,6 +62,7 @@ export default function ViewModal() {
   if (loading || !template) return <div className="p-8 text-center">불러오는 중...</div>;
 
   const handleCilckUse = () => {
+    templateUse(template.templateId);
     closeModal();
     openModal('using', {
       templateId: template.templateId,
@@ -78,17 +82,17 @@ export default function ViewModal() {
     });
   };
 
-
-const handleDeleteConfirm = () => {
-    templateDelete(template.templateId)
-    window.location.reload()
-  }
+  const handleDeleteConfirm = () => {
+    templateDelete(template.templateId);
+    window.location.reload();
+  };
 
   const handleClickDelete = () => {
-    setDeleteModalOpen(true)
+    setDeleteModalOpen(true);
   };
 
   const handleClickAiUse = () => {
+    templateUse(template.templateId);
     setCurrentTemplate({ templateId: template.templateId, content: template.content });
     closeModal();
     router.push('/advice');
@@ -238,10 +242,12 @@ const handleDeleteConfirm = () => {
         {toastVisible && <Toast message={toastMessage} onClose={() => setToastVisible(false)} />}
       </section>
       <ArchiveModalWarning
-              isOpen={deleteModalOpen}
-              onConfirm={handleDeleteConfirm}
-              onCancel={() => {setDeleteModalOpen(false)}}
-            />
+        isOpen={deleteModalOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => {
+          setDeleteModalOpen(false);
+        }}
+      />
     </section>
   );
 }

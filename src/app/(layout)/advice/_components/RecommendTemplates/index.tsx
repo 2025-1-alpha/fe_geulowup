@@ -8,9 +8,12 @@ import { useTemplatesRecommendation } from '@/hooks/template/useTemplatesRecomme
 import { useTemplatesLikes } from '@/hooks/template/useTemplateLikes';
 import { useAuth } from '@/hooks/useAuth';
 import { checkAuth } from '@/utils/checkAuth';
+import { useModalStore } from '@/stores/useModalStore';
 
 export default function RecommendTemplates() {
   const { requireAuth } = useAuth();
+  const { openModal } = useModalStore();
+
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     if (typeof window !== 'undefined') {
       return checkAuth();
@@ -39,6 +42,10 @@ export default function RecommendTemplates() {
     }
     setAsideState(label);
   };
+
+  const handleClickCard = (templateId : number) => {
+openModal('view', {templateId})
+  }
 
   useEffect(() => {
     let response;
@@ -96,6 +103,7 @@ export default function RecommendTemplates() {
               description={template.description}
               tags={template.tags}
               likes={template.likes}
+              onClick={() => handleClickCard(template.templateId)}
             />
           ))}
         </section>

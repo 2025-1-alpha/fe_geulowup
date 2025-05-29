@@ -141,15 +141,17 @@ export default function ViewModal() {
   const handleClickLike = () => {
     // TODO : 리팩토링 시 debounce 넣기기
 
-    if (requireAuth()) {templateLike(template.templateId);
+    if (requireAuth()) {
+      templateLike(template.templateId);
 
-    if (!hasLiked) {
-      setLikeCount((likeCount as number) + 1);
-    } else {
-      setLikeCount((likeCount as number) - 1);
+      if (!hasLiked) {
+        setLikeCount((likeCount as number) + 1);
+      } else {
+        setLikeCount((likeCount as number) - 1);
+      }
+
+      setHasLiked((prev) => !prev);
     }
-
-    setHasLiked((prev) => (!prev))}
   };
 
   return (

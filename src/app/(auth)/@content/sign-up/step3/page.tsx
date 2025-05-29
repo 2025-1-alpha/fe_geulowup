@@ -104,9 +104,7 @@ export default function Step1() {
                         : 'bg-primary-navy1 text-primary-navy4 hover:bg-primary-navy2'
                     } `}
                   >
-                     <Icon 
-                      className={`mr-2 h-6 w-6 ${isActive && 'brightness-0 invert' }`}
-                    />
+                    <Icon className={`mr-2 h-6 w-6 ${isActive && 'brightness-0 invert'}`} />
                     {label}
                   </button>
                 );

@@ -32,6 +32,8 @@ export default function ViewModal() {
 
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
+  const { requireAuth } = useAuth();
+
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [hasLiked, setHasLiked] = useState(false);
   const [likeCount, setLikeCount] = useState<number>();
@@ -68,13 +70,16 @@ export default function ViewModal() {
   if (loading || !template) return <div className="p-8 text-center">불러오는 중...</div>;
 
   const handleCilckUse = () => {
-    closeModal();
-    openModal('using', {
-      templateId: template.templateId,
-      draftTitle: template.title,
-      draftContent: template.content,
-      draftTags: template.tags,
-    });
+    if (requireAuth()) {
+      templateUse(template.templateId);
+      closeModal();
+      openModal('using', {
+        templateId: template.templateId,
+        draftTitle: template.title,
+        draftContent: template.content,
+        draftTags: template.tags,
+      });
+    }
   };
 
   const handleClickEdit = (template: TemplateDetail) => {

@@ -1,5 +1,6 @@
 import { getTemplateLikes } from '@/services/template/getTemplateLikes';
-import { useQuery } from '@tanstack/react-query';
+import { postTemplateLike } from '@/services/template/postTemplateLike';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 export const useTemplatesLikes = (options?: { enabled?: boolean }) => {
   return useQuery({
@@ -8,3 +9,7 @@ export const useTemplatesLikes = (options?: { enabled?: boolean }) => {
     enabled: options?.enabled ?? true,
   });
 };
+
+export const useLikePost = () => {
+    return useMutation({mutationFn : (templateId : number) => postTemplateLike(templateId)});
+}

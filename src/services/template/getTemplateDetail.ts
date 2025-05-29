@@ -14,6 +14,7 @@ export interface TemplateDetail {
   tags: string[];
   likeCount: number;
   isPrivate: boolean;
+  hasLiked: boolean;
   saved?: boolean;
   savedFolder?: { folderId: number; name: string };
 }

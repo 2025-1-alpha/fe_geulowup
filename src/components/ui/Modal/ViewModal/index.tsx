@@ -8,7 +8,8 @@ import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { useDeleteTemplate } from '@/hooks/template/useTemplateDeletes';
-import {useTemplateUse} from '@/hooks/template/useTemplateUse' 
+import { useTemplateUse } from '@/hooks/template/useTemplateUse';
+import { useLikePost } from '@/hooks/template/useTemplateLikes';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import ArchiveModalWarning from '@/app/(layout)/archive/_components/ArchiveModalWarning';
@@ -24,19 +25,22 @@ import Toast from '../../Toast';
 export default function ViewModal() {
   const router = useRouter();
 
+  const { mutate: templateDelete } = useDeleteTemplate();
+  const { mutate: templateUse } = useTemplateUse();
+  const { mutate: templateLike } = useLikePost();
+
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
+
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState<number>();
   const [folderId, setFolderId] = useState<number>();
   const [loading, setLoading] = useState(true);
   const [dropdown, setDropdown] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  const { mutate: templateDelete } = useDeleteTemplate();
-  const {mutate : templateUse} = useTemplateUse();
-
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -48,6 +52,8 @@ export default function ViewModal() {
         const data = await getTemplateDetail(selectedTemplateId);
         setTemplate(data);
         setFolderId(data?.savedFolder?.folderId ?? 0);
+        setLikeCount(data?.likeCount ?? 0);
+        setHasLiked(data?.hasLiked ?? false);
       } catch (err) {
         console.error('템플릿 상세 불러오기 실패:', err);
         closeModal();
@@ -121,6 +127,19 @@ export default function ViewModal() {
     openModal('profile', {
       templateId: template.templateId,
     });
+  };
+
+  const handleClickLike = () => {
+    // TODO : 리팩토링 시 debounce 넣기기
+    templateLike(template.templateId);
+
+    if (!hasLiked) {
+      setLikeCount((likeCount as number) + 1);
+    } else {
+      setLikeCount((likeCount as number) - 1);
+    }
+
+    setHasLiked((prev) => (!prev))
   };
 
   return (
@@ -222,10 +241,10 @@ export default function ViewModal() {
 
             <div className="flex flex-col items-center justify-center gap-3">
               <div className="title-sm flex">추천수</div>
-              <div className="body-lg flex gap-1">
+              <button className="body-lg flex gap-1" onClick={handleClickLike}>
                 <IconLike />
-                {template.likeCount}
-              </div>
+                {likeCount}
+              </button>
             </div>
           </section>
         </section>

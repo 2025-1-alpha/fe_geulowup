@@ -1,5 +1,6 @@
 import { getTemplateLikes } from '@/services/template/getTemplateLikes';
-import { useQuery } from '@tanstack/react-query';
+import { postTemplateLike } from '@/services/template/postTemplateLike';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 export const useTemplatesLikes = () => {
   return useQuery({
@@ -7,3 +8,7 @@ export const useTemplatesLikes = () => {
     queryFn: () => getTemplateLikes(),
   });
 };
+
+export const useLikePost = () => {
+    return useMutation({mutationFn : (templateId : number) => postTemplateLike(templateId)});
+}

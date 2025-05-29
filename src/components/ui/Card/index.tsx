@@ -84,6 +84,13 @@ const Card: React.FC<CardProps> = ({
       const element = descriptionRef.current;
       if (!element) return;
 
+      // hover 상태에서는 원본 텍스트를 보여줌
+      if (variant === 'small' && state === 'hover') {
+        setTruncatedDescription(description);
+        element.textContent = description; // DOM에도 원본 텍스트 반영
+        return;
+      }
+
       // 원래 텍스트로 초기화
       element.textContent = description;
 
@@ -153,7 +160,12 @@ const Card: React.FC<CardProps> = ({
             ref={descriptionRef}
             className="body-sm text-layout-grey6 mb-[16px]"
             style={{
-              maxHeight: variant === 'small' && state !== 'hover' ? '44px' : 'calc(1.5em * 3)',
+              maxHeight:
+                variant === 'small' && state !== 'hover'
+                  ? '44px'
+                  : variant === 'small' && state === 'hover'
+                    ? 'none'
+                    : 'calc(1.5em * 3)',
               overflow: 'hidden',
             }}
           >

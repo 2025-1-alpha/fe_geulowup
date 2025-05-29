@@ -7,8 +7,10 @@ import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
+import { useDeleteTemplate } from '@/hooks/template/useTemplateDeletes';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
+import ArchiveModalWarning from '@/app/(layout)/archive/_components/ArchiveModalWarning';
 import IconGlowScore from '@/assets/icons/icon-glow-score.svg';
 import IconClose from '@/assets/icons/icon-close.svg';
 import IconLike from '@/assets/icons/icon-like.svg';
@@ -29,6 +31,9 @@ export default function ViewModal() {
   const [dropdown, setDropdown] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const { mutate: templateDelete } = useDeleteTemplate();
 
   const inputs = Array.from(template?.content?.matchAll(/{(.*?)}/g) ?? []).map((m) => m[1]);
 
@@ -71,6 +76,16 @@ export default function ViewModal() {
       draftContent: template.content,
       draftTags: template.tags,
     });
+  };
+
+
+const handleDeleteConfirm = () => {
+    templateDelete(template.templateId)
+    window.location.reload()
+  }
+
+  const handleClickDelete = () => {
+    setDeleteModalOpen(true)
   };
 
   const handleClickAiUse = () => {
@@ -150,7 +165,7 @@ export default function ViewModal() {
       <section className="body-lg text-layout-grey5 flex h-[28px] items-center justify-end gap-4">
         {template?.isAuthor && (
           <>
-            <button className="flex items-center gap-1">
+            <button onClick={handleClickDelete} className="flex items-center gap-1">
               <IconTrash />
               삭제하기
             </button>
@@ -222,6 +237,11 @@ export default function ViewModal() {
         </section>
         {toastVisible && <Toast message={toastMessage} onClose={() => setToastVisible(false)} />}
       </section>
+      <ArchiveModalWarning
+              isOpen={deleteModalOpen}
+              onConfirm={handleDeleteConfirm}
+              onCancel={() => {setDeleteModalOpen(false)}}
+            />
     </section>
   );
 }

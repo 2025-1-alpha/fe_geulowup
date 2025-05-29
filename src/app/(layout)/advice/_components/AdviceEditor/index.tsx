@@ -10,9 +10,11 @@ import RecommendTemplates from '../RecommendTemplates';
 import IconHelp from '@/assets/icons/icon-help.svg';
 import { usePostAdvice } from '@/hooks/models/usePostAdvice';
 import { useSpellCheck } from '@/hooks/models/usePostSpellCheck';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function AdviceEditor() {
   const { currentTemplate } = useTemplateStore();
+  const { requireAuth } = useAuth();
   const [draftContent, setDraftContent] = useState(currentTemplate?.content || '');
   const [tags, setTags] = useState<string[]>([]);
   const [aiMode, setAiMode] = useState(true);
@@ -52,10 +54,12 @@ export default function AdviceEditor() {
 
   const handleSubmit = () => {
     if (aiMode) {
-      mutate({
-        content: draftContent,
-        tags: tags.filter((tag) => tag.trim() !== ''),
-      });
+      if (requireAuth()) {
+        mutate({
+          content: draftContent,
+          tags: tags.filter((tag) => tag.trim() !== ''),
+        });
+      }
     } else {
       spellCheckMutate({
         content: draftContent,

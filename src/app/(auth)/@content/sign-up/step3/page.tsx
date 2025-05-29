@@ -7,30 +7,44 @@ import { Button } from '@/components/ui/Button';
 import { StepBar } from '@/components/ui/StepBar';
 import { useSignupStore } from '@/stores/signUpStore';
 import { useSignUp } from '@/hooks/users/useSignUp';
-import IconArrowDown from '@/assets/icons/icon-arrow-down.svg';
 import IconArrowBack from '@/assets/icons/icon-arrow-back.svg';
+import IconLogin1 from '@/assets/icons/icon-login1.svg';
+import IconLogin2 from '@/assets/icons/icon-login2.svg';
+import IconLogin3 from '@/assets/icons/icon-login3.svg';
+import IconLogin4 from '@/assets/icons/icon-login4.svg';
+import IconLogin5 from '@/assets/icons/icon-login5.svg';
+import IconLogin6 from '@/assets/icons/icon-login6.svg';
+import IconLogin7 from '@/assets/icons/icon-login7.svg';
+import IconLogin8 from '@/assets/icons/icon-login8.svg';
+import IconLogin9 from '@/assets/icons/icon-login9.svg';
+import IconLogin10 from '@/assets/icons/icon-login10.svg';
+import IconLogin11 from '@/assets/icons/icon-login11.svg';
+import IconLogin12 from '@/assets/icons/icon-login12.svg';
+import IconLogin13 from '@/assets/icons/icon-login13.svg';
+import IconLogin14 from '@/assets/icons/icon-login14.svg';
+import IconLogin15 from '@/assets/icons/icon-login15.svg';
+import IconLogin16 from '@/assets/icons/icon-login16.svg';
 
 const category = [
   [
-    // TODO : svg로 아이콘 받으면 다시 넣기
-    { label: '인사말', icon: IconArrowDown },
-    { label: '자기소개', icon: IconArrowDown },
-    { label: '사과문', icon: IconArrowDown },
-    { label: '부탁글', icon: IconArrowDown },
-    { label: '감사글', icon: IconArrowDown },
-    { label: '제안글', icon: IconArrowDown },
-    { label: '공지글', icon: IconArrowDown },
-    { label: '소개글', icon: IconArrowDown },
+    { label: '인사말', icon: IconLogin1 },
+    { label: '자기소개', icon: IconLogin2 },
+    { label: '사과문', icon: IconLogin3 },
+    { label: '부탁글', icon: IconLogin4 },
+    { label: '감사글', icon: IconLogin5 },
+    { label: '제안글', icon: IconLogin6 },
+    { label: '공지글', icon: IconLogin7 },
+    { label: '소개글', icon: IconLogin8 },
   ],
   [
-    { label: '후기작성', icon: IconArrowDown },
-    { label: '소셜글', icon: IconArrowDown },
-    { label: '고객상담', icon: IconArrowDown },
-    { label: '교수문의', icon: IconArrowDown },
-    { label: '조별활동', icon: IconArrowDown },
-    { label: '공모전', icon: IconArrowDown },
-    { label: '지원서', icon: IconArrowDown },
-    { label: '기타', icon: IconArrowDown },
+    { label: '후기작성', icon: IconLogin9 },
+    { label: '소셜글', icon: IconLogin10 },
+    { label: '고객상담', icon: IconLogin11 },
+    { label: '교수문의', icon: IconLogin12 },
+    { label: '조별활동', icon: IconLogin13 },
+    { label: '공모전', icon: IconLogin14 },
+    { label: '지원서', icon: IconLogin15 },
+    { label: '기타', icon: IconLogin16 },
   ],
 ];
 
@@ -90,7 +104,7 @@ export default function Step1() {
                         : 'bg-primary-navy1 text-primary-navy4 hover:bg-primary-navy2'
                     } `}
                   >
-                    <Icon className="mr-2 h-5 w-5" />
+                    <Icon className="mr-2 h-6 w-6" />
                     {label}
                   </button>
                 );

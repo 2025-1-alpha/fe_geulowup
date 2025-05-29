@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
+import { useAuth } from '@/hooks/useAuth';
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { useDeleteTemplate } from '@/hooks/template/useTemplateDeletes';
 import { useTemplateUse } from '@/hooks/template/useTemplateUse';
@@ -31,7 +32,6 @@ export default function ViewModal() {
 
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
-
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [hasLiked, setHasLiked] = useState(false);
   const [likeCount, setLikeCount] = useState<number>();
@@ -68,7 +68,6 @@ export default function ViewModal() {
   if (loading || !template) return <div className="p-8 text-center">불러오는 중...</div>;
 
   const handleCilckUse = () => {
-    templateUse(template.templateId);
     closeModal();
     openModal('using', {
       templateId: template.templateId,
@@ -105,7 +104,9 @@ export default function ViewModal() {
   };
 
   const handleDropdown = () => {
-    setDropdown((prev) => !prev);
+    if (requireAuth()) {
+      setDropdown((prev) => !prev);
+    }
   };
 
   const handleCopyClipBoard = (text: string) => {
@@ -123,10 +124,12 @@ export default function ViewModal() {
   };
 
   const handleAuthor = () => {
-    closeModal();
-    openModal('profile', {
-      templateId: template.templateId,
-    });
+    if (requireAuth()) {
+      closeModal();
+      openModal('profile', {
+        templateId: template.templateId,
+      });
+    }
   };
 
   const handleClickLike = () => {

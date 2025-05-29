@@ -41,10 +41,6 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
     onFolderSelect(folderId.toString());
   };
 
-  const handleFolderDoubleClick = (folderId: string) => {
-    console.log('폴더 더블클릭:', folderId);
-  };
-
   const handleCreateFolderClick = () => {
     setIsCreatingFolder(true);
   };
@@ -106,7 +102,6 @@ export default function ArchiveSidebar({ selectedFolderId, onFolderSelect }: Arc
             isSelected={selectedFolderId === folder.id.toString()}
             isDeletable={folder.id !== 1 && folder.id !== 2}
             onClick={() => handleFolderClick(folder.id)}
-            onDoubleClick={() => handleFolderDoubleClick(folder.id.toString())}
             onDelete={() => handleDeleteClick(folder.id)}
           />
         ))}

@@ -78,16 +78,8 @@ export default function ArchiveCardGrid({
   };
 
   // 모달 열기 핸들러
-  const handleCardClick = (templateId: number, cardData: Template) => {
-    console.log('카드 클릭:', {
-      templateId,
-      folderId: selectedFolderId,
-      cardData,
-      source: 'archive',
-      timestamp: new Date().toISOString(),
-    });
-
-    openModal('view', {
+  const handleCardClick = (templateId: number) => {
+       openModal('view', {
       templateId,
     });
   };
@@ -104,7 +96,7 @@ export default function ArchiveCardGrid({
             description={card.content}
             tags={card.tags}
             likes={card.likeCount}
-            onClick={() => handleCardClick(card.templateId, card)}
+            onClick={() => handleCardClick(card.templateId)}
             className="cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
           />
         ))}

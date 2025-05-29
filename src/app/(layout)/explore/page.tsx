@@ -99,10 +99,8 @@ export default function ExplorePage() {
 
           if (parsedPayload && parsedPayload.name) {
             setUserName(parsedPayload.name);
-            console.log('User name set to state:', parsedPayload.name);
 
             localStorage.setItem('user', JSON.stringify({ name: parsedPayload.name }));
-            console.log('User object saved to localStorage:', { name: parsedPayload.name });
           } else {
             console.log('Name not found in parsed payload or payload is null');
           }

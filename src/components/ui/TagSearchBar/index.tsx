@@ -79,7 +79,6 @@ export const TagSearchBar: React.FC<TagSearchBarProps> = ({
   const sizeClass = size === 'big' ? 'w-[1320px]' : 'w-[984px]';
 
   const handleTagClick = (tag: TagType) => {
-    console.log('TagSearchBar - 태그 클릭:', tag, '현재 선택된 태그:', selectedTag);
     if (onTagSelect) {
       onTagSelect(tag);
     }

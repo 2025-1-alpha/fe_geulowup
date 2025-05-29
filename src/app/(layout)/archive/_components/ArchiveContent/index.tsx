@@ -39,8 +39,6 @@ export default function ArchiveContent({ selectedFolderId }: ArchiveContentProps
   };
 
   const handleSearchClick = () => {
-    // 검색 로직 (추후 구현)
-    console.log('검색:', selectedTag, '폴더:', selectedFolderId);
   };
 
   const handleSortChange = () => {

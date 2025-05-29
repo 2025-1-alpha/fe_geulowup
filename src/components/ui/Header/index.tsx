@@ -2,14 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '../Button';
 import Logo from '@/assets/logo.svg';
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
+  const { requireAuth } = useAuth();
 
   const menus = [
     { label: '조언받기', href: '/advice' },
@@ -21,7 +25,7 @@ export default function Header() {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     setIsLogin(!!(token && user));
-  }, []);
+  }, [isLogin]);
 
   return (
     <header className="bg-layout-grey1 mx-auto mb-[100px] flex min-w-screen items-center justify-between px-24 py-3">
@@ -33,13 +37,21 @@ export default function Header() {
           {menus.map((menu) => {
             const isActive = pathname.startsWith(menu.href);
             return (
-              <Link
+              <button
                 key={menu.href}
-                href={menu.href}
+                onClick={() => {
+                  if (menu.label === '보관함') {
+                    if (requireAuth()) {
+                      router.push(menu.href);
+                    }
+                  } else {
+                    router.push(menu.href);
+                  }
+                }}
                 className={cn('text-layout-grey5 button-lg', isActive && 'text-layout-grey6')}
               >
                 {menu.label}
-              </Link>
+              </button>
             );
           })}
         </nav>
@@ -54,7 +66,9 @@ export default function Header() {
             variant="grey"
             size="small"
             onClick={() => {
-              alert('로그아웃!');
+              window.localStorage.removeItem('token');
+              window.localStorage.removeItem('user');
+              window.location.reload();
             }}
           >
             로그아웃

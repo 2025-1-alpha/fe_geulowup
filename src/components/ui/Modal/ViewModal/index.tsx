@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/stores/useModalStore';
 import { useTemplateStore } from '@/stores/useTemplateStore';
+import { useAuth } from '@/hooks/useAuth';
 import { getTemplateDetail, TemplateDetail } from '@/services/template/getTemplateDetail';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
@@ -23,6 +24,8 @@ export default function ViewModal() {
 
   const { selectedTemplateId, openModal, closeModal } = useModalStore();
   const { setCurrentTemplate } = useTemplateStore();
+  const { requireAuth } = useAuth();
+
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
   const [folderId, setFolderId] = useState<number>();
   const [loading, setLoading] = useState(true);
@@ -54,13 +57,15 @@ export default function ViewModal() {
   if (loading || !template) return <div className="p-8 text-center">불러오는 중...</div>;
 
   const handleCilckUse = () => {
-    closeModal();
-    openModal('using', {
-      templateId: template.templateId,
-      draftTitle: template.title,
-      draftContent: template.content,
-      draftTags: template.tags,
-    });
+    if (requireAuth()) {
+      closeModal();
+      openModal('using', {
+        templateId: template.templateId,
+        draftTitle: template.title,
+        draftContent: template.content,
+        draftTags: template.tags,
+      });
+    }
   };
 
   const handleClickEdit = (template: TemplateDetail) => {
@@ -80,7 +85,9 @@ export default function ViewModal() {
   };
 
   const handleDropdown = () => {
-    setDropdown((prev) => !prev);
+    if (requireAuth()) {
+      setDropdown((prev) => !prev);
+    }
   };
 
   const handleCopyClipBoard = (text: string) => {
@@ -98,10 +105,12 @@ export default function ViewModal() {
   };
 
   const handleAuthor = () => {
-    closeModal();
-    openModal('profile', {
-      templateId: template.templateId,
-    });
+    if (requireAuth()) {
+      closeModal();
+      openModal('profile', {
+        templateId: template.templateId,
+      });
+    }
   };
 
   return (

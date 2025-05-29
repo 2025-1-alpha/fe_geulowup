@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useLoginModalStore } from '@/stores/useLoginModal';
+import { useModalStore } from '@/stores/useModalStore';
 import { Spacing } from '../../Spacing';
 import { Button } from '../../Button';
 import IconClose from '@/assets/icons/icon-close.svg';
@@ -9,6 +10,7 @@ export default function LoginModal() {
   const router = useRouter();
 
   const { isLoginOpen, closeLoginModal } = useLoginModalStore();
+  const { closeModal} = useModalStore();
 
   if (!isLoginOpen) return null;
 
@@ -29,6 +31,8 @@ export default function LoginModal() {
         </Button>
         <Button
           onClick={() => {
+            closeModal()
+            closeLoginModal()
             router.push('/login');
           }}
         >

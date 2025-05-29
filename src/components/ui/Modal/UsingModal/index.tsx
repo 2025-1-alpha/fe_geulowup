@@ -69,8 +69,10 @@ export default function UsingModal() {
     document.body.appendChild($textarea);
     $textarea.value = text;
     $textarea.select();
+    document.execCommand('copy');
     document.body.removeChild($textarea);
-    // TODO : 저장되었습니다와 동일하게 복사되었습니다 띄우기
+
+    triggerToast('복사되었습니다.');
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -149,7 +151,6 @@ export default function UsingModal() {
           <button
             onClick={() => {
               handleCopyClipBoard(content);
-              triggerToast('복사되었습니다.');
             }}
             className="flex items-center gap-1"
           >

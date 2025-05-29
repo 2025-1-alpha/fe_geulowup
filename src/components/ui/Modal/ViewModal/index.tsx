@@ -119,6 +119,7 @@ export default function ViewModal() {
     document.body.appendChild($textarea);
     $textarea.value = text;
     $textarea.select();
+    document.execCommand('copy');
     document.body.removeChild($textarea);
     triggerToast('복사되었습니다.');
   };

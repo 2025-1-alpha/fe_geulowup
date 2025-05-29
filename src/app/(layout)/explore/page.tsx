@@ -72,11 +72,9 @@ export default function ExplorePage() {
   // 사용자 이름 로드 및 설정
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('Loaded token:', token);
     if (token) {
       try {
         const payloadBase64Url = token.split('.')[1];
-        console.log('Payload Base64URL (raw from token):', payloadBase64Url);
 
         if (payloadBase64Url) {
           // Base64URL을 표준 Base64로 변환
@@ -87,7 +85,6 @@ export default function ExplorePage() {
           console.log('Payload Base64 (after B64URL to B64 conversion):', base64);
 
           const binaryString = atob(base64); // 변환된 base64 문자열 사용
-          console.log('Decoded Binary String (raw from atob):', binaryString);
 
           // 바이너리 문자열을 Uint8Array로 변환
           const bytes = new Uint8Array(binaryString.length);
@@ -97,10 +94,8 @@ export default function ExplorePage() {
 
           // Uint8Array를 UTF-8 문자열로 디코딩
           const decodedPayloadUtf8 = new TextDecoder('utf-8').decode(bytes);
-          console.log('Decoded Payload (UTF-8 string):', decodedPayloadUtf8);
 
           const parsedPayload = JSON.parse(decodedPayloadUtf8);
-          console.log('Parsed Payload (JS object):', parsedPayload);
 
           if (parsedPayload && parsedPayload.name) {
             setUserName(parsedPayload.name);
@@ -165,7 +160,6 @@ export default function ExplorePage() {
 
   // 태그 선택 핸들러
   const handleTagSelect = (tag: TagType) => {
-    console.log('태그 선택:', tag, '이전 선택된 태그:', selectedTag);
     setSelectedTag(tag === selectedTag ? undefined : tag);
     setVisibleCardCount(16); // 태그 변경 시 초기 카드 수로 리셋
   };
@@ -173,12 +167,10 @@ export default function ExplorePage() {
   // 정렬 변경 핸들러
   const handleSortChange = () => {
     setSortType((prev) => (prev === 'popular' ? 'recent' : 'popular'));
-    console.log('정렬 변경:', sortType === 'popular' ? 'recent' : 'popular');
   };
 
   // 검색 버튼 핸들러
   const handleSearchClick = () => {
-    console.log(`검색: ${selectedTag || '선택된 태그 없음'}`);
   };
 
   // 추천 템플릿 이전/다음 핸들러
